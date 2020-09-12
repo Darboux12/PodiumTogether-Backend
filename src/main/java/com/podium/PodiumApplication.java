@@ -1,13 +1,13 @@
-package com.gdziejestgrane.gjg;
+package com.podium;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GjgApplication {
+public class PodiumApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GjgApplication.class, args);
+        SpringApplication.run(PodiumApplication.class, args);
     }
 
 }
