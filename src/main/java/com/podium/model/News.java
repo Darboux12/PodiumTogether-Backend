@@ -4,6 +4,7 @@ package com.podium.model;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -27,11 +28,13 @@ public class News {
     private String title;
 
     @NotNull
-    @Column(name = "short_text")
+    @Column(name = "shortText")
+    @Type(type = "text")
     private String shortText;
 
     @NotNull
     @Column(name = "text")
+    @Type(type = "text")
     private String text;
 
     @NotNull
@@ -44,6 +47,7 @@ public class News {
 
     @NotNull
     @Lob
+    @Type(type="org.hibernate.type.ImageType")
     @Column(name = "image")
     private byte[] image;
 
