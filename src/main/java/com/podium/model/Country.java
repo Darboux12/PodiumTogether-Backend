@@ -1,6 +1,7 @@
 package com.podium.model;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,11 @@ public class Country {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "country")
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "country")
     private Set<User> users;
 }

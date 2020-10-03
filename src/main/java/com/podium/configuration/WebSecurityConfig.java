@@ -76,6 +76,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/news/add")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/user/add")
+                .permitAll()
+
 
                 // all other requests need to be authenticated
                         .anyRequest().authenticated().and().

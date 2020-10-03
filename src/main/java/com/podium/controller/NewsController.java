@@ -4,6 +4,7 @@ import com.podium.model.News;
 import com.podium.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,7 @@ public class NewsController {
     }
 
     @PostMapping(value = "/news/add")
-    public void addNews(
+    public ResponseEntity addNews(
             @RequestParam("title") String title,
             @RequestParam("shortText") String shortText,
             @RequestParam("linkText") String linkText,
@@ -37,6 +38,8 @@ public class NewsController {
     ) throws IOException {
 
         this.newsService.addNews(title,shortText,linkText,fullText,image);
+
+        return ResponseEntity.ok().body("Hej");
     }
 
 }

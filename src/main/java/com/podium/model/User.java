@@ -55,7 +55,6 @@ public class User {
     @Column(name = "birthday")
     private Date birthday;
 
-    @NotNull
     @Lob
     @Type(type="org.hibernate.type.ImageType")
     @Column(name = "profile_image")
