@@ -25,7 +25,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
 
-        com.podium.model.User user = this.userRepository.findUserByUsername(username);
+        com.podium.model.User user = this.userRepository.findByUsername(username);
 
 
         if (user != null)

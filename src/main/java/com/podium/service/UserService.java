@@ -4,6 +4,8 @@ import com.podium.model.Country;
 import com.podium.model.Role;
 import com.podium.model.SignUpRequest;
 import com.podium.model.User;
+import com.podium.repository.CountryRepository;
+import com.podium.repository.RoleRepository;
 import com.podium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +18,16 @@ public class UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    private RoleRepository roleRepository;
+
+    private CountryRepository countryRepository;
+
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CountryRepository countryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.countryRepository = countryRepository;
     }
 
     public void addUser(SignUpRequest signUpRequest){
@@ -35,8 +43,7 @@ public class UserService {
 
         user.setCountry(country);
 
-        Role role = new Role();
-        role.setName("subscriber");
+        Role role = this.roleRepository.findByName("subscriber");
 
         user.getRoles().add(role);
         user.setBirthday(signUpRequest.getBirthday());
@@ -49,8 +56,41 @@ public class UserService {
     }
 
     public User findUserByUsername(String username){
-       return this.userRepository.findUserByUsername(username);
+       return this.userRepository.findByUsername(username);
     }
+
+    public Iterable<User> findAllUsers(){
+        return this.userRepository.findAll();
+    }
+
+    public Iterable<User> findAllByRole(String roleName){
+
+        Role role = this.roleRepository.findByName(roleName);
+
+        return this.userRepository.findAllByRolesContaining(role);
+    }
+
+    public Iterable<User> findAllByCountry(String countryName){
+
+        Country country = this.countryRepository.findByName(countryName);
+
+        return this.userRepository.findAllByCountry(country);
+
+    }
+
+    public boolean existUserByUsername(String username){
+       return this.userRepository.existsByUsername(username);
+    }
+
+    public boolean existUserByEmail(String email){
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public void updateUserUsername(String presentUsername, String newUsername){
+        this.userRepository.updateUserUsername(presentUsername,newUsername);
+    }
+
+
 
 
 }

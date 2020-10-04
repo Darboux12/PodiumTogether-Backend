@@ -21,7 +21,7 @@ public class NewsService {
         this.newsRepository = newsRepository;
     }
 
-    public List<News> getAllNews(){
+    public Iterable<News> getAllNews(){
         return this.newsRepository.findAll();
     }
 

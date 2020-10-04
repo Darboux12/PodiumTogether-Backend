@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .frameOptions()
                 .deny()
                 .and()
-                // dont authenticate this particular request
+                // dont authenticate this particular requests
                 .authorizeRequests().antMatchers("/authenticate")
                 .permitAll()
 
@@ -80,6 +80,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/user/get/{username}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/get/role")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/test")
                 .permitAll()
 
 

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     private UserService userService;
@@ -21,9 +21,17 @@ public class UserController {
     @PostMapping("/user/add")
     public ResponseEntity addUser(@RequestBody SignUpRequest request){
 
-        this.userService.addUser(request);
+        if(this.userService.existUserByUsername(request.getUsername()))
+            return ResponseEntity.status(409).body("User with given username already exist");
 
-        return ResponseEntity.ok().body("User successfully signed up");
+        else if(this.userService.existUserByEmail(request.getEmail()))
+            return ResponseEntity.status(409).body("User with given email already exist");
+
+        else{
+            this.userService.addUser(request);
+            return ResponseEntity.ok().body("User successfully signed up");
+        }
+
     }
 
     @GetMapping("/user/get/{username}")
@@ -33,7 +41,7 @@ public class UserController {
 
         User user = this.userService.findUserByUsername(username);
 
-        System.out.println(user.getPassword());
+
 
 
 

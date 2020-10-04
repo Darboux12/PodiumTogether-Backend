@@ -1,5 +1,6 @@
 package com.podium.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","users"})
 @Table(name = "COUNTRY")
 public class Country {
 
@@ -23,11 +25,6 @@ public class Country {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "country")
+    @OneToMany(mappedBy="country")
     private Set<User> users;
 }
