@@ -11,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,6 +27,9 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception
@@ -33,13 +37,16 @@ public class JwtAuthenticationController {
 
         final UserDetails userDetails =
                 userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        //JwtUserDetails userDetails = new JwtUserDetails();
-        //userDetails.setUsername(authenticationRequest.getUsername());
 
+        final boolean accessPermission = this.passwordEncoder.matches(
+                authenticationRequest.getPassword(),
+                userDetails.getPassword());
 
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        if(accessPermission)
+            return ResponseEntity.ok(new JwtResponse(jwtTokenUtil.generateToken(userDetails)));
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        else
+            return ResponseEntity.badRequest().body("Authentication failed");
     }
 
     private void authenticate(String username, String password) throws Exception {
