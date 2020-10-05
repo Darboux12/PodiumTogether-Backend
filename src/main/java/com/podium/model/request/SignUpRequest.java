@@ -1,4 +1,4 @@
-package com.podium.model;
+package com.podium.model.request;
 
 import lombok.Getter;
 import lombok.Setter;

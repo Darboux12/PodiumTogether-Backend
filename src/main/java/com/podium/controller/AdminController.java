@@ -1,6 +1,6 @@
 package com.podium.controller;
 
-import com.podium.model.User;
+import com.podium.model.entity.User;
 import com.podium.service.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

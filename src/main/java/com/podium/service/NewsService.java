@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.model.News;
+import com.podium.model.entity.News;
 import com.podium.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class NewsService {

@@ -1,8 +1,8 @@
-package com.podium.model;
+package com.podium.model.entity;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,18 +13,19 @@ import java.util.Set;
 @Setter
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","users"})
-@Table(name = "COUNTRY")
-public class Country {
+@Table(name = "ROLE")
+public class Role {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @Column(name = "country_id")
-    private int countryId;
+    @Column(name = "role_id")
+    private int roleId;
 
     @NotNull
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy="country")
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
+
 }

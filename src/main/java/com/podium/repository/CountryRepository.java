@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.Country;
+import com.podium.model.entity.Country;
 import org.springframework.data.repository.CrudRepository;
 
 public interface CountryRepository extends CrudRepository<Country,Integer> {

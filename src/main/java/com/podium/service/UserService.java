@@ -1,9 +1,9 @@
 package com.podium.service;
 
-import com.podium.model.Country;
-import com.podium.model.Role;
-import com.podium.model.SignUpRequest;
-import com.podium.model.User;
+import com.podium.model.entity.Country;
+import com.podium.model.entity.Role;
+import com.podium.model.request.SignUpRequest;
+import com.podium.model.entity.User;
 import com.podium.repository.CountryRepository;
 import com.podium.repository.RoleRepository;
 import com.podium.repository.UserRepository;
@@ -90,7 +90,8 @@ public class UserService {
         this.userRepository.updateUserUsername(presentUsername,newUsername);
     }
 
+    public void deleteUserByUsername(String username){
 
-
-
+        this.userRepository.deleteByUsername(username);
+    }
 }

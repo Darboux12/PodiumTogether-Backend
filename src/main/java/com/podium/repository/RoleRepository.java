@@ -1,7 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.podium.model.entity.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

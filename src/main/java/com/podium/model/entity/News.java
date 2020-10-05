@@ -1,15 +1,12 @@
-package com.podium.model;
+package com.podium.model.entity;
 
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.io.File;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter

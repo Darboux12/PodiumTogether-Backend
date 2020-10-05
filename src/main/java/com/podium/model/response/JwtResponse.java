@@ -1,4 +1,4 @@
-package com.podium.model;
+package com.podium.model.response;
 
 import java.io.Serializable;
 

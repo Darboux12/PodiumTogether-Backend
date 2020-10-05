@@ -1,8 +1,8 @@
 package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
-import com.podium.model.JwtRequest;
-import com.podium.model.JwtResponse;
+import com.podium.model.request.JwtRequest;
+import com.podium.model.response.JwtResponse;
 import com.podium.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

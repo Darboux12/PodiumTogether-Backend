@@ -1,9 +1,10 @@
 package com.podium.controller;
 
-import com.podium.model.SignUpRequest;
-import com.podium.model.User;
+import com.podium.model.request.SignUpRequest;
+import com.podium.model.entity.User;
 import com.podium.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,30 +22,96 @@ public class UserController {
     @PostMapping("/user/add")
     public ResponseEntity addUser(@RequestBody SignUpRequest request){
 
-        if(this.userService.existUserByUsername(request.getUsername()))
-            return ResponseEntity.status(409).body("User with given username already exist");
+        if(this.userService.existUserByUsername(request.getUsername())){
 
-        else if(this.userService.existUserByEmail(request.getEmail()))
-            return ResponseEntity.status(409).body("User with given email already exist");
-
-        else{
-            this.userService.addUser(request);
-            return ResponseEntity.ok().body("User successfully signed up");
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Already-Exist","Username");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("User with given username already exist");
         }
+
+        if(this.userService.existUserByEmail(request.getEmail())){
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Already-Exist","Email");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("User with given email already exist");
+        }
+
+        if(request.getUsername().isEmpty()) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Empty-Value","Username");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Username cannot be empty");
+        }
+
+        if(request.getUsername().length() > 30) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Length-Error","Username");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Username cannot be longer than 30 signs");
+        }
+
+        if(request.getEmail().isEmpty()) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Empty-Value","Email");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Email cannot be empty");
+        }
+
+        if(request.getPassword().isEmpty()) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Empty-Value","Password");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Password cannot be empty");
+        }
+
+        if(request.getBirthday() == null) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Empty-Value","Birthday");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Birthday cannot be empty");
+        }
+
+        this.userService.addUser(request);
+        return ResponseEntity.ok().body("User successfully signed up");
+
 
     }
 
-    @GetMapping("/user/get/{username}")
-    public void getUser(@PathVariable String username){
+    @GetMapping("/user/{username}")
+    public User getUser(@PathVariable String username){
+        return this.userService.findUserByUsername(username);
+    }
 
+    @DeleteMapping("/user/{username}")
+    public ResponseEntity deleteUser(@PathVariable String username){
 
+        if(this.userService.existUserByUsername(username)){
+            this.userService.deleteUserByUsername(username);
+            return ResponseEntity.ok().body("User successfully deleted");
+        }
 
-        User user = this.userService.findUserByUsername(username);
-
-
-
-
-
+        else return ResponseEntity.status(404).body("User do not exist");
 
     }
 }

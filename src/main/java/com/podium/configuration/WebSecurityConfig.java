@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/user/add")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/user/get/{username}")
+                .and().authorizeRequests().antMatchers("/user/{username}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/get/role")
@@ -87,6 +87,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
                 .and().authorizeRequests().antMatchers("/test")
                 .permitAll()
+
+                .and().authorizeRequests().antMatchers("/user/{username}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/contact/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/subject/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/subject/get/all")
+                .permitAll()
+
+
+
+
+
 
 
                 // all other requests need to be authenticated
