@@ -1,7 +1,7 @@
 package com.podium.controller;
 
-import com.podium.model.request.SignUpRequest;
 import com.podium.model.entity.User;
+import com.podium.model.request.SignUpRequest;
 import com.podium.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -98,9 +98,12 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/{username}")
-    public User getUser(@PathVariable String username){
-        return this.userService.findUserByUsername(username);
+    @GetMapping("/user/get/{username}")
+    public ResponseEntity getUser(@PathVariable String username){
+
+        return ResponseEntity
+                .status(200)
+                .body(this.userService.findUserByUsername(username));
     }
 
     @DeleteMapping("/user/{username}")

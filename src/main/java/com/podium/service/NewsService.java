@@ -47,6 +47,10 @@ public class NewsService {
         this.newsRepository.save(news);
     }
 
+    public Iterable<News> findallNews(){
+        return this.newsRepository.findAll();
+    }
+
 
 
 }

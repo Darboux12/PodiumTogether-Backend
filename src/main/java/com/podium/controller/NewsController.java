@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.model.entity.News;
 import com.podium.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    @PostMapping(value = "/news/add")
+    @PostMapping("/news/add")
     public ResponseEntity addNews(
             @RequestParam("title") String title,
             @RequestParam("shortText") String shortText,
@@ -32,6 +33,12 @@ public class NewsController {
 
         return ResponseEntity.ok().body("Hej");
     }
+
+    @GetMapping("/news/get/all")
+    public Iterable<News> findAllNews(){
+        return this.newsService.findallNews();
+    }
+
 
 }
 

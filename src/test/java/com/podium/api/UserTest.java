@@ -1,8 +1,11 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.model.entity.User;
 import com.podium.model.request.SignUpRequest;
 import io.restassured.http.ContentType;
+import io.restassured.internal.assertion.Assertion;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,6 +17,8 @@ import java.text.ParseException;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -52,7 +57,40 @@ public class UserTest {
     }
 
     @Test
-    public void T02_tryToAddSameUser_ShouldReturnStatus_409() throws ParseException {
+    public void T02_getSignedUpUserByUsername__ShouldReturnStatus_200(){
+
+        given()
+                .spec(TestSpecification.buildRequestSpec())
+                .contentType(ContentType.JSON)
+                .pathParam("username",signUpRequestOne.getUsername())
+                .when()
+                .get(Path.server + Endpoint.getUserByUsernameEndpoint)
+                .then().assertThat()
+                .statusCode(200)
+                .spec(TestSpecification.buildResponseSpec());
+    }
+
+    @Test
+    public void T02_getSignedUpUserByUsername__ShouldReturn_ValidUser(){
+
+        User user =
+
+        given()
+                .spec(TestSpecification.buildRequestSpec())
+                .contentType(ContentType.JSON)
+                .pathParam("username",signUpRequestOne.getUsername())
+                .when()
+                .get(Path.server + Endpoint.getUserByUsernameEndpoint)
+                .then().assertThat()
+                .statusCode(200)
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(User.class);
+
+        Assert.assertEquals(signUpRequestOne.getUsername(),user.getUsername());
+    }
+
+    @Test
+    public void T03_tryToAddSameUser_ShouldReturnStatus_409() throws ParseException {
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -66,7 +104,7 @@ public class UserTest {
     }
 
     @Test
-    public void T03_tryToAddUser_WithSameUsername_ShouldReturnMessage_409() throws ParseException {
+    public void T04_tryToAddUser_WithSameUsername_ShouldReturnMessage_409() throws ParseException {
 
         signUpRequestTwo.setUsername(signUpRequestOne.getUsername());
 
@@ -84,7 +122,7 @@ public class UserTest {
     }
 
     @Test
-    public void T04_tryToAddUser_WithSameUsername_ShouldReturnHeader_AlreadyExist_Username() throws ParseException {
+    public void T05_tryToAddUser_WithSameUsername_ShouldReturnHeader_AlreadyExist_Username() throws ParseException {
 
         signUpRequestTwo.setUsername(signUpRequestOne.getUsername());
 
@@ -102,7 +140,7 @@ public class UserTest {
     }
 
     @Test
-    public void T05_tryToAddUser_WithSameEmail_ShouldReturnMessage_409() throws ParseException {
+    public void T06_tryToAddUser_WithSameEmail_ShouldReturnMessage_409() throws ParseException {
 
         signUpRequestTwo.setEmail(signUpRequestOne.getEmail());
 
@@ -119,7 +157,7 @@ public class UserTest {
     }
 
     @Test
-    public void T06_tryToAddSameUser_ShouldReturnHeader_AlreadyExist_Email() throws ParseException {
+    public void T07_tryToAddSameUser_ShouldReturnHeader_AlreadyExist_Email() throws ParseException {
 
         System.out.println("HEhe" + signUpRequestTwo.getUsername());
 
@@ -139,7 +177,7 @@ public class UserTest {
     }
 
     @Test
-    public void T07_deleteValidUser_ShouldReturnStatus_200() throws ParseException {
+    public void T08_deleteValidUser_ShouldReturnStatus_200() throws ParseException {
 
         given().spec(TestSpecification.buildRequestSpec())
                 .pathParam("username",Constant.getValidSignUpRequestOne().getUsername())
@@ -151,7 +189,7 @@ public class UserTest {
     }
 
     @Test
-    public void T08_tryToAddUser_WithoutUsername_ShouldReturnStatus_409() throws ParseException {
+    public void T09_tryToAddUser_WithoutUsername_ShouldReturnStatus_409() throws ParseException {
 
         signUpRequestTwo.setUsername("");
 
@@ -170,7 +208,7 @@ public class UserTest {
     }
 
     @Test
-    public void T09_tryToAddUser_WithoutUsername_ShouldReturnHeader_EmptyValue_Username() throws ParseException {
+    public void T10_tryToAddUser_WithoutUsername_ShouldReturnHeader_EmptyValue_Username() throws ParseException {
 
         signUpRequestTwo.setUsername("");
 
@@ -190,7 +228,7 @@ public class UserTest {
     }
 
     @Test
-    public void T10_tryToAddUser_WithoutEmail_ShouldReturnStatus_409() throws ParseException {
+    public void T11_tryToAddUser_WithoutEmail_ShouldReturnStatus_409() throws ParseException {
 
         signUpRequestTwo.setEmail("");
 
@@ -207,7 +245,7 @@ public class UserTest {
     }
 
     @Test
-    public void T11_tryToAddUser_WithoutEmail_ShouldReturnHeader_EmptyValue_Email() throws ParseException {
+    public void T12_tryToAddUser_WithoutEmail_ShouldReturnHeader_EmptyValue_Email() throws ParseException {
 
         signUpRequestTwo.setEmail("");
 
@@ -227,7 +265,7 @@ public class UserTest {
     }
 
     @Test
-    public void T12_tryToAddUser_WithToLongUsername_ShouldReturnStatus_409() throws ParseException {
+    public void T13_tryToAddUser_WithToLongUsername_ShouldReturnStatus_409() throws ParseException {
 
         signUpRequestTwo.setUsername("ThisUsernameIsExtremelyDefinitelyToLong");
 
@@ -245,7 +283,7 @@ public class UserTest {
     }
 
     @Test
-    public void T13_tryToAddUser_WithToLongUsername_ShouldReturnHeader_LengthError() throws ParseException {
+    public void T14_tryToAddUser_WithToLongUsername_ShouldReturnHeader_LengthError() throws ParseException {
 
         signUpRequestTwo.setUsername("ThisUsernameIsExtremelyDefinitelyToLong");
 
@@ -261,4 +299,6 @@ public class UserTest {
         signUpRequestTwo.setUsername(initialUsernameTwo);
 
     }
+
+
 }
