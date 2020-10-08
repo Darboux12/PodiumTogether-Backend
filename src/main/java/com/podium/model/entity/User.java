@@ -60,4 +60,21 @@ public class User {
     @Column(name = "profile_image")
     private byte[] profileImage;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "user_event",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "event_id") })
+    private Set<Event> eventsJoined = new HashSet<>();
+
+    @OneToMany(mappedBy="author")
+    private Set<Event> eventsCreated = new HashSet<>();
+
+    @Column(name = "views")
+    private int views;
+
+
 }

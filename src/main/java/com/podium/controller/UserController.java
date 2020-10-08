@@ -1,7 +1,7 @@
 package com.podium.controller;
 
-import com.podium.model.entity.User;
 import com.podium.model.request.SignUpRequest;
+import com.podium.service.CountryService;
 import com.podium.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private UserService userService;
+    private CountryService countryService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CountryService countryService) {
         this.userService = userService;
+        this.countryService = countryService;
     }
 
     @PostMapping("/user/add")
@@ -92,18 +94,37 @@ public class UserController {
                     .body("Birthday cannot be empty");
         }
 
+        if(!countryService.existCountryByName(request.getCountry())) {
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Impossible-Value","Country");
+            return ResponseEntity
+                    .status(409)
+                    .headers(headers)
+                    .body("Value does not exist");
+        }
+
         this.userService.addUser(request);
         return ResponseEntity.ok().body("User successfully signed up");
 
+    }
+
+    @GetMapping("/user/find/{username}")
+    public ResponseEntity findUser(@PathVariable String username){
+
+            return ResponseEntity
+                    .status(200)
+                    .body(this.userService.findUserByUsername(username));
 
     }
 
-    @GetMapping("/user/get/{username}")
-    public ResponseEntity getUser(@PathVariable String username){
+    @GetMapping("/user/find/all")
+    public ResponseEntity findAllUsers(){
 
         return ResponseEntity
                 .status(200)
-                .body(this.userService.findUserByUsername(username));
+                .body(this.userService.findAllUsers());
+
     }
 
     @DeleteMapping("/user/{username}")

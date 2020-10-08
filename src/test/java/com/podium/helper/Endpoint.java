@@ -12,7 +12,55 @@ public class Endpoint {
     public static final String deleteUserEndpoint = "/user/{username}";
 
     /** GET - Username path variable requested */
-    public static final String getUserByUsernameEndpoint = "/user/get/{username}";
+    public static final String getUserByUsernameEndpoint = "/user/find/{username}";
+
+    /** GET */
+    public static final String findAllUsers = "/user/find/all";
+
+    /** GET */
+    public static final String findAllNews = "/news/find/all";
+
+    /** POST - Params required: title, shortText, linkText, fullText, image */
+    public static final String addNews = "/news/add";
+
+    /** POST - ContactRequest body requested */
+    public static final String addContact = "/contact/add";
+
+    /** GET - Params: userEmail, message, subject */
+    public static final String findContact = "/contact/find";
+
+    /** DELETE - Id path variable requested*/
+    public static final String deleteContact = "/contact/delete/{id}";
+
+    /** POST - Name param requested */
+    public static final String addSubject = "/subject/add";
+
+    /** DELETE - Name path variable requested */
+    public static final String deleteSubject = "/subject/delete/{name}";
+
+    /** GET - Name param requested */
+    public static final String findSubjectByName = "/subject/find/{name}";
+
+    /** GET */
+    public static final String findAllCountry = "/country/find/all";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

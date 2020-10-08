@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -15,15 +16,26 @@ import java.util.Set;
 @Table(name = "COUNTRY")
 public class Country {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     @Id
     @Column(name = "country_id")
-    private int countryId;
+    private String countryId;
 
     @NotNull
     @Column(name = "name")
     private String name;
 
+    @NotNull
+    @Column(name = "printable_name")
+    private String printable_name;
+
+    @NotNull
+    @Column(name = "iso3")
+    private String iso3;
+
+    @Column(name = "numcode")
+    private short numCode;
+
     @OneToMany(mappedBy="country")
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 }

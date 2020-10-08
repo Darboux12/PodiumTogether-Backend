@@ -40,6 +40,17 @@ public class ContactService {
 
     }
 
+    public void deleteContact(int id){
+        this.contactRepository.deleteById(id);
+    }
+
+    public Contact findContact(String userEmail, String message, String subject){
+
+        Subject subjectEntity = this.subjectRepository.findByName(subject);
+
+        return this.contactRepository.findByUserEmailAndMessageAndSubject(userEmail,message,subjectEntity);
+    }
+
     public void addSubject(String subjectName){
 
         Subject subject = new Subject();
@@ -56,7 +67,15 @@ public class ContactService {
        return this.subjectRepository.existsByName(subjectName);
     }
 
+    public void deleteSubjectByName(String name){
+        this.subjectRepository.deleteByName(name);
+    }
+
     public Iterable<Subject> findAllSubjects(){
         return this.subjectRepository.findAll();
+    }
+
+    public Subject findSubjectByName(String subjectName){
+        return this.subjectRepository.findByName(subjectName);
     }
 }

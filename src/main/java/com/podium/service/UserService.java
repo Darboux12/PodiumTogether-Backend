@@ -38,7 +38,7 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
-        Country country = new Country();
+        Country country = countryRepository.findByName(signUpRequest.getCountry());
         country.setName(signUpRequest.getCountry());
 
         user.setCountry(country);
@@ -60,6 +60,7 @@ public class UserService {
     }
 
     public Iterable<User> findAllUsers(){
+        System.out.println("Find all");
         return this.userRepository.findAll();
     }
 

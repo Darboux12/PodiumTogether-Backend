@@ -3,6 +3,7 @@ package com.podium.service;
 import com.podium.model.entity.News;
 import com.podium.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +21,12 @@ public class NewsService {
         this.newsRepository = newsRepository;
     }
 
-    public Iterable<News> getAllNews(){
-        return this.newsRepository.findAll();
+    public ResponseEntity getAllNews(){
+
+        return ResponseEntity
+                .status(200)
+                .body(this.newsRepository.findAll());
+
     }
 
     public void addNews(
@@ -47,7 +52,7 @@ public class NewsService {
         this.newsRepository.save(news);
     }
 
-    public Iterable<News> findallNews(){
+    public Iterable<News> findAllNews(){
         return this.newsRepository.findAll();
     }
 

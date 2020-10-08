@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContactRepository extends CrudRepository<Contact,Integer> {
 
+    Contact findByUserEmailAndMessageAndSubject(String userEmail, String Message, Subject subject);
+
 
 
 }

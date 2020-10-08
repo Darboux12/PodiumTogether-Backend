@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins("*")
-                .allowedMethods("HEAD", "GET", "PUT", "POST",
+                .allowedMethods("HEAD", "find", "PUT", "POST",
                         "DELETE", "PATCH").allowedHeaders("*");
     }
 
@@ -82,29 +82,56 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/user/{username}")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/get/role")
+                .and().authorizeRequests().antMatchers("/find/role")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/test")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/user/get/{username}")
+                .and().authorizeRequests().antMatchers("/user/find/{username}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/contact/add")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/contact/delete/{id}")
+                .permitAll()
+
                 .and().authorizeRequests().antMatchers("/subject/add")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/subject/get/all")
+                .and().authorizeRequests().antMatchers("/subject/find/all")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/news/get/all")
+                .and().authorizeRequests().antMatchers("/news/find/all")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/user/{username}")
                 .permitAll()
+
+                .and().authorizeRequests().antMatchers("/user/find/all")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/contact/find")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/subject/find/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/country/find/all")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/subject/delete/{name}")
+                .permitAll()
+
+
+
+
+
+
+
+
+
 
 
 

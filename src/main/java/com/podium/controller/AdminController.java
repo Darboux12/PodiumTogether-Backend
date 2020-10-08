@@ -16,7 +16,7 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/get/role")
+    @GetMapping("/find/role")
     public Iterable<User> getRole(){
 
         return this.userService.findAllByRole("subscriber");
