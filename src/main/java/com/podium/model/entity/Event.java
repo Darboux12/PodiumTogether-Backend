@@ -95,4 +95,7 @@ public class Event {
     @JoinColumn(name="discipline_id", nullable=false)
     private Discipline discipline;
 
+    @Column(name = "views")
+    private int views;
+
 }

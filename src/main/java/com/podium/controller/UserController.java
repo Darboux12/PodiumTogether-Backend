@@ -138,4 +138,29 @@ public class UserController {
         else return ResponseEntity.status(404).body("User do not exist");
 
     }
+
+    @GetMapping("/user/exist/username/{username}")
+    public ResponseEntity existUserByUsername(@PathVariable String username){
+
+        if(!this.userService.existUserByUsername(username))
+            return ResponseEntity.ok().build();
+
+        else
+            return ResponseEntity.badRequest().build();
+
+    }
+
+    @GetMapping("/user/exist/email/{email}")
+    public ResponseEntity existUserByEmail(@PathVariable String email){
+
+        if(!this.userService.existUserByEmail(email))
+            return ResponseEntity.ok().build();
+
+        else
+            return ResponseEntity.badRequest().build();
+
+    }
+
+
+
 }

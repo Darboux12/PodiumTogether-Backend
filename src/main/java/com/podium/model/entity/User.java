@@ -73,8 +73,7 @@ public class User {
     @OneToMany(mappedBy="author")
     private Set<Event> eventsCreated = new HashSet<>();
 
-    @Column(name = "views")
-    private int views;
+
 
 
 }
