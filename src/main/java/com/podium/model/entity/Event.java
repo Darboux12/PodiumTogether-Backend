@@ -92,7 +92,7 @@ public class Event {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name="discipline_id", nullable=false)
+    @JoinColumn(name="discipline", nullable=false)
     private Discipline discipline;
 
     @Column(name = "views")

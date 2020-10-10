@@ -18,7 +18,7 @@ public class Country {
 
 
     @Id
-    @Column(name = "country_id")
+    @Column(name = "country_id", columnDefinition = "char")
     private String countryId;
 
     @NotNull
@@ -29,12 +29,12 @@ public class Country {
     @Column(name = "printable_name")
     private String printable_name;
 
-    @NotNull
-    @Column(name = "iso3")
+
+    @Column(name = "iso3", columnDefinition = "char")
     private String iso3;
 
-    @Column(name = "numcode")
-    private short numCode;
+    @Column(name = "numcode",columnDefinition = "smallint")
+    private Integer numCode;
 
     @OneToMany(mappedBy="country")
     private Set<User> users = new HashSet<>();

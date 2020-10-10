@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DisciplineRepository extends CrudRepository<Discipline,Integer> {
 
-    boolean existsByName(String disciplineName);
+    boolean existsByDiscipline(String disciplineName);
 
-    Discipline findByName(String disciplineName);
+    Discipline findByDiscipline(String disciplineName);
 
 }

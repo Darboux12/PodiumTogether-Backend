@@ -16,14 +16,10 @@ import java.util.Set;
 @Table(name = "ROLE")
 public class Role {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @Column(name = "role_id")
-    private int roleId;
-
     @NotNull
-    @Column(name = "name")
-    private String name;
+    @Column(name = "role")
+    private String role;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

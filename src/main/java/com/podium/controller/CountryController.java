@@ -19,7 +19,7 @@ public class CountryController {
     }
 
     @GetMapping("/country/find/all")
-    public ResponseEntity findAllCountry(){
+       public ResponseEntity findAllCountry(){
         return ResponseEntity.ok().body(this.countryService.findAllCountry());
     }
 }

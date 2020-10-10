@@ -16,14 +16,10 @@ import java.util.Set;
 @Table(name = "DISCIPLINE")
 public class Discipline {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @Column(name = "discipline_id")
-    private int disciplineId;
-
     @NotNull
-    @Column(name = "name")
-    private String name;
+    @Column(name = "discipline")
+    private String discipline;
 
     @OneToMany(mappedBy="discipline")
     private Set<Event> events = new HashSet<>();

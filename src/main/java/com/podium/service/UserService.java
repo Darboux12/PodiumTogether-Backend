@@ -43,7 +43,7 @@ public class UserService {
 
         user.setCountry(country);
 
-        Role role = this.roleRepository.findByName("subscriber");
+        Role role = this.roleRepository.findByRole("subscriber");
 
         user.getRoles().add(role);
         user.setBirthday(signUpRequest.getBirthday());
@@ -66,7 +66,7 @@ public class UserService {
 
     public Iterable<User> findAllByRole(String roleName){
 
-        Role role = this.roleRepository.findByName(roleName);
+        Role role = this.roleRepository.findByRole(roleName);
 
         return this.userRepository.findAllByRolesContaining(role);
     }

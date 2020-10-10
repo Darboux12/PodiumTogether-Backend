@@ -2,6 +2,7 @@ package com.podium.service;
 
 import com.podium.model.entity.Discipline;
 import com.podium.repository.DisciplineRepository;
+import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +17,22 @@ public class DisciplineService {
     }
 
     public boolean existByDisciplineName(String disciplineName){
-        return this.disciplineRepository.existsByName(disciplineName);
+
+        disciplineName = WordUtils.capitalize(disciplineName);
+
+        return this.disciplineRepository.existsByDiscipline(disciplineName);
     }
 
     public void addDiscipline(String disciplineName){
 
         Discipline discipline = new Discipline();
-        discipline.setName(disciplineName);
+        discipline.setDiscipline(disciplineName);
         this.disciplineRepository.save(discipline);
 
+    }
+
+    public Iterable<Discipline> findAllDiscipline(){
+        return this.disciplineRepository.findAll();
     }
 
 
