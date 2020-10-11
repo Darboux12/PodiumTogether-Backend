@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -27,7 +28,7 @@ public class NewsController {
             @RequestParam("shortText") String shortText,
             @RequestParam("linkText") String linkText,
             @RequestParam("fullText") String fullText,
-            @RequestParam("image") MultipartFile image
+            @RequestParam("images") List<MultipartFile> images
     ) throws IOException {
 
         if(title.isEmpty()){
@@ -66,15 +67,7 @@ public class NewsController {
                     .body("Full-Text cannot be empty");
         }
 
-
-
-
-
-
-
-
-
-        this.newsService.addNews(title,shortText,linkText,fullText,image);
+        this.newsService.addNews(title,shortText,linkText,fullText,images);
 
         return ResponseEntity.ok().body("Hej");
     }

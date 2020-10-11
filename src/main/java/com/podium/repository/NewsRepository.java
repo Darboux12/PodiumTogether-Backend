@@ -11,5 +11,6 @@ public interface NewsRepository extends CrudRepository<News,Integer> {
 
     News findByDate(Date date);
 
+    News findByTitle(String newsTitle);
 
 }

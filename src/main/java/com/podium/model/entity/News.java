@@ -8,6 +8,8 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,10 +44,7 @@ public class News {
     @Column(name = "date")
     private Date date;
 
-    @NotNull
-    @Lob
-    @Type(type="org.hibernate.type.ImageType")
-    @Column(name = "image")
-    private byte[] image;
+    @OneToMany(mappedBy="news")
+    private Set<PodiumResource> newsResources = new HashSet<>();
 
 }
