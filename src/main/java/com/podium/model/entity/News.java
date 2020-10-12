@@ -1,6 +1,7 @@
 package com.podium.model.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "NEWS")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","newsResources"})
 public class News {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,7 +46,14 @@ public class News {
     @Column(name = "date")
     private Date date;
 
-    @OneToMany(mappedBy="news")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "news_resource",
+            joinColumns = { @JoinColumn(name = "news_id") },
+            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
     private Set<PodiumResource> newsResources = new HashSet<>();
 
 }

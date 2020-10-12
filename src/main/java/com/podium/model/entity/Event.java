@@ -98,4 +98,14 @@ public class Event {
     @Column(name = "views")
     private int views;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "event_resource",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
+    private Set<PodiumResource> eventResources = new HashSet<>();
+
 }

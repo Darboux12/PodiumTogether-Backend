@@ -139,6 +139,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/discipline/exist/{discipline}")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/news/find/{id}")
+                .permitAll()
+
+
 
 
 

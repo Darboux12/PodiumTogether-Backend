@@ -73,11 +73,20 @@ public class NewsController {
     }
 
     @GetMapping("/news/find/all")
-    public ResponseEntity findAllNews(){
+    public ResponseEntity findAllNews() throws IOException {
 
         return ResponseEntity
                 .status(200)
                 .body(this.newsService.findAllNews());
+
+    }
+
+    @GetMapping("/news/find/{id}")
+    public ResponseEntity findNewsById(@PathVariable int id) throws IOException {
+
+        return ResponseEntity
+                .ok()
+                .body(this.newsService.findNewsById(id));
 
     }
 

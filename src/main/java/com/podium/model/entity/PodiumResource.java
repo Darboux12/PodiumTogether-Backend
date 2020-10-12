@@ -6,11 +6,13 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "NEWS_RESOURCES")
+@Table(name = "PODIUM_RESOURCES")
 public class PodiumResource {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,13 +32,11 @@ public class PodiumResource {
     @Column(name="path")
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinColumn(name="news_id", nullable=false)
-    private News news;
+    @ManyToMany(mappedBy = "newsResources")
+    private Set<News> news = new HashSet<>();
+
+    @ManyToMany(mappedBy = "eventResources")
+    private Set<Event> events = new HashSet<>();
 
 
 }
