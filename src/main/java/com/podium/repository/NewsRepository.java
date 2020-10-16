@@ -13,4 +13,6 @@ public interface NewsRepository extends CrudRepository<News,Integer> {
 
     News findByTitle(String newsTitle);
 
+    boolean existsByTitle(String newsTitle);
+
 }

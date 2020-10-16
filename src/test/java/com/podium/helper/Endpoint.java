@@ -20,6 +20,9 @@ public class Endpoint {
     /** GET */
     public static final String findAllNews = "/news/find/all";
 
+    /** GET */
+    public static final String findNewsByTitle = "/news/find/title/{title}";
+
     /** POST - Params required: title, shortText, linkText, fullText, image */
     public static final String addNews = "/news/add";
 
@@ -43,6 +46,17 @@ public class Endpoint {
 
     /** GET */
     public static final String findAllCountry = "/country/find/all";
+
+    /** DELETE - Name path variable requested */
+    public static final String deleteNewsById = "/news/delete/{id}";
+
+
+
+
+
+
+
+
 
 
 

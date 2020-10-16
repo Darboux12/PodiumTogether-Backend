@@ -24,8 +24,8 @@ public class TestSpecification {
     public static ResponseSpecification buildResponseSpec(){
 
         return responseSpecBuilder
-                .log(LogDetail.STATUS)
-                .log(LogDetail.BODY)
+
+                .log(LogDetail.ALL)
                 .build();
 
 

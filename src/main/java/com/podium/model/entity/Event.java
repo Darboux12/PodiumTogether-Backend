@@ -57,9 +57,6 @@ public class Event {
     @Column(name = "description")
     private double description;
 
-    @OneToMany(mappedBy="event")
-    private Set<EventFile> eventFiles = new HashSet<>();
-
     @ManyToMany(mappedBy = "eventsJoined")
     private Set<User> usersJoined = new HashSet<>();
 
@@ -107,5 +104,16 @@ public class Event {
             joinColumns = { @JoinColumn(name = "event_id") },
             inverseJoinColumns = { @JoinColumn(name = "resource_id") })
     private Set<PodiumResource> eventResources = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "news_resource",
+            joinColumns = { @JoinColumn(name = "news_id") },
+            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
+    private Set<PodiumResource> newsResources = new HashSet<>();
 
 }

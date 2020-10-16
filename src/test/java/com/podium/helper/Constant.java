@@ -2,6 +2,7 @@ package com.podium.helper;
 
 import com.podium.model.entity.News;
 import com.podium.model.request.ContactRequest;
+import com.podium.model.request.NewsRequest;
 import com.podium.model.request.SignUpRequest;
 
 import java.text.ParseException;
@@ -14,6 +15,8 @@ public class Constant {
     private static SignUpRequest validSignUpRequestTwo = new SignUpRequest();
 
     private static ContactRequest validContactRequest = new ContactRequest();
+
+    private static NewsRequest validNewsRequest = new NewsRequest();
 
     private static News validNews = new News();
 
@@ -53,6 +56,16 @@ public class Constant {
 
         return validContactRequest;
 
+    }
+
+    public static NewsRequest getValidNewsRequest(){
+
+        validNewsRequest.setTitle("TestTitle");
+        validNewsRequest.setFullText("TestFullText");
+        validNewsRequest.setShortText("TestShortText");
+        validNewsRequest.setLinkText("TestLinkText");
+
+        return validNewsRequest;
     }
 
 

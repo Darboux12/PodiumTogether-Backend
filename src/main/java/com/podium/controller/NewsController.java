@@ -1,15 +1,16 @@
 package com.podium.controller;
 
-import com.podium.model.entity.News;
+import com.podium.model.request.NewsRequest;
 import com.podium.service.NewsService;
+import com.podium.validation.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
-import java.util.List;
+import java.text.ParseException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -23,53 +24,18 @@ public class NewsController {
     }
 
     @PostMapping("/news/add")
-    public ResponseEntity addNews(
-            @RequestParam("title") String title,
-            @RequestParam("shortText") String shortText,
-            @RequestParam("linkText") String linkText,
-            @RequestParam("fullText") String fullText,
-            @RequestParam("images") List<MultipartFile> images
-    ) throws IOException {
+    public ResponseEntity addNews(@RequestBody NewsRequest request) throws IllegalAccessException, ParseException {
 
-        if(title.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Title");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Title cannot be empty");
-        }
+       PodiumValidator validator = new PodiumValidator();
+       validator.validateRequestBody(request);
 
-        if(shortText.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Short-Text");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Short-Text cannot be empty");
-        }
+       if(this.newsService.existNewsByTitle(request.getTitle()))
+           throw new ResponseStatusException(
+                   HttpStatus.CONFLICT, "News already exist");
 
-        if(linkText.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Link-Text");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Link-Text cannot be empty");
-        }
+       this.newsService.addNews(request);
+       return ResponseEntity.ok().body("News successfully added");
 
-        if(fullText.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Full-Text");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Full-Text cannot be empty");
-        }
-
-        this.newsService.addNews(title,shortText,linkText,fullText,images);
-
-        return ResponseEntity.ok().body("Hej");
     }
 
     @GetMapping("/news/find/all")
@@ -81,8 +47,12 @@ public class NewsController {
 
     }
 
-    @GetMapping("/news/find/{id}")
+    @GetMapping("/news/find/id/{id}")
     public ResponseEntity findNewsById(@PathVariable int id) throws IOException {
+
+        if(!this.newsService.existNewsById(id))
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "News not found");
 
         return ResponseEntity
                 .ok()
@@ -90,6 +60,32 @@ public class NewsController {
 
     }
 
+    @GetMapping("/news/find/title/{title}")
+    public ResponseEntity findNewsByTitle(@PathVariable String title) throws IOException {
+
+        if(!this.newsService.existNewsByTitle(title))
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "News not found");
+
+        return ResponseEntity
+                .ok()
+                .body(this.newsService.findNewsByTitle(title));
+
+    }
+
+    @DeleteMapping("/news/delete/{id}")
+    public ResponseEntity deleteNewsById(@PathVariable int id) throws IOException {
+
+        if(!this.newsService.existNewsById(id))
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "News not found");
+
+        this.newsService.deleteNewsById(id);
+
+        return ResponseEntity.ok().body("News successfully deleted");
+
+
+    }
 
 }
 

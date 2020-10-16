@@ -139,8 +139,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/discipline/exist/{discipline}")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/news/find/{id}")
+                .and().authorizeRequests().antMatchers("/news/find/id/{id}")
                 .permitAll()
+
+                .and().authorizeRequests().antMatchers("/event/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/image/upload/news")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/news/find/title/{title}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/news/delete/{id}")
+                .permitAll()
+
+
+
+
+
+
+
+
 
 
 
@@ -173,4 +193,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+
+
+
+
 }

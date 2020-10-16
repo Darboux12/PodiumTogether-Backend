@@ -1,13 +1,17 @@
 package com.podium.model.request;
 
+import com.podium.validation.annotation.PodiumTextNotEmpty;
+
 import java.io.Serializable;
 
 public class JwtRequest implements Serializable {
 
+    @PodiumTextNotEmpty
     private String username;
+    @PodiumTextNotEmpty
     private String password;
 
-    // need default constructor for JSON Parsing
+
     public JwtRequest() {
 
     }

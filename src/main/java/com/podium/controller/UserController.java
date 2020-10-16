@@ -3,10 +3,16 @@ package com.podium.controller;
 import com.podium.model.request.SignUpRequest;
 import com.podium.service.CountryService;
 import com.podium.service.UserService;
+import com.podium.validation.PodiumValidator;
+import com.podium.validation.validators.PodiumValidationResponse;
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.text.ParseException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -22,87 +28,64 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity addUser(@RequestBody SignUpRequest request){
+    public ResponseEntity addUser(@RequestBody SignUpRequest request) throws ParseException, IllegalAccessException {
+
+        PodiumValidator validator = new PodiumValidator();
+        validator.validateRequestBody(request);
+
 
         if(this.userService.existUserByUsername(request.getUsername())){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Already-Exist","Username");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("User with given username already exist");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "User with given username already exists");
         }
 
         if(this.userService.existUserByEmail(request.getEmail())){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Already-Exist","Email");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("User with given email already exist");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "User with given email already exists");
         }
 
-        if(request.getUsername().isEmpty()) {
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Username");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Username cannot be empty");
-        }
 
-        if(request.getUsername().length() > 30) {
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Length-Error","Username");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Username cannot be longer than 30 signs");
-        }
+         /*
 
-        if(request.getEmail().isEmpty()) {
+        if(this.userService.existUserByEmail(request.getEmail()))
+            return PodiumValidationResponse.AlreadyExist("Email");
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Email");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Email cannot be empty");
-        }
+        if(PodiumValidator.isTextEmpty(request.getUsername()))
+            return PodiumValidationResponse.EmptyValue("Username");
 
-        if(request.getPassword().isEmpty()) {
+        if(PodiumValidator.isLongerThan(request.getUsername(),
+                PodiumLimits.maxUsernameLength))
+            return PodiumValidationResponse
+                    .TooLong("Username",PodiumLimits.maxUsernameLength);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Password");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Password cannot be empty");
-        }
+        if(PodiumValidator.isShorterThan(request.getUsername(),
+                PodiumLimits.minUsernameLength))
+            return PodiumValidationResponse
+                    .TooShort("Username",PodiumLimits.minUsernameLength);
 
-        if(request.getBirthday() == null) {
+        if(PodiumValidator.isLongerThan(request.getPassword(),
+                PodiumLimits.maxPasswordLength))
+            return PodiumValidationResponse
+                    .TooLong("Password",PodiumLimits.maxPasswordLength);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Birthday");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Birthday cannot be empty");
-        }
+        if(PodiumValidator.isShorterThan(request.getPassword(),
+                PodiumLimits.minPasswordLength))
+            return PodiumValidationResponse
+                    .TooShort("Password",PodiumLimits.minPasswordLength);
 
-        if(!countryService.existCountryByName(request.getCountry())) {
+        if(PodiumValidator.isTextEmpty(request.getEmail()))
+            return PodiumValidationResponse.EmptyValue("Email");
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Impossible-Value","Country");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Value does not exist");
-        }
+        if(PodiumValidator.isTextEmpty(request.getPassword()))
+            return PodiumValidationResponse.EmptyValue("Password");
+
+        if(PodiumValidator.isNull(request.getBirthday()))
+            return PodiumValidationResponse.EmptyValue("Birthday");
+
+        if(!countryService.existCountryByName(request.getCountry()))
+            return PodiumValidationResponse.NonexistentValue("Country");*/
 
         this.userService.addUser(request);
         return ResponseEntity.ok().body("User successfully signed up");
@@ -112,9 +95,14 @@ public class UserController {
     @GetMapping("/user/find/{username}")
     public ResponseEntity findUser(@PathVariable String username){
 
+        if(this.userService.existUserByUsername(username))
             return ResponseEntity
                     .status(200)
                     .body(this.userService.findUserByUsername(username));
+
+        else
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found");
 
     }
 
@@ -135,7 +123,8 @@ public class UserController {
             return ResponseEntity.ok().body("User successfully deleted");
         }
 
-        else return ResponseEntity.status(404).body("User do not exist");
+        else
+            return PodiumValidationResponse.NotFoundValue("Username");
 
     }
 
@@ -146,7 +135,7 @@ public class UserController {
             return ResponseEntity.ok().build();
 
         else
-            return ResponseEntity.badRequest().build();
+            return PodiumValidationResponse.NonexistentValue("Username");
 
     }
 
@@ -157,10 +146,8 @@ public class UserController {
             return ResponseEntity.ok().build();
 
         else
-            return ResponseEntity.badRequest().build();
+            return PodiumValidationResponse.NonexistentValue("Email");
 
     }
-
-
 
 }
