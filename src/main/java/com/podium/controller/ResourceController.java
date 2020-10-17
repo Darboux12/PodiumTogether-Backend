@@ -37,9 +37,6 @@ public class ResourceController {
 
         return ResponseEntity.ok().build();
 
-
-
     }
-
 
 }

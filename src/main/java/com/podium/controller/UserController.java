@@ -39,50 +39,6 @@ public class UserController {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "User with given email already exists");
 
-
-
-
-
-         /*
-
-        if(this.userService.existUserByEmail(request.getEmail()))
-            return PodiumValidationResponse.AlreadyExist("Email");
-
-        if(PodiumValidator.isTextEmpty(request.getUsername()))
-            return PodiumValidationResponse.EmptyValue("Username");
-
-        if(PodiumValidator.isLongerThan(request.getUsername(),
-                PodiumLimits.maxUsernameLength))
-            return PodiumValidationResponse
-                    .TooLong("Username",PodiumLimits.maxUsernameLength);
-
-        if(PodiumValidator.isShorterThan(request.getUsername(),
-                PodiumLimits.minUsernameLength))
-            return PodiumValidationResponse
-                    .TooShort("Username",PodiumLimits.minUsernameLength);
-
-        if(PodiumValidator.isLongerThan(request.getPassword(),
-                PodiumLimits.maxPasswordLength))
-            return PodiumValidationResponse
-                    .TooLong("Password",PodiumLimits.maxPasswordLength);
-
-        if(PodiumValidator.isShorterThan(request.getPassword(),
-                PodiumLimits.minPasswordLength))
-            return PodiumValidationResponse
-                    .TooShort("Password",PodiumLimits.minPasswordLength);
-
-        if(PodiumValidator.isTextEmpty(request.getEmail()))
-            return PodiumValidationResponse.EmptyValue("Email");
-
-        if(PodiumValidator.isTextEmpty(request.getPassword()))
-            return PodiumValidationResponse.EmptyValue("Password");
-
-        if(PodiumValidator.isNull(request.getBirthday()))
-            return PodiumValidationResponse.EmptyValue("Birthday");
-
-        if(!countryService.existCountryByName(request.getCountry()))
-            return PodiumValidationResponse.NonexistentValue("Country");*/
-
         this.userService.addUser(request);
         return ResponseEntity.ok().body("User successfully signed up");
 
@@ -120,29 +76,32 @@ public class UserController {
         }
 
         else
-            return PodiumValidationResponse.NotFoundValue("Username");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found");
 
     }
 
     @GetMapping("/user/exist/username/{username}")
     public ResponseEntity existUserByUsername(@PathVariable String username){
 
-        if(!this.userService.existUserByUsername(username))
+        if(this.userService.existUserByUsername(username))
             return ResponseEntity.ok().build();
 
         else
-            return PodiumValidationResponse.NonexistentValue("Username");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found");
 
     }
 
     @GetMapping("/user/exist/email/{email}")
     public ResponseEntity existUserByEmail(@PathVariable String email){
 
-        if(!this.userService.existUserByEmail(email))
+        if(this.userService.existUserByEmail(email))
             return ResponseEntity.ok().build();
 
         else
-            return PodiumValidationResponse.NonexistentValue("Email");
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Email not found");
 
     }
 

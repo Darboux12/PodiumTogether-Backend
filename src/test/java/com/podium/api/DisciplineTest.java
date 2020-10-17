@@ -1,12 +1,9 @@
 package com.podium.api;
 
 import com.podium.helper.*;
-import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.entity.Country;
-import com.podium.model.entity.News;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
@@ -22,25 +19,25 @@ import static io.restassured.RestAssured.given;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CountryTest {
+public class DisciplineTest {
 
-    private static CountryRequestDto requestDto;
-    private static String valueHolder;
+   private static DisciplineRequestDto requestDto;
+   private static String valueHolder;
 
     @BeforeClass
     public static void beforeClass(){
         TestLogger.setUp();
-        requestDto = Constant.getValidCountryRequestDto();
+        requestDto = Constant.getValidDisciplineRequestDto();
     }
 
     @Test
-    public void T01_addValidCountry_ShouldReturnStatus_OK(){
+    public void T01_addValidDiscipline_ShouldReturnStatus_OK(){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
+                .when().post(Path.server + Endpoint.addDiscipline)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -48,12 +45,12 @@ public class CountryTest {
     }
 
     @Test
-    public void T02_getAllCountry_ShouldReturnStatus_OK(){
+    public void T02_getAllDiscipline_ShouldReturnStatus_OK(){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllCountry)
+                .when().get(Path.server + Endpoint.findAllNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -61,116 +58,104 @@ public class CountryTest {
     }
 
     @Test
-    public void T03_getAllCountry_ShouldReturnIterable_CountryResponse(){
+    public void T03_getAllDiscipline_ShouldReturnIterable_DisciplineResponse(){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllCountry)
+                .get(Path.server + Endpoint.findAllDiscipline)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CountryResponseDto[].class);
+                .extract().as(DisciplineResponseDto[].class);
 
     }
 
     @Test
-    public void T04_deleteCreatedCountry_ShouldReturnStatus_OK(){
+    public void T04_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",requestDto.getName())
-                .delete(Path.server + Endpoint.deleteCountryByName)
+                .pathParam("discipline",requestDto.getDiscipline())
+                .delete(Path.server + Endpoint.deleteDisciplineByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
+
     }
 
     @Test
-    public void T05_deleteCreatedCountryAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T05_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",requestDto.getName())
-                .delete(Path.server + Endpoint.deleteCountryByName)
+                .pathParam("discipline",requestDto.getDiscipline())
+                .delete(Path.server + Endpoint.deleteDisciplineByName)
                 .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
     @Test
-    public void T06_addCountryEmptyName_ShouldReturnStatus_CONFLICT(){
+    public void T06_addDisciplineEmptyName_ShouldReturnStatus_CONFLICT(){
 
-        valueHolder = requestDto.getName();
-        requestDto.setName("");
+        valueHolder = requestDto.getDiscipline();
+        requestDto.setDiscipline("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
+                .when().post(Path.server + Endpoint.addDiscipline)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        requestDto.setName(valueHolder);
+        requestDto.setDiscipline(valueHolder);
 
     }
 
     @Test
-    public void T07_addCountryEmptyId_ShouldReturnStatus_CONFLICT(){
+    public void T07_addDisciplineToShortName_ShouldReturnStatus_CONFLICT(){
 
-        valueHolder = requestDto.getCountryId();
-        requestDto.setCountryId("");
+        String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
+
+        valueHolder = requestDto.getDiscipline();
+        requestDto.setDiscipline(toShort);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
+                .when().post(Path.server + Endpoint.addDiscipline)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        requestDto.setCountryId(valueHolder);
+       requestDto.setDiscipline(valueHolder);
 
     }
 
     @Test
-    public void T08_addCountryEmptyPrintableName_ShouldReturnStatus_CONFLICT(){
+    public void T08_addDisciplineToLongName_ShouldReturnStatus_CONFLICT(){
 
-        valueHolder = requestDto.getPrintableName();
-        requestDto.setPrintableName("");
+        String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-        requestDto.setPrintableName(valueHolder);
-
-    }
-
-    @Test
-    public void T09_addCountryEmptyIso3_ShouldReturnStatus_CONFLICT(){
-
-        valueHolder = requestDto.getIso3();
-        requestDto.setIso3("");
+        valueHolder = requestDto.getDiscipline();
+        requestDto.setDiscipline(toLong);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
+                .when().post(Path.server + Endpoint.addDiscipline)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        requestDto.setIso3(valueHolder);
+       requestDto.setDiscipline(valueHolder);
 
     }
+
+
 
 }

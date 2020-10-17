@@ -1,9 +1,6 @@
 package com.podium.helper;
 
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.model.dto.request.SignUpRequestDto;
-import com.podium.model.dto.request.SubjectRequestDto;
+import com.podium.model.dto.request.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,14 +10,11 @@ public class Constant {
 
     private static SignUpRequestDto validSignUpRequestDtoOne = new SignUpRequestDto();
     private static SignUpRequestDto validSignUpRequestDtoTwo = new SignUpRequestDto();
-
     private static ContactRequestDto validContactRequestDto = new ContactRequestDto();
-
     private static NewsRequestDto validNewsRequest = new NewsRequestDto();
-
-
-
+    private static DisciplineRequestDto validDisciplineRequestDto = new DisciplineRequestDto();
     private static SubjectRequestDto validSubjectRequestDto = new SubjectRequestDto();
+    private static CountryRequestDto validCountryRequestDto = new CountryRequestDto();
 
     public Constant() throws ParseException { }
 
@@ -74,6 +68,21 @@ public class Constant {
 
         validSubjectRequestDto.setSubject("TestSubject");
         return validSubjectRequestDto;
+    }
+
+    public static DisciplineRequestDto getValidDisciplineRequestDto(){
+        validDisciplineRequestDto.setDiscipline("TestDiscipline");
+        return validDisciplineRequestDto;
+    }
+
+    public static CountryRequestDto getValidCountryRequestDto(){
+        validCountryRequestDto.setCountryId("QQ");
+        validCountryRequestDto.setNumCode(null);
+        validCountryRequestDto.setName("TestCountry");
+        validCountryRequestDto.setPrintableName("PrintableTestName");
+        validCountryRequestDto.setIso3("QQQ");
+        return validCountryRequestDto;
+
     }
 
 

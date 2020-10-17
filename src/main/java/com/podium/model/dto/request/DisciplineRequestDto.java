@@ -8,10 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubjectRequestDto {
+public class DisciplineRequestDto {
 
     @PodiumTextNotEmpty
-    @PodiumLength(min = PodiumLimits.minSubjectLength, max = PodiumLimits.maxSubjectLength)
-    private String subject;
-
+    @PodiumLength(min = PodiumLimits.minDisciplineLength, max = PodiumLimits.maxDisciplineLength)
+    private String discipline;
 }

@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "COUNTRY")
 public class Country {
 
-
     @Id
     @Column(name = "country_id", columnDefinition = "char")
     private String countryId;
@@ -28,7 +27,6 @@ public class Country {
     @NotNull
     @Column(name = "printable_name")
     private String printable_name;
-
 
     @Column(name = "iso3", columnDefinition = "char")
     private String iso3;

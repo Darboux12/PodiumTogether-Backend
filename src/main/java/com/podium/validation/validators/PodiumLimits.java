@@ -40,5 +40,8 @@ public class PodiumLimits {
     public static final int minSubjectLength = 3;
     public static final int maxSubjectLength = 30;
 
+    public static final int minDisciplineLength = 3;
+    public static final int maxDisciplineLength = 30;
+
 
 }

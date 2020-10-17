@@ -156,7 +156,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .permitAll()
 
 
+                .and().authorizeRequests().antMatchers("/discipline/delete/{discipline}")
+                .permitAll()
 
+
+                .and().authorizeRequests().antMatchers("/country/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/country/exist/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/country/delete/{name}")
+                .permitAll()
 
 
 

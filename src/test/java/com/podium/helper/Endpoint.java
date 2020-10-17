@@ -44,13 +44,27 @@ public class Endpoint {
     /** GET - Name param requested */
     public static final String findSubjectByName = "/subject/find/{name}";
 
-    /** GET */
-    public static final String findAllCountry = "/country/find/all";
+
 
     /** DELETE - Name path variable requested */
     public static final String deleteNewsById = "/news/delete/{id}";
 
     public static final String addNewsImage = "/image/upload/news";
+
+    public static final String addDiscipline = "/discipline/add";
+    public static final String findAllDiscipline = "/discipline/find/all";
+    public static final String existDisciplineByName = "/discipline/exist/{discipline}";
+    public static final String deleteDisciplineByName = "/discipline/delete/{discipline}";
+
+
+    /** GET */
+    public static final String findAllCountry = "/country/find/all";
+    public static final String addCountry = "/country/add";
+    public static final String existCountryByName = "/country/exist/{name}";
+    public static final String deleteCountryByName = "/country/delete/{name}";
+
+
+
 
 
 
