@@ -1,8 +1,8 @@
 package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
-import com.podium.model.request.JwtRequest;
-import com.podium.model.response.JwtResponse;
+import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.model.dto.response.JwtResponseDto;
 import com.podium.service.JwtUserDetailsService;
 import com.podium.service.UserService;
 import com.podium.validation.PodiumValidator;
@@ -35,10 +35,9 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequestDto authenticationRequest) throws Exception {
 
-        PodiumValidator validator = new PodiumValidator();
-        validator.validateRequestBody(authenticationRequest);
+        PodiumValidator.getInstance().validateRequestBody(authenticationRequest);
 
         final UserDetails userDetails =
                 userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
@@ -48,7 +47,7 @@ public class JwtAuthenticationController {
                 userDetails.getPassword());
 
         if(accessPermission)
-            return ResponseEntity.ok(new JwtResponse(jwtTokenUtil.generateToken(userDetails),authenticationRequest.getUsername()));
+            return ResponseEntity.ok(new JwtResponseDto(jwtTokenUtil.generateToken(userDetails),authenticationRequest.getUsername()));
 
         else
             throw new ResponseStatusException(

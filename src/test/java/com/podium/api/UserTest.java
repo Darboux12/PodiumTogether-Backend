@@ -1,14 +1,11 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.entity.User;
-import com.podium.model.request.JwtRequest;
-import com.podium.model.request.SignUpRequest;
 import com.podium.validation.validators.PodiumLimits;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.internal.assertion.Assertion;
-import io.restassured.parsing.Parser;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -24,16 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserTest {
 
-    private static  SignUpRequest signUpRequestOne;
-    private static SignUpRequest signUpRequestTwo;
+    private static SignUpRequestDto signUpRequestDtoOne;
+    private static SignUpRequestDto signUpRequestDtoTwo;
     private static String initialUsernameTwo;
     private static String initialEmailTwo;
     private static String initialCountryTwo;
@@ -46,11 +40,11 @@ public class UserTest {
     public static void beforeClass() throws ParseException {
 
         TestLogger.setUp();
-        signUpRequestOne = Constant.getValidSignUpRequestOne();
-        signUpRequestTwo = Constant.getValidSignUpRequestTwo();
-        initialUsernameTwo = Constant.getValidSignUpRequestTwo().getUsername();
-        initialEmailTwo = Constant.getValidSignUpRequestTwo().getEmail();
-        initialCountryTwo = Constant.getValidSignUpRequestTwo().getCountry();
+        signUpRequestDtoOne = Constant.getValidSignUpRequestDtoOne();
+        signUpRequestDtoTwo = Constant.getValidSignUpRequestDtoTwo();
+        initialUsernameTwo = Constant.getValidSignUpRequestDtoTwo().getUsername();
+        initialEmailTwo = Constant.getValidSignUpRequestDtoTwo().getEmail();
+        initialCountryTwo = Constant.getValidSignUpRequestDtoTwo().getCountry();
 
     }
 
@@ -60,7 +54,7 @@ public class UserTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
@@ -71,8 +65,8 @@ public class UserTest {
     @Test
     public void T02_signInUser_ShouldReturnStatus_OK() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest(signUpRequestOne.getUsername(),signUpRequestOne.getPassword());
+        JwtRequestDto request =
+                new JwtRequestDto(signUpRequestDtoOne.getUsername(), signUpRequestDtoOne.getPassword());
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -89,8 +83,8 @@ public class UserTest {
     @Test
     public void T03_signInUserEmptyUsername_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest("",signUpRequestOne.getPassword());
+        JwtRequestDto request =
+                new JwtRequestDto("", signUpRequestDtoOne.getPassword());
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -107,8 +101,8 @@ public class UserTest {
     @Test
     public void T04_signInUserEmptyPassword_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest(signUpRequestOne.getUsername(),"");
+        JwtRequestDto request =
+                new JwtRequestDto(signUpRequestDtoOne.getUsername(),"");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -125,8 +119,8 @@ public class UserTest {
     @Test
     public void T05_signInUserWrongPassword_ShouldReturnStatus_BADREQUEST() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest(signUpRequestOne.getUsername(),"WrongPassword");
+        JwtRequestDto request =
+                new JwtRequestDto(signUpRequestDtoOne.getUsername(),"WrongPassword");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -143,8 +137,8 @@ public class UserTest {
     @Test
     public void T06_signInUserWrongUsername_ShouldReturnStatus_UNAUTHORIZED() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest("WrongUsername",signUpRequestOne.getPassword());
+        JwtRequestDto request =
+                new JwtRequestDto("WrongUsername", signUpRequestDtoOne.getPassword());
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -161,8 +155,8 @@ public class UserTest {
     @Test
     public void T07_signInUserWrongPasswordAndUsername_ShouldReturnStatus_UNAUTHORIZED() throws ParseException {
 
-        JwtRequest request =
-                new JwtRequest("WrongUsername","WrongPassword");
+        JwtRequestDto request =
+                new JwtRequestDto("WrongUsername","WrongPassword");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -182,7 +176,7 @@ public class UserTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .pathParam("username",signUpRequestOne.getUsername())
+                .pathParam("username", signUpRequestDtoOne.getUsername())
                 .when()
                 .get(Path.server + Endpoint.getUserByUsernameEndpoint)
                 .then().assertThat()
@@ -198,7 +192,7 @@ public class UserTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .pathParam("username",signUpRequestOne.getUsername())
+                .pathParam("username", signUpRequestDtoOne.getUsername())
                 .when()
                 .get(Path.server + Endpoint.getUserByUsernameEndpoint)
                 .then().assertThat()
@@ -206,7 +200,7 @@ public class UserTest {
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(User.class);
 
-        Assert.assertEquals(signUpRequestOne.getUsername(),user.getUsername());
+        Assert.assertEquals(signUpRequestDtoOne.getUsername(),user.getUsername());
     }
 
     @Test
@@ -230,7 +224,7 @@ public class UserTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(Constant.getValidSignUpRequestOne())
+                .body(Constant.getValidSignUpRequestDtoOne())
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
@@ -241,43 +235,43 @@ public class UserTest {
     @Test
     public void T12_tryToAddUser_WithSameUsername_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        signUpRequestTwo.setUsername(signUpRequestOne.getUsername());
+        signUpRequestDtoTwo.setUsername(signUpRequestDtoOne.getUsername());
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestTwo.setUsername(initialUsernameTwo);
+        signUpRequestDtoTwo.setUsername(initialUsernameTwo);
 
     }
 
     @Test
     public void T13_tryToAddUser_WithSameEmail_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        signUpRequestTwo.setEmail(signUpRequestOne.getEmail());
+        signUpRequestDtoTwo.setEmail(signUpRequestDtoOne.getEmail());
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestTwo.setEmail(initialEmailTwo);
+        signUpRequestDtoTwo.setEmail(initialEmailTwo);
     }
 
     @Test
     public void T14_deleteValidUser_ShouldReturnStatus_OK() throws ParseException {
 
         given().spec(TestSpecification.buildRequestSpec())
-                .pathParam("username",Constant.getValidSignUpRequestOne().getUsername())
+                .pathParam("username",Constant.getValidSignUpRequestDtoOne().getUsername())
                 .when()
                 .delete(Path.server + Endpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
@@ -288,20 +282,20 @@ public class UserTest {
     @Test
     public void T15_signUpUserEmptyUsername_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername("");
+        valueHolder = signUpRequestDtoOne.getUsername();
+        signUpRequestDtoOne.setUsername("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpRequestDtoOne.setUsername(valueHolder);
     }
 
     @Test
@@ -309,20 +303,20 @@ public class UserTest {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minUsernameLength - 1);
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername(toShort);
+        valueHolder = signUpRequestDtoOne.getUsername();
+        signUpRequestDtoOne.setUsername(toShort);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpRequestDtoOne.setUsername(valueHolder);
     }
 
     @Test
@@ -330,59 +324,59 @@ public class UserTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxUsernameLength + 1);
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername(toLong);
+        valueHolder = signUpRequestDtoOne.getUsername();
+        signUpRequestDtoOne.setUsername(toLong);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpRequestDtoOne.setUsername(valueHolder);
     }
 
     @Test
     public void T18_signUpUserEmptyEmail_ShouldReturnStatus_CONFLICT() throws ParseException {
 
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail("");
+        valueHolder = signUpRequestDtoOne.getEmail();
+        signUpRequestDtoOne.setEmail("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpRequestDtoOne.setEmail(valueHolder);
     }
 
     @Test
     public void T19_signUpUserInvalidEmail_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail("invalidEmail@");
+        valueHolder = signUpRequestDtoOne.getEmail();
+        signUpRequestDtoOne.setEmail("invalidEmail@");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpRequestDtoOne.setEmail(valueHolder);
     }
 
     @Test
@@ -390,20 +384,20 @@ public class UserTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1);
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail(toLong);
+        valueHolder = signUpRequestDtoOne.getEmail();
+        signUpRequestDtoOne.setEmail(toLong);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpRequestDtoOne.setEmail(valueHolder);
     }
 
     @Test
@@ -411,20 +405,20 @@ public class UserTest {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minPasswordLength - 1);
 
-        valueHolder = signUpRequestOne.getPassword();
-        signUpRequestOne.setPassword(toShort);
+        valueHolder = signUpRequestDtoOne.getPassword();
+        signUpRequestDtoOne.setPassword(toShort);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setPassword(valueHolder);
+        signUpRequestDtoOne.setPassword(valueHolder);
     }
 
     @Test
@@ -432,58 +426,58 @@ public class UserTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxPasswordLength + 1);
 
-        valueHolder = signUpRequestOne.getPassword();
-        signUpRequestOne.setPassword(toLong);
+        valueHolder = signUpRequestDtoOne.getPassword();
+        signUpRequestDtoOne.setPassword(toLong);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setPassword(valueHolder);
+        signUpRequestDtoOne.setPassword(valueHolder);
     }
 
     @Test
     public void T23_signUpUserEmptyCountry_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getCountry();
-        signUpRequestOne.setCountry("");
+        valueHolder = signUpRequestDtoOne.getCountry();
+        signUpRequestDtoOne.setCountry("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setCountry(valueHolder);
+        signUpRequestDtoOne.setCountry(valueHolder);
     }
 
     @Test
     public void T24_signUpUserBirthdayInFuture_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        Date tmpDate = signUpRequestOne.getBirthday();
-        signUpRequestOne.setBirthday(new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2100"));
+        Date tmpDate = signUpRequestDtoOne.getBirthday();
+        signUpRequestDtoOne.setBirthday(new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2100"));
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestOne)
+                .body(signUpRequestDtoOne)
                 .when()
                 .post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setBirthday(tmpDate);
+        signUpRequestDtoOne.setBirthday(tmpDate);
     }
 
 
@@ -497,17 +491,17 @@ public class UserTest {
     @Test
     public void T10_tryToAddUser_WithoutUsername_ShouldReturnStatus_409() throws ParseException {
 
-        signUpRequestTwo.setUsername("");
+        signUpRequestDtoTwo.setUsername("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409);
 
-        signUpRequestTwo.setUsername(initialUsernameTwo);
+        signUpRequestDtoTwo.setUsername(initialUsernameTwo);
 
 
 
@@ -517,18 +511,18 @@ public class UserTest {
     @Test
     public void T12_tryToAddUser_WithoutEmail_ShouldReturnStatus_409() throws ParseException {
 
-        signUpRequestTwo.setEmail("");
+        signUpRequestDtoTwo.setEmail("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestTwo.setEmail(initialEmailTwo);
+        signUpRequestDtoTwo.setEmail(initialEmailTwo);
     }
 
 
@@ -536,18 +530,18 @@ public class UserTest {
     @Test
     public void T14_tryToAddUser_WithToLongUsername_ShouldReturnStatus_409() throws ParseException {
 
-        signUpRequestTwo.setUsername("ThisUsernameIsExtremelyDefinitelyToLong");
+        signUpRequestDtoTwo.setUsername("ThisUsernameIsExtremelyDefinitelyToLong");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
 
-        signUpRequestTwo.setUsername(initialUsernameTwo);
+        signUpRequestDtoTwo.setUsername(initialUsernameTwo);
 
     }
 
@@ -556,18 +550,18 @@ public class UserTest {
     @Test
     public void T16_tryToAddUser_WithWrongCountry_ShouldReturnStatus_409() throws ParseException {
 
-        signUpRequestTwo.setCountry("NotExistingCountryName");
+        signUpRequestDtoTwo.setCountry("NotExistingCountryName");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(signUpRequestTwo)
+                .body(signUpRequestDtoTwo)
                 .when().post(Path.server + Endpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
 
-        signUpRequestTwo.setCountry(initialCountryTwo);
+        signUpRequestDtoTwo.setCountry(initialCountryTwo);
     }
 
 
@@ -608,16 +602,16 @@ public class UserTest {
     @Test
     public void T20_deleteNotExistingUser_ShouldReturnStatus_404() throws ParseException {
 
-        signUpRequestTwo.setUsername("NotExistingUserName");
+        signUpRequestDtoTwo.setUsername("NotExistingUserName");
 
         given().spec(TestSpecification.buildRequestSpec())
-                .pathParam("username",signUpRequestTwo.getUsername())
+                .pathParam("username",signUpRequestDtoTwo.getUsername())
                 .when()
                 .delete(Path.server + Endpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(404)
                 .spec(TestSpecification.buildResponseSpec());
 
-        signUpRequestOne.setUsername(initialUsernameTwo);
+        signUpRequestDtoOne.setUsername(initialUsernameTwo);
 
     }
 
@@ -627,7 +621,7 @@ public class UserTest {
         String username = "";
         String password = "testPassword";
 
-        JwtRequest jwtRequest = new JwtRequest();
+        JwtRequestDto jwtRequest = new JwtRequestDto();
         jwtRequest.setUsername(username);
         jwtRequest.setPassword(password);
 

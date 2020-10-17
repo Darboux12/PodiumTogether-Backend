@@ -1,10 +1,10 @@
-package com.podium.model.request;
+package com.podium.model.dto.request;
 
 import com.podium.validation.annotation.PodiumTextNotEmpty;
 
 import java.io.Serializable;
 
-public class JwtRequest implements Serializable {
+public class JwtRequestDto implements Serializable {
 
     @PodiumTextNotEmpty
     private String username;
@@ -12,11 +12,11 @@ public class JwtRequest implements Serializable {
     private String password;
 
 
-    public JwtRequest() {
+    public JwtRequestDto() {
 
     }
 
-    public JwtRequest(String username, String password) {
+    public JwtRequestDto(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }

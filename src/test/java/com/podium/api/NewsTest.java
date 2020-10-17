@@ -1,14 +1,14 @@
 package com.podium.api;
 
 import com.podium.helper.*;
-import com.podium.model.entity.News;
-import com.podium.model.entity.User;
-import com.podium.model.request.NewsRequest;
-import com.podium.model.response.NewsResponse;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.request.ResourceImageRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
+import io.restassured.internal.util.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,10 +16,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.text.ParseException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -27,7 +34,7 @@ import static io.restassured.RestAssured.given;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NewsTest {
 
-    private static NewsRequest newsRequest;
+    private static NewsRequestDto newsRequest;
     private static String valueHolder;
 
     @BeforeClass
@@ -60,7 +67,7 @@ public class NewsTest {
                 .get(Path.server + Endpoint.findAllNews)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
-                .extract().as(NewsResponse[].class);
+                .extract().as(NewsResponseDto[].class);
 
     }
 
@@ -86,8 +93,8 @@ public class NewsTest {
     @Test
     public void T04_addNewsWithOutFullText_ShouldReturnStatus_CONFLICT(){
 
-        valueHolder = newsRequest.getFullText();
-        newsRequest.setFullText("");
+        valueHolder = newsRequest.getText();
+        newsRequest.setText("");
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -98,7 +105,7 @@ public class NewsTest {
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        newsRequest.setFullText(valueHolder);
+        newsRequest.setText(valueHolder);
 
     }
 
@@ -175,7 +182,7 @@ public class NewsTest {
     @Test
     public void T09_findAndDeleteCreatedValidNews_ShouldReturnStatus_OK(){
 
-        NewsResponse newsResponse =
+        NewsResponseDto newsResponseDto =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -185,13 +192,13 @@ public class NewsTest {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(NewsResponse.class);
+                        .extract().as(NewsResponseDto.class);
 
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .pathParam("id",newsResponse.getId())
+                .pathParam("id", newsResponseDto.getId())
                 .when().delete(Path.server + Endpoint.deleteNewsById)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
@@ -246,8 +253,8 @@ public class NewsTest {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minNewsFullTextLength - 1);
 
-        valueHolder = newsRequest.getFullText();
-        newsRequest.setFullText(toShort);
+        valueHolder = newsRequest.getText();
+        newsRequest.setText(toShort);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -258,7 +265,7 @@ public class NewsTest {
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        newsRequest.setFullText(valueHolder);
+        newsRequest.setText(valueHolder);
 
     }
 
@@ -330,8 +337,8 @@ public class NewsTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxNewsFullTextLength + 1);
 
-        valueHolder = newsRequest.getFullText();
-        newsRequest.setFullText(toLong);
+        valueHolder = newsRequest.getText();
+        newsRequest.setText(toLong);
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -342,7 +349,7 @@ public class NewsTest {
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
 
-        newsRequest.setFullText(valueHolder);
+        newsRequest.setText(valueHolder);
 
     }
 

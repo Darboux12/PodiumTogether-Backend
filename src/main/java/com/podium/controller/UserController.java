@@ -1,11 +1,10 @@
 package com.podium.controller;
 
-import com.podium.model.request.SignUpRequest;
+import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.service.CountryService;
 import com.podium.service.UserService;
 import com.podium.validation.PodiumValidator;
 import com.podium.validation.validators.PodiumValidationResponse;
-import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +27,18 @@ public class UserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity addUser(@RequestBody SignUpRequest request) throws ParseException, IllegalAccessException {
+    public ResponseEntity addUser(@RequestBody SignUpRequestDto request) throws ParseException, IllegalAccessException {
 
-        PodiumValidator validator = new PodiumValidator();
-        validator.validateRequestBody(request);
+        PodiumValidator.getInstance().validateRequestBody(request);
 
-
-        if(this.userService.existUserByUsername(request.getUsername())){
+        if(this.userService.existUserByUsername(request.getUsername()))
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "User with given username already exists");
-        }
 
-        if(this.userService.existUserByEmail(request.getEmail())){
+        if(this.userService.existUserByEmail(request.getEmail()))
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "User with given email already exists");
-        }
+
 
 
 

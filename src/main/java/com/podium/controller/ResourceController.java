@@ -1,12 +1,11 @@
 package com.podium.controller;
 
+import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.service.NewsService;
+import com.podium.validation.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,13 +22,18 @@ public class ResourceController {
         this.newsService = newsService;
     }
 
-
     @PostMapping("/image/upload/news")
     public ResponseEntity uploadImageNews(
-            @RequestParam("images") List<MultipartFile> images,
-            @RequestParam("title") String title) throws IOException {
+            @RequestParam("title") String title,
+            @RequestParam("images") List<MultipartFile> images) throws IOException {
 
-        this.newsService.uploadImages(images,title);
+        ResourceImageRequestDto requestDto = new ResourceImageRequestDto();
+        requestDto.setId(title);
+        requestDto.setFiles(images);
+
+        PodiumValidator.getInstance().validateRequestBody(requestDto);
+
+        this.newsService.uploadImages(requestDto);
 
         return ResponseEntity.ok().build();
 

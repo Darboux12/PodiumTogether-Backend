@@ -26,7 +26,7 @@ public class Endpoint {
     /** POST - Params required: title, shortText, linkText, fullText, image */
     public static final String addNews = "/news/add";
 
-    /** POST - ContactRequest body requested */
+    /** POST - ContactRequestDto body requested */
     public static final String addContact = "/contact/add";
 
     /** GET - Params: userEmail, message, subject */
@@ -49,6 +49,8 @@ public class Endpoint {
 
     /** DELETE - Name path variable requested */
     public static final String deleteNewsById = "/news/delete/{id}";
+
+    public static final String addNewsImage = "/image/upload/news";
 
 
 

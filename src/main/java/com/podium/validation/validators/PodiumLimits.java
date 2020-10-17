@@ -34,4 +34,11 @@ public class PodiumLimits {
 
     );
 
+    public static final int minContactMessageLength = 10;
+    public static final int maxContactMessageLength = 300;
+
+    public static final int minSubjectLength = 3;
+    public static final int maxSubjectLength = 30;
+
+
 }

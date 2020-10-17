@@ -1,6 +1,7 @@
 package com.podium.controller;
 
-import com.podium.model.request.NewsRequest;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.service.NewsService;
 import com.podium.validation.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,9 @@ public class NewsController {
     }
 
     @PostMapping("/news/add")
-    public ResponseEntity addNews(@RequestBody NewsRequest request) throws IllegalAccessException, ParseException {
+    public ResponseEntity addNews(@RequestBody NewsRequestDto request) throws IllegalAccessException, ParseException {
 
-       PodiumValidator validator = new PodiumValidator();
-       validator.validateRequestBody(request);
+       PodiumValidator.getInstance().validateRequestBody(request);
 
        if(this.newsService.existNewsByTitle(request.getTitle()))
            throw new ResponseStatusException(
@@ -39,7 +39,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/find/all")
-    public ResponseEntity findAllNews() throws IOException {
+    public ResponseEntity<Iterable<NewsResponseDto>> findAllNews() throws IOException {
 
         return ResponseEntity
                 .status(200)
@@ -48,7 +48,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/find/id/{id}")
-    public ResponseEntity findNewsById(@PathVariable int id) throws IOException {
+    public ResponseEntity<NewsResponseDto> findNewsById(@PathVariable int id) throws IOException {
 
         if(!this.newsService.existNewsById(id))
             throw new ResponseStatusException(
@@ -61,7 +61,7 @@ public class NewsController {
     }
 
     @GetMapping("/news/find/title/{title}")
-    public ResponseEntity findNewsByTitle(@PathVariable String title) throws IOException {
+    public ResponseEntity<NewsResponseDto> findNewsByTitle(@PathVariable String title) throws IOException {
 
         if(!this.newsService.existNewsByTitle(title))
             throw new ResponseStatusException(

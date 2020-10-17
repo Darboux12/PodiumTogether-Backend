@@ -1,11 +1,12 @@
 package com.podium.service;
 
 import com.podium.configuration.Paths;
+import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.model.entity.News;
 import com.podium.model.entity.PodiumResource;
 import com.podium.model.other.PodiumFile;
-import com.podium.model.request.NewsRequest;
-import com.podium.model.response.NewsResponse;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.repository.NewsRepository;
 import com.podium.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,131 +33,35 @@ public class NewsService {
         this.resourcesRepository = resourcesRepository;
     }
 
-    public ResponseEntity getAllNews(){
+    public void addNews(NewsRequestDto request) {
 
-        return ResponseEntity
-                .status(200)
-                .body(this.newsRepository.findAll());
+        this.newsRepository.save(this.convertRequestDtoToEntity(request));
 
     }
 
-    public void addNews(NewsRequest request) {
+    public Iterable<NewsResponseDto> findAllNews() throws IOException {
 
-        News news = new News();
-        news.setTitle(request.getTitle());
-        news.setShortText(request.getShortText());
-        news.setLinkText(request.getLinkText());
-        news.setText(request.getFullText());
-        Date date = new Date();
-        news.setDate(date);
+        List<NewsResponseDto> newsResponseDtos = new ArrayList<>();
 
-        this.newsRepository.save(news);
+        for(News news : this.newsRepository.findAll())
+            newsResponseDtos.add(this.convertEntityToResponseDto(news));
 
-    }
-
-    public Iterable<NewsResponse> findAllNews() throws IOException {
-
-        List<NewsResponse> newsResponses = new ArrayList<>();
-
-        for(News news : this.newsRepository.findAll()){
-
-            NewsResponse newsResponse = new NewsResponse();
-            newsResponse.setId(news.getNewsId());
-            newsResponse.setDate(news.getDate());
-            newsResponse.setLinkText(news.getLinkText());
-            newsResponse.setShortText(news.getShortText());
-            newsResponse.setText(news.getText());
-            newsResponse.setTitle(news.getTitle());
-
-            for(PodiumResource resource : news.getNewsResources()){
-
-                PodiumFile podiumFile = new PodiumFile();
-
-                podiumFile.setContent(FileCopyUtils
-                        .copyToByteArray(new File(resource.getPath())));
-
-                podiumFile.setName(resource.getName());
-                podiumFile.setType(resource.getType());
-
-                newsResponse.getPodiumFiles().add(podiumFile);
-            }
-
-            newsResponses.add(newsResponse);
-
-        }
-
-        return newsResponses;
+        return newsResponseDtos;
 }
 
-    public NewsResponse findNewsById(int id) throws IOException {
+    public NewsResponseDto findNewsById(int id) throws IOException {
 
         News news = this.newsRepository.findById(id).orElse(null);
 
-        if(news != null) {
-
-            NewsResponse newsResponse = new NewsResponse();
-            newsResponse.setId(news.getNewsId());
-            newsResponse.setDate(news.getDate());
-            newsResponse.setLinkText(news.getLinkText());
-            newsResponse.setShortText(news.getShortText());
-            newsResponse.setText(news.getText());
-            newsResponse.setTitle(news.getTitle());
-
-            for (PodiumResource resource : news.getNewsResources()) {
-
-                PodiumFile podiumFile = new PodiumFile();
-
-                podiumFile.setContent(FileCopyUtils
-                        .copyToByteArray(new File(resource.getPath())));
-
-                podiumFile.setName(resource.getName());
-                podiumFile.setType(resource.getType());
-
-                newsResponse.getPodiumFiles().add(podiumFile);
-
-            }
-
-            return newsResponse;
-
-        }
-
-        return null;
+        return news != null ? this.convertEntityToResponseDto(news) : null;
 
     }
 
-    public NewsResponse findNewsByTitle(String title) throws IOException {
+    public NewsResponseDto findNewsByTitle(String title) throws IOException {
 
         News news = this.newsRepository.findByTitle(title);
 
-        if(news != null) {
-
-            NewsResponse newsResponse = new NewsResponse();
-            newsResponse.setId(news.getNewsId());
-            newsResponse.setDate(news.getDate());
-            newsResponse.setLinkText(news.getLinkText());
-            newsResponse.setShortText(news.getShortText());
-            newsResponse.setText(news.getText());
-            newsResponse.setTitle(news.getTitle());
-
-            for (PodiumResource resource : news.getNewsResources()) {
-
-                PodiumFile podiumFile = new PodiumFile();
-
-                podiumFile.setContent(FileCopyUtils
-                        .copyToByteArray(new File(resource.getPath())));
-
-                podiumFile.setName(resource.getName());
-                podiumFile.setType(resource.getType());
-
-                newsResponse.getPodiumFiles().add(podiumFile);
-
-            }
-
-            return newsResponse;
-
-        }
-
-        return null;
+        return news != null ? this.convertEntityToResponseDto(news) : null;
 
     }
 
@@ -164,9 +69,9 @@ public class NewsService {
         return this.newsRepository.existsById(id);
     }
 
-    public void uploadImages(List<MultipartFile> images, String title) throws IOException {
+    public void uploadImages(ResourceImageRequestDto requestDto) throws IOException {
 
-        for (MultipartFile image : images) {
+        for (MultipartFile image : requestDto.getFiles()) {
 
             String path = Paths.getImages() + image.getOriginalFilename();
 
@@ -179,7 +84,7 @@ public class NewsService {
             resource.setType(image.getContentType());
             resource.setPath(path);
 
-            News news = this.newsRepository.findByTitle(title);
+            News news = this.newsRepository.findByTitle(requestDto.getId());
 
             news.getNewsResources().add(resource);
 
@@ -196,5 +101,51 @@ public class NewsService {
 
     public void deleteNewsById(int id){
         this.newsRepository.deleteById(id);
+    }
+
+    private News convertRequestDtoToEntity(NewsRequestDto requestDto){
+
+        News news = new News();
+        news.setTitle(requestDto.getTitle());
+        news.setShortText(requestDto.getShortText());
+        news.setLinkText(requestDto.getLinkText());
+        news.setText(requestDto.getText());
+        Date date = new Date();
+        news.setDate(date);
+
+        return news;
+
+    }
+
+    private NewsResponseDto convertEntityToResponseDto(News news){
+
+        NewsResponseDto responseDto = new NewsResponseDto();
+        responseDto.setId(news.getNewsId());
+        responseDto.setShortText(news.getShortText());
+        responseDto.setLinkText(news.getLinkText());
+        responseDto.setText(news.getText());
+        responseDto.setDate(news.getDate());
+        responseDto.setTitle(news.getTitle());
+
+        for(PodiumResource resource : news.getNewsResources()){
+
+            PodiumFile podiumFile = new PodiumFile();
+
+            try {
+                podiumFile.setContent(FileCopyUtils
+                        .copyToByteArray(new File(resource.getPath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            podiumFile.setName(resource.getName());
+            podiumFile.setType(resource.getType());
+
+            responseDto.getPodiumFiles().add(podiumFile);
+
+        }
+
+        return responseDto;
+
     }
 }

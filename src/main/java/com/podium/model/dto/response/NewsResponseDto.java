@@ -1,7 +1,5 @@
-package com.podium.model.response;
+package com.podium.model.dto.response;
 
-import com.podium.model.entity.News;
-import com.podium.model.entity.PodiumResource;
 import com.podium.model.other.PodiumFile;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class NewsResponse {
+public class NewsResponseDto {
 
     private int id;
     private String title;

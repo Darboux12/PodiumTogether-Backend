@@ -12,7 +12,18 @@ import java.util.Date;
 
 public class PodiumValidator {
 
-    public void validateRequestBody(Object object) throws IllegalAccessException, ParseException {
+    private static PodiumValidator instance;
+
+    private PodiumValidator() {}
+
+    public static PodiumValidator getInstance() {
+        if(instance == null) {
+            instance = new PodiumValidator();
+        }
+        return instance;
+    }
+
+    public void validateRequestBody(Object object){
 
         Class requestClass = object.getClass();
 
@@ -20,14 +31,21 @@ public class PodiumValidator {
 
             field.setAccessible(true);
 
+            try {
                 this.podiumTextNotEmpty(object,field);
+                this.podiumNotNull(object,field);
                 this.podiumDatePast(object,field);
                 this.podiumImageType(object,field);
                 this.podiumDateFuture(object,field);
                 this.podiumLength(object,field);
                 this.podiumValidEmail(object,field);
 
+            } catch (IllegalAccessException | ParseException e) {
+                e.printStackTrace();
             }
+
+
+        }
         }
 
     private void podiumTextNotEmpty(Object object, Field field) throws IllegalAccessException {
@@ -35,6 +53,15 @@ public class PodiumValidator {
         if(field.isAnnotationPresent(PodiumTextNotEmpty.class))
             if(field.getType().equals(String.class))
                 if(ValidationHandler.isTextEmpty((String)field.get(object)))
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be empty");
+
+    }
+
+    private void podiumNotNull(Object object, Field field) throws IllegalAccessException {
+
+        if(field.isAnnotationPresent(PodiumNotNull.class))
+                if(ValidationHandler.isNull(field.get(object)))
                     throw new ResponseStatusException(
                             HttpStatus.CONFLICT, field.getName() +" cannot be empty");
 

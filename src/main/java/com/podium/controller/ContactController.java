@@ -1,12 +1,15 @@
 package com.podium.controller;
 
 import com.podium.model.entity.Subject;
-import com.podium.model.request.ContactRequest;
+import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.service.ContactService;
+import com.podium.validation.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -20,51 +23,13 @@ public class ContactController {
     }
 
     @PostMapping("/contact/add")
-    public ResponseEntity addContact(@RequestBody ContactRequest request){
+    public ResponseEntity addContact(@RequestBody ContactRequestDto request){
 
-        if(request.getUserEmail().isEmpty()){
+        PodiumValidator.getInstance().validateRequestBody(request);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Email");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Email cannot be empty");
-
-        }
-
-        if(request.getSubject().isEmpty()){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Subject");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Subject cannot be empty");
-
-        }
-
-        if(request.getMessage().isEmpty()){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Message");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Message cannot be empty");
-
-        }
-
-        if(!this.contactService.existSubjectByName(request.getSubject())){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Impossible value","Subject");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Value does not exist");
-
-        }
+        if(!this.contactService.existSubjectByName(request.getSubject()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Given subject does not exist");
 
         this.contactService.addContact(request);
 
@@ -91,30 +56,15 @@ public class ContactController {
     }
 
     @PostMapping("/subject/add")
-    public ResponseEntity addSubject(@RequestParam("subject") String subject){
+    public ResponseEntity addSubject(@RequestBody SubjectRequestDto request){
 
-        if(subject.isEmpty()){
+        PodiumValidator.getInstance().validateRequestBody(request);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Subject");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Subject cannot be empty");
+        if(this.contactService.existSubjectByName(request.getSubject()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Subject already exists");
 
-        }
-
-        if(this.contactService.existSubjectByName(subject)){
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Already-Exist","Subject");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Subject already exist");
-        }
-
-        this.contactService.addSubject(subject);
+        this.contactService.addSubject(request.getSubject());
         return ResponseEntity.ok().body("Subject successfully added");
 
     }

@@ -1,4 +1,4 @@
-package com.podium.model.request;
+package com.podium.model.dto.request;
 
 import com.podium.validation.annotation.PodiumLength;
 import com.podium.validation.annotation.PodiumTextNotEmpty;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewsRequest {
+public class NewsRequestDto {
 
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minNewsTitleLength, max = PodiumLimits.maxNewsTitleLength)
@@ -21,6 +21,6 @@ public class NewsRequest {
     private String linkText;
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minNewsFullTextLength, max = PodiumLimits.maxNewsFullTextLength)
-    private String fullText;
+    private String text;
 
 }

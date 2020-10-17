@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.model.entity.Country;
 import com.podium.model.entity.Role;
-import com.podium.model.request.SignUpRequest;
+import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.entity.User;
 import com.podium.repository.CountryRepository;
 import com.podium.repository.RoleRepository;
@@ -30,23 +30,23 @@ public class UserService {
         this.countryRepository = countryRepository;
     }
 
-    public void addUser(SignUpRequest signUpRequest){
+    public void addUser(SignUpRequestDto signUpRequestDto){
 
         User user = new User();
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
+        user.setUsername(signUpRequestDto.getUsername());
+        user.setEmail(signUpRequestDto.getEmail());
 
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
 
-        Country country = countryRepository.findByName(signUpRequest.getCountry());
-        country.setName(signUpRequest.getCountry());
+        Country country = countryRepository.findByName(signUpRequestDto.getCountry());
+        country.setName(signUpRequestDto.getCountry());
 
         user.setCountry(country);
 
         Role role = this.roleRepository.findByRole("subscriber");
 
         user.getRoles().add(role);
-        user.setBirthday(signUpRequest.getBirthday());
+        user.setBirthday(signUpRequestDto.getBirthday());
 
         user.setProfileImage(null);
 

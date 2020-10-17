@@ -1,17 +1,12 @@
 package com.podium.service;
 
+import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.entity.Contact;
 import com.podium.model.entity.Subject;
-import com.podium.model.request.ContactRequest;
 import com.podium.repository.ContactRepository;
 import com.podium.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 @Service
 public class ContactService {
@@ -25,14 +20,14 @@ public class ContactService {
         this.subjectRepository = subjectRepository;
     }
 
-    public void addContact(ContactRequest contactRequest){
+    public void addContact(ContactRequestDto contactRequestDTO){
 
         Contact contact = new Contact();
 
-        contact.setUserEmail(contactRequest.getUserEmail());
-        contact.setMessage(contactRequest.getMessage());
+        contact.setUserEmail(contactRequestDTO.getUserEmail());
+        contact.setMessage(contactRequestDTO.getMessage());
 
-        Subject subject = this.subjectRepository.findByName(contactRequest.getSubject());
+        Subject subject = this.subjectRepository.findByName(contactRequestDTO.getSubject());
 
         contact.setSubject(subject);
 
@@ -47,6 +42,8 @@ public class ContactService {
     public Contact findContact(String userEmail, String message, String subject){
 
         Subject subjectEntity = this.subjectRepository.findByName(subject);
+
+
 
         return this.contactRepository.findByUserEmailAndMessageAndSubject(userEmail,message,subjectEntity);
     }

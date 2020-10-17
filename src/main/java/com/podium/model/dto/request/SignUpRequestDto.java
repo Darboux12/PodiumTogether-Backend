@@ -1,4 +1,4 @@
-package com.podium.model.request;
+package com.podium.model.dto.request;
 
 import com.podium.validation.annotation.PodiumDatePast;
 import com.podium.validation.annotation.PodiumLength;
@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class SignUpRequest {
+public class SignUpRequestDto {
 
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minUsernameLength, max = PodiumLimits.maxUsernameLength)

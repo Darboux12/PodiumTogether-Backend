@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
+import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
 
@@ -23,14 +24,14 @@ public class CountryTest {
     }
 
     @Test
-    public void T01_getAllCountry_ShouldReturnStatus_200(){
+    public void T01_getAllCountry_ShouldReturnStatus_OK(){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when().get(Path.server + Endpoint.findAllCountry)
                 .then().assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
