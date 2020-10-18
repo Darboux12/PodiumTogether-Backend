@@ -1,15 +1,8 @@
 package com.podium.api;
 
 import com.podium.helper.*;
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.entity.Country;
-import com.podium.model.entity.News;
-import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;

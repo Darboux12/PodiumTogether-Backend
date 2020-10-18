@@ -3,6 +3,7 @@ package com.podium.api;
 import com.podium.helper.*;
 import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.entity.User;
 import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
@@ -185,9 +186,9 @@ public class UserTest {
     }
 
     @Test
-    public void T09_getSignedUpUserByUsername__ShouldReturn_ValidUser(){
+    public void T09_getSignedUpUserByUsername__ShouldReturn_ValidResponseDto(){
 
-        User user =
+        UserResponseDto user =
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -198,7 +199,7 @@ public class UserTest {
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
-                .extract().as(User.class);
+                .extract().as(UserResponseDto.class);
 
         Assert.assertEquals(signUpRequestDtoOne.getUsername(),user.getUsername());
     }

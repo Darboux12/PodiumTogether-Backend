@@ -25,6 +25,6 @@ public class Gender {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy="gender")
+    @ManyToMany(mappedBy = "genders")
     private Set<Event> events = new HashSet<>();
 }

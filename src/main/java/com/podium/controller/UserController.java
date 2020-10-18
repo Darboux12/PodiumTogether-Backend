@@ -1,13 +1,14 @@
 package com.podium.controller;
 
 import com.podium.model.dto.request.SignUpRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.service.CountryService;
 import com.podium.service.UserService;
 import com.podium.validation.PodiumValidator;
-import com.podium.validation.validators.PodiumValidationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/user/find/{username}")
-    public ResponseEntity findUser(@PathVariable String username){
+    public ResponseEntity<UserResponseDto> findUser(@PathVariable String username){
 
         if(this.userService.existUserByUsername(username))
             return ResponseEntity
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/user/find/all")
-    public ResponseEntity findAllUsers(){
+    public ResponseEntity<Iterable<UserResponseDto>> findAllUsers(){
 
         return ResponseEntity
                 .status(200)

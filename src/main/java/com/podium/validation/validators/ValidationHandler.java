@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ValidationHandler {
 
-    public static boolean isTextEmpty(String text){
+    public static boolean isTextEmpty(String text) {
         return text.isEmpty();
     }
 
@@ -29,7 +29,7 @@ public class ValidationHandler {
         return true;
     }
 
-    public static boolean isNull(Object object){
+    public static boolean isNull(Object object) {
         return object == null;
     }
 
@@ -37,9 +37,6 @@ public class ValidationHandler {
 
         return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss:ms")
                 .parse(date).before(new Date());
-
-
-
 
 
     }
@@ -59,34 +56,54 @@ public class ValidationHandler {
         return date.after(new Date());
     }
 
-    public static boolean isLongerThan(String text, int lengthLimit){
+    public static boolean isLongerThan(String text, int lengthLimit) {
         return text.length() > lengthLimit;
     }
 
-    public static boolean isShorterThan(String text, int lengthLimit){
+    public static boolean isShorterThan(String text, int lengthLimit) {
         return text.length() < lengthLimit;
     }
 
-    public static  boolean isImageContentType(String imageType, List<String> allowedTypes){
+    public static boolean isImageContentType(String imageType, List<String> allowedTypes) {
         return allowedTypes.contains(imageType);
     }
 
-    public static boolean isIntNumberEmpty(int number){
+    public static boolean isIntNumberEmpty(int number) {
         return number == 0;
     }
 
-    public boolean isDoubleNumberEmpty(double number){
+    public boolean isDoubleNumberEmpty(double number) {
         return number == 0;
     }
 
-    public static boolean isTextNumeric(String text){
-        return StringUtils.isNumeric(text);
+    public static boolean isTextNumericInt(String text) {
+
+        double a = Double.parseDouble(text);
+
+        return true;
+
     }
 
-    public static boolean isEmailValid(String email){
+    public static boolean isEmailValid(String email) {
 
         EmailValidator emailValidator = EmailValidator.getInstance();
         return emailValidator.isValid(email);
 
+    }
+
+    public static boolean isBiggerThanInt(int number, int limit) {
+        return number > limit;
+    }
+
+    public static boolean isSmallerThanInt(int number, int limit) {
+        return number < limit;
+    }
+
+    public static boolean isBiggerThanDouble(double number, double limit){
+        return number > limit;
+    }
+
+    public static boolean isSmallerThanDouble(double number, double limit){
+        return number < limit;
     }
 }

@@ -73,14 +73,6 @@ public class Event {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name="gender_id", nullable=false)
-    private Gender gender;
-
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
     @JoinColumn(name="localization_id", nullable=false)
     private Localization localization;
 
@@ -111,9 +103,9 @@ public class Event {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "news_resource",
-            joinColumns = { @JoinColumn(name = "news_id") },
-            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
-    private Set<PodiumResource> newsResources = new HashSet<>();
+    @JoinTable(name = "event_gender",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "gender_id") })
+    private Set<Gender> genders = new HashSet<>();
 
 }

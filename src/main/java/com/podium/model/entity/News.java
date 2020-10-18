@@ -56,4 +56,7 @@ public class News {
             inverseJoinColumns = { @JoinColumn(name = "resource_id") })
     private Set<PodiumResource> newsResources = new HashSet<>();
 
+
+
+
 }

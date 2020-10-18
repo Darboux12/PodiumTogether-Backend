@@ -1,5 +1,7 @@
 package com.podium.service;
 
+import com.podium.model.dto.response.CountryResponseDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.entity.Country;
 import com.podium.model.entity.Role;
 import com.podium.model.dto.request.SignUpRequestDto;
@@ -10,6 +12,11 @@ import com.podium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -31,52 +38,46 @@ public class UserService {
     }
 
     public void addUser(SignUpRequestDto signUpRequestDto){
-
-        User user = new User();
-        user.setUsername(signUpRequestDto.getUsername());
-        user.setEmail(signUpRequestDto.getEmail());
-
-        user.setPassword(passwordEncoder.encode(signUpRequestDto.getPassword()));
-
-        Country country = countryRepository.findByName(signUpRequestDto.getCountry());
-        country.setName(signUpRequestDto.getCountry());
-
-        user.setCountry(country);
-
-        Role role = this.roleRepository.findByRole("subscriber");
-
-        user.getRoles().add(role);
-        user.setBirthday(signUpRequestDto.getBirthday());
-
-        user.setProfileImage(null);
-
-        this.userRepository.save(user);
-
-
+        this.userRepository.save(this.convertRequestDtoToEntity(signUpRequestDto));
     }
 
-    public User findUserByUsername(String username){
-       return this.userRepository.findByUsername(username);
+    public UserResponseDto findUserByUsername(String username){
+       return this.convertEntityToResponseDto(
+               this.userRepository.findByUsername(username));
     }
 
-    public Iterable<User> findAllUsers(){
-        System.out.println("Find all");
-        return this.userRepository.findAll();
+    public Iterable<UserResponseDto> findAllUsers(){
+
+        List<UserResponseDto> responseDtos = new ArrayList<>();
+
+        for(User user : this.userRepository.findAll())
+            responseDtos.add(this.convertEntityToResponseDto(user));
+
+        return responseDtos;
     }
 
-    public Iterable<User> findAllByRole(String roleName){
+    public Iterable<UserResponseDto> findAllByRole(String roleName){
+
+        List<UserResponseDto> responseDtos = new ArrayList<>();
 
         Role role = this.roleRepository.findByRole(roleName);
 
-        return this.userRepository.findAllByRolesContaining(role);
+        for(User user : this.userRepository.findAllByRolesContaining(role))
+            responseDtos.add(this.convertEntityToResponseDto(user));
+
+        return responseDtos;
     }
 
-    public Iterable<User> findAllByCountry(String countryName){
+    public Iterable<UserResponseDto> findAllByCountry(String countryName){
+
+        List<UserResponseDto> responseDtos = new ArrayList<>();
 
         Country country = this.countryRepository.findByName(countryName);
 
-        return this.userRepository.findAllByCountry(country);
+        for(User user : this.userRepository.findAllByCountry(country))
+            responseDtos.add(this.convertEntityToResponseDto(user));
 
+        return responseDtos;
     }
 
     public boolean existUserByUsername(String username){
@@ -94,5 +95,44 @@ public class UserService {
     public void deleteUserByUsername(String username){
 
         this.userRepository.deleteByUsername(username);
+    }
+
+    private User convertRequestDtoToEntity(SignUpRequestDto requestDto){
+
+        User user = new User();
+        user.setUsername(requestDto.getUsername());
+        user.setEmail(requestDto.getEmail());
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+
+        Country country = countryRepository.findByName(requestDto.getCountry());
+        user.setCountry(country);
+
+        Role role = this.roleRepository.findByRole("subscriber");
+
+        if(role == null){
+            role = new Role();
+            role.setRole("subscriber");
+            this.roleRepository.save(role);
+        }
+
+        user.getRoles().add(role);
+        user.setBirthday(requestDto.getBirthday());
+
+        return user;
+    }
+
+    private UserResponseDto convertEntityToResponseDto(User user){
+
+        UserResponseDto responseDto = new UserResponseDto();
+        responseDto.setId(user.getUserId());
+        responseDto.setUsername(user.getUsername());
+        responseDto.setEmail(user.getEmail());
+        responseDto.setPassword(user.getPassword());
+        responseDto.setCountry(user.getCountry().getPrintable_name());
+        Set<String> roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
+        responseDto.setRoles(roles);
+        responseDto.setBirthday(user.getBirthday());
+        return responseDto;
+
     }
 }

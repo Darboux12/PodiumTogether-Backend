@@ -4,7 +4,9 @@ import com.podium.model.dto.request.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Constant {
 
@@ -15,6 +17,9 @@ public class Constant {
     private static DisciplineRequestDto validDisciplineRequestDto = new DisciplineRequestDto();
     private static SubjectRequestDto validSubjectRequestDto = new SubjectRequestDto();
     private static CountryRequestDto validCountryRequestDto = new CountryRequestDto();
+    private static GenderRequestDto validGenderRequestDto = new GenderRequestDto();
+    private static EventRequestDto validEventRequestDto = new EventRequestDto();
+    private static CityRequestDto validCityRequestDto = new CityRequestDto();
 
     public Constant() throws ParseException { }
 
@@ -84,6 +89,52 @@ public class Constant {
         return validCountryRequestDto;
 
     }
+
+    public static GenderRequestDto getValidGenderRequestDto(){
+        validGenderRequestDto.setGender("TestGender");
+        return validGenderRequestDto;
+    }
+
+    public static EventRequestDto getValidEventRequestDto() throws ParseException {
+
+        validEventRequestDto.setTitle("TestEventTitle");
+
+        Date dateFrom= new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss:ms").parse("1998-02-13 17:00:00:00");
+        Date dateTo= new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss:ms").parse("1998-02-20 13:00:00:00");
+
+        validEventRequestDto.setDateFrom(dateFrom);
+        validEventRequestDto.setDateTo(dateTo);
+        validEventRequestDto.setCity("TestCity");
+        validEventRequestDto.setNumber(433);
+        validEventRequestDto.setStreet("TestStreet");
+        validEventRequestDto.setPostal("23-203");
+        validEventRequestDto.setDiscipline("TestDiscipline");
+        validEventRequestDto.setPeople(12);
+
+        List<String> genders = new ArrayList<>();
+        genders.add("Male");
+        genders.add("Female");
+
+        validEventRequestDto.setGenders(genders);
+        validEventRequestDto.setMinAge(12);
+        validEventRequestDto.setMaxAge(43);
+        validEventRequestDto.setCost(12);
+        validEventRequestDto.setDiscipline("This is test description");
+        validEventRequestDto.setAuthor("test_username_one");
+
+        return validEventRequestDto;
+
+
+    }
+
+    public static CityRequestDto getValidCityRequestDto(){
+        validCityRequestDto.setCity("TestCity");
+        return validCityRequestDto;
+    }
+
+
 
 
 

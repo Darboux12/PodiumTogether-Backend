@@ -1,7 +1,5 @@
 package com.podium.controller;
 
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.service.CountryService;
 import com.podium.validation.PodiumValidator;

@@ -55,10 +55,15 @@ public class User {
     @Column(name = "birthday")
     private Date birthday;
 
-    @Lob
-    @Type(type="org.hibernate.type.ImageType")
-    @Column(name = "profile_image")
-    private byte[] profileImage;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "news_resource",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
+    private Set<PodiumResource> profileImages = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -72,8 +77,5 @@ public class User {
 
     @OneToMany(mappedBy="author")
     private Set<Event> eventsCreated = new HashSet<>();
-
-
-
 
 }

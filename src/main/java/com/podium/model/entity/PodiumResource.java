@@ -38,5 +38,8 @@ public class PodiumResource {
     @ManyToMany(mappedBy = "eventResources")
     private Set<Event> events = new HashSet<>();
 
+    @ManyToMany(mappedBy = "profileImages")
+    private Set<User> users = new HashSet<>();
+
 
 }

@@ -1,13 +1,12 @@
 package com.podium.controller;
 
+import com.podium.model.dto.request.EventRequestDto;
 import com.podium.service.EventService;
+import com.podium.validation.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -24,26 +23,9 @@ public class EventController {
     }
 
     @PostMapping("/event/add")
-    public ResponseEntity addEvent(
-            @RequestParam("title") String title,
-            @RequestParam("date") String date,
-            @RequestParam("city") String city,
-            @RequestParam("number") int number,
-            @RequestParam("street") String street,
-            @RequestParam("postal") String postal,
-            @RequestParam("discipline") String discipline,
-            @RequestParam("people") int people,
-            @RequestParam("genders")List<String> genders,
-            @RequestParam("minAge") int minAge,
-            @RequestParam("maxAge") int maxAge,
-            @RequestParam("cost") double cost,
-            @RequestParam("time") double time,
-            @RequestParam("description") String description,
-            @RequestParam("startHour") String startHour,
-            @RequestParam("endHour") String endHour,
-            @RequestParam("documents") List<MultipartFile> documents,
-            @RequestParam("images") List<MultipartFile> images
-    ){
+    public ResponseEntity addEvent(@RequestBody EventRequestDto requestDto){
+
+        PodiumValidator.getInstance().validateRequestBody(requestDto);
 
         /*
 
@@ -75,7 +57,7 @@ public class EventController {
             return PodiumValidationResponse.EmptyValue("People-Number"); */
 
 
-
+/*
 
 
 
@@ -140,7 +122,7 @@ public class EventController {
                     .status(409)
                     .headers(headers)
                     .body("End hour cannot be empty");
-        }
+        } */
 
         return ResponseEntity
                 .ok().build();

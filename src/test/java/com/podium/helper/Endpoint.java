@@ -63,6 +63,23 @@ public class Endpoint {
     public static final String existCountryByName = "/country/exist/{name}";
     public static final String deleteCountryByName = "/country/delete/{name}";
 
+    public static final String findAllGender = "/gender/find/all";
+    public static final String addGender = "/gender/add";
+    public static final String existGenderByName = "/gender/exist/{name}";
+    public static final String deleteGenderByName = "/gender/delete/{name}";
+    public static final String findGenderByName = "/gender/find/name/{name}";
+
+    public static final String findAllCity = "/city/find/all";
+    public static final String addCity = "/city/add";
+    public static final String existCityByName = "/city/exist/{name}";
+    public static final String deleteCityByName = "/city/delete/{name}";
+    public static final String findCityByName = "/city/find/name/{name}";
+
+    public static final String addEvent= "/event/add";
+
+
+
+
 
 
 

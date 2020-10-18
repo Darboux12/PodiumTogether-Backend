@@ -169,9 +169,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/country/delete/{name}")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/gender/find/all")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/gender/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/gender/exist/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/gender/delete/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/gender/find/name/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/event/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/city/find/all")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/city/find/name/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/city/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/city/exist/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/city/delete/{name}")
+                .permitAll()
 
 
-
+                .and().authorizeRequests().antMatchers("/event/add")
+                .permitAll()
 
 
 

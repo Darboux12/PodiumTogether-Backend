@@ -39,9 +39,13 @@ public class PodiumValidator {
                 this.podiumDateFuture(object,field);
                 this.podiumLength(object,field);
                 this.podiumValidEmail(object,field);
+                this.podiumNumberInt(object,field);
+                this.podiumNumberDouble(object,field);
 
             } catch (IllegalAccessException | ParseException e) {
                 e.printStackTrace();
+
+
             }
 
 
@@ -131,6 +135,51 @@ public class PodiumValidator {
 
     }
 
+    private void podiumNumberInt(Object object, Field field) throws IllegalAccessException, ParseException {
+
+        if(field.isAnnotationPresent(PodiumNumberInt.class))
+            if(field.getType().equals(int.class)){
+
+                int fieldValue = (int) field.get(object);
+                int min = field.getAnnotation(PodiumNumberInt.class).min();
+                int max = field.getAnnotation(PodiumNumberInt.class).max();
+
+                if(ValidationHandler.isBiggerThanInt(fieldValue,max))
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be bigger than " + max);
+
+                if(ValidationHandler.isSmallerThanInt(fieldValue,min))
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be smaller than " + min);
+
+
+            }
+
+
+    }
+
+    private void podiumNumberDouble(Object object, Field field) throws IllegalAccessException, ParseException {
+
+        if(field.isAnnotationPresent(PodiumNumberDouble.class))
+            if(field.getType().equals(double.class)){
+
+                double fieldValue = (double) field.get(object);
+                double min = field.getAnnotation(PodiumNumberDouble.class).min();
+                double max = field.getAnnotation(PodiumNumberDouble.class).max();
+
+                if(ValidationHandler.isBiggerThanDouble(fieldValue,max))
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be bigger than " + max);
+
+                if(ValidationHandler.isSmallerThanDouble(fieldValue,min))
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be smaller than " + min);
+
+
+            }
+
+
+    }
 
 
 
