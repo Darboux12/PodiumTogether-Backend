@@ -3,7 +3,7 @@ package com.podium.controller;
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.service.GenderService;
-import com.podium.validation.PodiumValidator;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

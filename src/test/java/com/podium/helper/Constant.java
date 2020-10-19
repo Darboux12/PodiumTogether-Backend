@@ -1,6 +1,7 @@
 package com.podium.helper;
 
 import com.podium.model.dto.request.*;
+import com.sun.jdi.request.EventRequest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,12 +22,13 @@ public class Constant {
     private static EventRequestDto validEventRequestDto = new EventRequestDto();
     private static CityRequestDto validCityRequestDto = new CityRequestDto();
 
+
     public Constant() throws ParseException { }
 
     public static SignUpRequestDto getValidSignUpRequestDtoOne() throws ParseException {
 
         validSignUpRequestDtoOne.setUsername("test_username_one");
-        validSignUpRequestDtoOne.setCountry("Poland");
+        validSignUpRequestDtoOne.setCountry("POLAND");
         validSignUpRequestDtoOne.setEmail("testemail_one@gmail.com");
         Date birthdayOne = new SimpleDateFormat(
                 "yyyy-MM-dd").parse("1998-02-13");
@@ -100,9 +102,9 @@ public class Constant {
         validEventRequestDto.setTitle("TestEventTitle");
 
         Date dateFrom= new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss:ms").parse("1998-02-13 17:00:00:00");
+                    "yyyy-MM-dd HH:mm:ss:ms").parse("2021-02-13 17:00:00:00");
         Date dateTo= new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss:ms").parse("1998-02-20 13:00:00:00");
+                    "yyyy-MM-dd HH:mm:ss:ms").parse("2021-02-20 13:00:00:00");
 
         validEventRequestDto.setDateFrom(dateFrom);
         validEventRequestDto.setDateTo(dateTo);
@@ -121,8 +123,10 @@ public class Constant {
         validEventRequestDto.setMinAge(12);
         validEventRequestDto.setMaxAge(43);
         validEventRequestDto.setCost(12);
-        validEventRequestDto.setDiscipline("This is test description");
+        validEventRequestDto.setDescription("This is test description");
         validEventRequestDto.setAuthor("test_username_one");
+
+
 
         return validEventRequestDto;
 

@@ -1,25 +1,32 @@
 package com.podium.controller;
 
 import com.podium.model.dto.request.EventRequestDto;
+import com.podium.service.DisciplineService;
 import com.podium.service.EventService;
-import com.podium.validation.PodiumValidator;
+import com.podium.service.GenderService;
+import com.podium.service.UserService;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EventController {
 
     private EventService eventService;
+    private DisciplineService disciplineService;
+    private GenderService genderService;
+    private UserService userService;
 
     @Autowired
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, DisciplineService disciplineService, GenderService genderService, UserService userService) {
         this.eventService = eventService;
+        this.disciplineService = disciplineService;
+        this.genderService = genderService;
+        this.userService = userService;
     }
 
     @PostMapping("/event/add")
@@ -27,105 +34,27 @@ public class EventController {
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
 
-        /*
+        if(this.eventService.existEventByTitle(requestDto.getTitle()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Event with given title already exists");
 
-        if(PodiumValidator.isTextEmpty(title))
-            return PodiumValidationResponse.EmptyValue("Title");
+        if(!this.disciplineService.existByDisciplineName(requestDto.getDiscipline()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Given discipline is not available");
 
-        if(PodiumValidator.isTextEmpty(date))
-            return PodiumValidationResponse.EmptyValue("Event-Date");
+        for(String gender : requestDto.getGenders())
+            if(!this.genderService.existByGenderName(gender))
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT, "At least one of given genders is not available");
 
-        if(!PodiumValidator.isValidDate(date))
-            return PodiumValidationResponse.InvalidDate("Event");
-
-        if(PodiumValidator.isTextEmpty(city))
-            return PodiumValidationResponse.EmptyValue("City");
-
-        if(PodiumValidator.isIntNumberEmpty(number))
-            return PodiumValidationResponse.EmptyValue("Number");
-
-        if(PodiumValidator.isTextEmpty(street))
-            return PodiumValidationResponse.EmptyValue("Street");
-
-        if(PodiumValidator.isTextEmpty(postal))
-            return PodiumValidationResponse.EmptyValue("Postal-Code");
-
-        if(PodiumValidator.isTextEmpty(discipline))
-            return PodiumValidationResponse.EmptyValue("Discipline");
-
-        if(PodiumValidator.isIntNumberEmpty(people))
-            return PodiumValidationResponse.EmptyValue("People-Number"); */
+        if(!this.userService.existUserByUsername(requestDto.getAuthor()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Given event author does not exist");
 
 
-/*
+        this.eventService.addEvent(requestDto);
 
-
-
-        if(genders.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Gender");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Gender cannot be empty");
-        }
-
-        if(minAge == 0){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Min-Age");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Minimal age cannot be empty");
-        }
-
-        if(maxAge == 0){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Max-Age");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Maximal age cannot be empty");
-        }
-
-        if(time == 0){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Time");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Time cannot be empty");
-        }
-
-        if(description.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Description");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Description cannot be empty");
-        }
-
-        if(startHour.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","Start-Hour");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("Start hour cannot be empty");
-        }
-
-        if(endHour.isEmpty()){
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Empty-Value","End-Hour");
-            return ResponseEntity
-                    .status(409)
-                    .headers(headers)
-                    .body("End hour cannot be empty");
-        } */
-
-        return ResponseEntity
-                .ok().build();
+        return ResponseEntity.ok().build();
 
 
     }

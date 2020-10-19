@@ -56,8 +56,8 @@ public class PodiumLimits {
     public static final int maxCityLength = 30;
 
     /** EVENT HOUSE NUMBER */
-    public static final int minEventNumberLength = 3;
-    public static final int maxEventNumberLength = 31;
+    public static final int minEventNumberLength = 0;
+    public static final int maxEventNumberLength = 1000000;
 
     /** STREET  */
     public static final int minStreetLength = 3;

@@ -15,4 +15,6 @@ public interface NewsRepository extends CrudRepository<News,Integer> {
 
     boolean existsByTitle(String newsTitle);
 
+    boolean existsByDate(Date date);
+
 }

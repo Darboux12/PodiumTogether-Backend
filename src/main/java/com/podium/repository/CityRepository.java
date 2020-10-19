@@ -8,11 +8,11 @@ import javax.transaction.Transactional;
 
 public interface CityRepository extends CrudRepository<City,Integer> {
 
-     boolean existsByName(String cityName);
+     boolean existsByCity(String cityName);
 
-     City findByName(String cityName);
+     City findByCity(String cityName);
 
      @Transactional
-     void deleteByName(String cityName);
+     void deleteByCity(String cityName);
 
 }

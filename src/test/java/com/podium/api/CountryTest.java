@@ -1,6 +1,7 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;

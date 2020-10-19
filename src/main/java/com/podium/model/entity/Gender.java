@@ -16,14 +16,10 @@ import java.util.Set;
 @Table(name = "GENDER")
 public class Gender {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    @Column(name = "gender_id")
-    private int genderId;
-
     @NotNull
-    @Column(name = "name")
-    private String name;
+    @Column(name = "gender")
+    private String gender;
 
     @ManyToMany(mappedBy = "genders")
     private Set<Event> events = new HashSet<>();

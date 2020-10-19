@@ -24,12 +24,12 @@ public class CityService {
     }
 
     public boolean existByCityName(String cityName){
-        return this.cityRepository.existsByName(cityName);
+        return this.cityRepository.existsByCity(cityName);
     }
 
     public CityResponseDto findCityByName(String cityName){
         return this.convertEntityToResponseDto(
-                this.cityRepository.findByName(cityName));
+                this.cityRepository.findByCity(cityName));
     }
 
     public Iterable<CityResponseDto> findAllCity(){
@@ -47,13 +47,13 @@ public class CityService {
     }
 
     public void deleteCityByName(String name){
-        this.cityRepository.deleteByName(name);
+        this.cityRepository.deleteByCity(name);
     }
 
     private City convertRequestDtoToEntity(CityRequestDto requestDto){
 
         City city = new City();
-        city.setName(requestDto.getCity());
+        city.setCity(requestDto.getCity());
         return city;
 
     }
@@ -61,8 +61,7 @@ public class CityService {
     private CityResponseDto convertEntityToResponseDto(City city){
 
         CityResponseDto responseDto = new CityResponseDto();
-        responseDto.setCity(city.getName());
-        responseDto.setId(city.getCityId());
+        responseDto.setCity(city.getCity());
         return responseDto;
 
     }

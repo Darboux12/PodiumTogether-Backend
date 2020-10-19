@@ -1,6 +1,5 @@
 package com.podium.model.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -14,14 +13,15 @@ import java.util.Set;
 @Setter
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","localizations"})
-@Table(name = "CITY")
-public class City {
+@Table(name = "STREET")
+public class Street {
 
     @Id
     @NotNull
-    @Column(name = "city")
-    private String city;
+    @Column(name = "street")
+    private String street;
 
-    @OneToMany(mappedBy="city")
+    @OneToMany(mappedBy="street")
     private Set<Localization> localizations = new HashSet<>();
+
 }

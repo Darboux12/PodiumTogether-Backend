@@ -1,11 +1,12 @@
 package com.podium.api;
 
-import com.podium.TestValidator.TestValidator;
 import com.podium.helper.*;
 import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
+import com.podium.model.entity.City;
+import com.podium.validator.CityValidator;
 import io.restassured.http.ContentType;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -30,120 +33,82 @@ public class CityTest {
     }
 
     @Test
-    public void T01_addValidCity_ShouldReturnStatus_OK(){
+    public void T01_Add_Valid_City_Should_Return_Status_OK(){
+        CityValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.OK);
+    }
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCity)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+    @Test
+    public void T02_Add_Same_City_Again_Should_Return_Status_CONFLICT(){
+        CityValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
+    }
+
+    @Test
+    public void T03_Find_All_City_Should_Return_Status_OK_Containing_Added_City_Name(){
+
+        boolean isPresent = CityValidator
+                .getInstance()
+                .findAll()
+                .stream()
+                .map(CityResponseDto::getCity)
+                .anyMatch(requestDto.getCity()::equals);
+
+        Assert.assertTrue(isPresent);
 
     }
 
     @Test
-    public void T02_addSameCityAgain_ShouldReturnStatus_CONFLICT(){
+    public void T04_Find_City_By_Name_Should_Return_Status_OK_And_Added_City(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCity)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        String cityName =
 
-    }
+        CityValidator
+                .getInstance()
+                .findByName(requestDto.getCity(),HttpStatus.OK)
+                .getCity();
 
-    @Test
-    public void T03_getAllCity_ShouldReturnStatus_OK(){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllCity)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CityResponseDto[].class);
-    }
-
-    @Test
-    public void T04_getAllCity_ShouldReturnIterable_CityResponse(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(Path.server + Endpoint.findAllCity)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CityResponseDto[].class);
-
-    }
-
-    @Test
-    public void T05_findCreatedCity_ShouldReturnStatus_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getCity())
-                .when()
-                .get(Path.server + Endpoint.findCityByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        Assert.assertEquals(requestDto.getCity(),cityName);
 
 
     }
 
     @Test
-    public void T06_findCreatedCity_ShouldReturn_CityResponse(){
+    public void T05_Exist_City_By_Name_Should_Return_Status_OK(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getCity())
-                .when()
-                .get(Path.server + Endpoint.findCityByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CityResponseDto.class);
-    }
-
-    @Test
-    public void T07_existCreatedCity_ShouldReturnStatus_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getCity())
-                .when()
-                .get(Path.server + Endpoint.existCityByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CityValidator
+                .getInstance()
+                .existCityByName(requestDto.getCity(),HttpStatus.OK);
 
     }
 
     @Test
-    public void T08_deleteCreatedCity_ShouldReturnStatus_OK(){
+    public void T06_Delete_City_Should_Return_Status_OK_Deleting_Created_City(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getCity())
-                .delete(Path.server + Endpoint.deleteCityByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CityValidator
+                .getInstance()
+                .deleteCityByName(requestDto.getCity(),HttpStatus.OK);
 
     }
 
     @Test
-    public void T09_deleteCreatedCityAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T07_Exist_Deleted_City_By_Name_Should_Return_Status_BAD_REQUEST(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getCity())
-                .delete(Path.server + Endpoint.deleteCityByName)
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CityValidator
+                .getInstance()
+                .existCityByName(requestDto.getCity(),HttpStatus.BAD_REQUEST);
 
     }
+
+    @Test
+    public void T08_Delete_Created_City_Again_Should_Return_Status_NOTFOUND(){
+
+        CityValidator
+                .getInstance()
+                .deleteCityByName(requestDto.getCity(),HttpStatus.NOT_FOUND);
+
+    }
+
 }

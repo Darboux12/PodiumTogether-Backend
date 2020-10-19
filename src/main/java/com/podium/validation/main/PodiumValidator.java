@@ -1,4 +1,4 @@
-package com.podium.validation;
+package com.podium.validation.main;
 
 import com.podium.validation.annotation.*;
 import com.podium.validation.validators.PodiumLimits;

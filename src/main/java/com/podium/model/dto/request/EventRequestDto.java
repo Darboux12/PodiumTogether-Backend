@@ -1,9 +1,7 @@
 package com.podium.model.dto.request;
 
-import com.podium.model.entity.*;
 import com.podium.validation.annotation.*;
 import com.podium.validation.validators.PodiumLimits;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;

@@ -5,7 +5,7 @@ import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.model.dto.response.JwtResponseDto;
 import com.podium.service.JwtUserDetailsService;
 import com.podium.service.UserService;
-import com.podium.validation.PodiumValidator;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

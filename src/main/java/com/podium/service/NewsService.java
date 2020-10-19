@@ -65,9 +65,18 @@ public class NewsService {
 
     }
 
+    public NewsResponseDto findNewsByDate(Date date) throws IOException {
+
+        News news = this.newsRepository.findByDate(date);
+
+        return news != null ? this.convertEntityToResponseDto(news) : null;
+
+    }
+
     public boolean existNewsById(int id){
         return this.newsRepository.existsById(id);
     }
+
 
     public void uploadImages(ResourceImageRequestDto requestDto) throws IOException {
 
@@ -97,6 +106,10 @@ public class NewsService {
 
     public boolean existNewsByTitle(String newsTitle){
         return this.newsRepository.existsByTitle(newsTitle);
+    }
+
+    public boolean existNewsByDate(Date date){
+        return this.newsRepository.existsByDate(date);
     }
 
     public void deleteNewsById(int id){

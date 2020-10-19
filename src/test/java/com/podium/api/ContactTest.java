@@ -1,6 +1,7 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.entity.Contact;
 import com.podium.model.entity.Subject;
 import com.podium.model.dto.request.SubjectRequestDto;

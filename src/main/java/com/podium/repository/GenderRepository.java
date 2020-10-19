@@ -4,15 +4,16 @@ import com.podium.model.entity.Gender;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface GenderRepository extends CrudRepository<Gender,Integer> {
 
-    boolean existsByName(String genderName);
+    boolean existsByGender(String genderName);
 
-    Gender findByName(String genderName);
+    Gender findByGender(String genderName);
 
     @Transactional
-    void deleteByName(String genderName);
+    void deleteByGender(String genderName);
 
 
 }

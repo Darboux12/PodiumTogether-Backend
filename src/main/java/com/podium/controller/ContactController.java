@@ -1,9 +1,10 @@
 package com.podium.controller;
 
+import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.entity.Subject;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.service.ContactService;
-import com.podium.validation.PodiumValidator;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

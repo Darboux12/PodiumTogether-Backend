@@ -2,7 +2,7 @@ package com.podium.controller;
 
 import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.service.NewsService;
-import com.podium.validation.PodiumValidator;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

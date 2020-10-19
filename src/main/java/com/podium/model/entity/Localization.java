@@ -26,16 +26,21 @@ public class Localization {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name="city_id", nullable=false)
+    @JoinColumn(name="city", nullable=false)
     private City city;
 
-    @NotNull
-    @Column(name = "street")
-    private String street;
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinColumn(name="street", nullable=false)
+    private Street street;
+
 
     @NotNull
     @Column(name = "number")
-    private String number;
+    private int number;
 
     @NotNull
     @Column(name = "postal_code")

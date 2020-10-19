@@ -21,13 +21,13 @@ public class GenderService {
     }
 
     public boolean existByGenderName(String genderName){
-        return this.genderRepository.existsByName(genderName);
+        return this.genderRepository.existsByGender(genderName);
     }
 
     public GenderResponseDto findByGenderName(String genderName){
 
        return this.convertEntityToResponseDto(
-               this.genderRepository.findByName(genderName));
+               this.genderRepository.findByGender(genderName));
     }
 
     public Iterable<GenderResponseDto> findAllGenders(){
@@ -45,13 +45,13 @@ public class GenderService {
     }
 
     public void deleteGenderByName(String name){
-        this.genderRepository.deleteByName(name);
+        this.genderRepository.deleteByGender(name);
     }
 
     private Gender convertRequestDtoToEntity(GenderRequestDto requestDto){
 
         Gender gender = new Gender();
-        gender.setName(requestDto.getGender());
+        gender.setGender(requestDto.getGender());
         return gender;
 
     }
@@ -59,8 +59,7 @@ public class GenderService {
     private GenderResponseDto convertEntityToResponseDto(Gender gender){
 
         GenderResponseDto responseDto = new GenderResponseDto();
-        responseDto.setId(gender.getGenderId());
-        responseDto.setGender(gender.getName());
+        responseDto.setGender(gender.getGender());
         return responseDto;
 
     }

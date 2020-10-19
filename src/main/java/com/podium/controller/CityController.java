@@ -1,11 +1,9 @@
 package com.podium.controller;
 
 import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.service.CityService;
-import com.podium.validation.PodiumValidator;
+import com.podium.validation.main.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
