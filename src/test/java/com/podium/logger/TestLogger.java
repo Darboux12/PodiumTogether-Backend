@@ -1,4 +1,4 @@
-package com.podium.helper;
+package com.podium.logger;
 
 import ch.qos.logback.classic.Level;
 import io.restassured.RestAssured;

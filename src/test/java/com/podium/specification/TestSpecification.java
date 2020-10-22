@@ -1,4 +1,4 @@
-package com.podium.helper;
+package com.podium.specification;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;

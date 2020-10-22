@@ -3,8 +3,10 @@ package com.podium.api;
 
 
 import com.podium.helper.*;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
+import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;

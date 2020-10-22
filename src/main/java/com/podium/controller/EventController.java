@@ -59,4 +59,18 @@ public class EventController {
 
     }
 
+    @DeleteMapping("/event/delete/{title}")
+    public ResponseEntity deleteEventByTitle(@PathVariable String title){
+
+        if(this.eventService.existEventByTitle(title)){
+            this.eventService.deleteEventByTitle(title);
+            return ResponseEntity.ok().body("Event successfully deleted");
+        }
+
+        else
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Event not found");
+
+    }
+
 }

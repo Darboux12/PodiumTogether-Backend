@@ -2,9 +2,11 @@ package com.podium.validator;
 
 import com.podium.helper.Endpoint;
 import com.podium.helper.Path;
+import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.EventRequestDto;
-import com.podium.model.dto.response.EventResponseDto;
+import com.podium.model.dto.request.CityRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
@@ -14,61 +16,80 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class EventValidator {
+public class ContactValidator {
 
-    private static EventValidator instance;
+    private static ContactValidator instance;
 
-    private EventValidator() {}
+    private ContactValidator() {}
 
-    public static EventValidator getInstance() {
+    public static ContactValidator getInstance() {
         if(instance == null) {
-            instance = new EventValidator();
+            instance = new ContactValidator();
         }
         return instance;
     }
 
-    public void add(EventRequestDto requestDto, HttpStatus status){
+    public void add(ContactRequestDto requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addEvent)
+                .when().post(Path.server + Endpoint.addContact)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public List<EventResponseDto> findAll(){
+    public List<ContactResponseDto> findAll(){
 
-        EventResponseDto[] dtos =
+        ContactResponseDto[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + Endpoint.findAllCity)
+                        .when().get(Path.server + Endpoint.findAllContact)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)EventResponseDto[].class);
+                        .extract().as((Type)ContactResponseDto[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public EventResponseDto findByTitle(String eventTitle, HttpStatus status){
+    public List<ContactResponseDto> findByEmail(String email, HttpStatus status){
 
-        return
+        ContactResponseDto[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .pathParam("name",eventTitle)
+                        .pathParam("email",email)
                         .when()
-                        .get(Path.server + Endpoint.findCityByName)
+                        .get(Path.server + Endpoint.findAllContactByEmail)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(EventResponseDto.class);
+                        .extract().as((Type) ContactResponseDto[].class);
+
+        return Arrays.asList(dtos);
+
+    }
+
+    public List<ContactResponseDto> findBySubject(String subject, HttpStatus status){
+
+        ContactResponseDto[] dtos =
+
+                given().spec(TestSpecification.buildRequestSpec())
+                        .contentType(ContentType.JSON)
+                        .pathParam("subject",subject)
+                        .when()
+                        .get(Path.server + Endpoint.findAllContactBySubject)
+                        .then().assertThat().statusCode(status.value())
+                        .spec(TestSpecification.buildResponseSpec())
+                        .extract().as((Type) ContactResponseDto[].class);
+
+        return Arrays.asList(dtos);
 
     }
 
@@ -84,16 +105,23 @@ public class EventValidator {
 
     }
 
-    public void deleteCityByName(String cityName, HttpStatus status){
+    public void deleteContactById(int id, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",cityName)
-                .delete(Path.server + Endpoint.deleteCityByName)
+                .pathParam("id",id)
+                .delete(Path.server + Endpoint.deleteContact)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
+
+
+
+
+
+
+
 
 
 

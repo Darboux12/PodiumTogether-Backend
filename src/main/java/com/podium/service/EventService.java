@@ -48,6 +48,11 @@ public class EventService {
         return this.eventRepository.existsByTitle(eventTitle);
     }
 
+    public void deleteEventByTitle(String eventTitle){
+        this.eventRepository.deleteByTitle(eventTitle);
+
+    }
+
     private Event convertRequestDtoToEntity(EventRequestDto requestDto){
 
         Event event = new Event();

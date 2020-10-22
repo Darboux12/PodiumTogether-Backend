@@ -17,6 +17,7 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","eventFiles"})
 @Table(name = "EVENT")
+@SecondaryTable(name = "EVENT_DETAILS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "event_details_id"))
 public class Event {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,32 +30,32 @@ public class Event {
     private String title;
 
     @NotNull
-    @Column(name = "date_from")
+    @Column(name = "date_from", table = "EVENT_DETAILS")
     private Date dateFrom;
 
     @NotNull
-    @Column(name = "date_to")
+    @Column(name = "date_to", table = "EVENT_DETAILS")
     private Date dateTo;
 
     @NotNull
-    @Column(name = "people_number")
+    @Column(name = "people_number", table = "EVENT_DETAILS")
     private int peopleNumber;
 
     @NotNull
-    @Column(name = "min_age")
+    @Column(name = "min_age", table = "EVENT_DETAILS")
     private int minAge;
 
     @NotNull
-    @Column(name = "max_age")
+    @Column(name = "max_age", table = "EVENT_DETAILS")
     private int maxAge;
 
     @NotNull
-    @Column(name = "cost")
+    @Column(name = "cost", table = "EVENT_DETAILS")
     private double cost;
 
     @NotNull
     @Type(type = "text")
-    @Column(name = "description")
+    @Column(name = "description", table = "EVENT_DETAILS")
     private String description;
 
     @ManyToMany(mappedBy = "eventsJoined")

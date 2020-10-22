@@ -1,14 +1,13 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;
+import com.podium.specification.TestSpecification;
 import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
-import io.restassured.internal.util.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,17 +15,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 

@@ -1,9 +1,17 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.CountryRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
+import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.CountryResponseDto;
+import com.podium.specification.TestSpecification;
+import com.podium.validator.CityValidator;
+import com.podium.validator.ContactValidator;
+import com.podium.validator.CountryValidator;
 import io.restassured.http.ContentType;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -13,6 +21,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.rootPath;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -28,140 +37,99 @@ public class CountryTest {
     }
 
     @Test
-    public void T01_addValidCountry_ShouldReturnStatus_OK(){
+    public void T01_Add_Valid_Country_Should_Return_Status_OK(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CountryValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.OK);
 
     }
 
     @Test
-    public void T02_getAllCountry_ShouldReturnStatus_OK(){
+    public void T02_Find_All_Country_Should_Return_Status_OK_Iterable_Country(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        boolean isPresent = CountryValidator
+                .getInstance()
+                .findAll()
+                .stream()
+                .map(CountryResponseDto::getName)
+                .anyMatch(requestDto.getName()::equals);
 
-    }
-
-    @Test
-    public void T03_getAllCountry_ShouldReturnIterable_CountryResponse(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(Path.server + Endpoint.findAllCountry)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CountryResponseDto[].class);
+        Assert.assertTrue(isPresent);
 
     }
 
     @Test
-    public void T04_deleteCreatedCountry_ShouldReturnStatus_OK(){
+    public void T03_Delete_Created_Country_ShouldReturnStatus_OK(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getName())
-                .delete(Path.server + Endpoint.deleteCountryByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CountryValidator
+                .getInstance()
+                .delete(requestDto.getName(),HttpStatus.OK);
 
     }
 
     @Test
-    public void T05_deleteCreatedCountryAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T04_deleteCreatedCountryAgain_ShouldReturnStatus_NOTFOUND(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getName())
-                .delete(Path.server + Endpoint.deleteCountryByName)
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CountryValidator
+                .getInstance()
+                .delete(requestDto.getName(),HttpStatus.NOT_FOUND);
 
     }
 
     @Test
-    public void T06_addCountryEmptyName_ShouldReturnStatus_CONFLICT(){
+    public void T05_addCountryEmptyName_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getName();
         requestDto.setName("");
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CountryValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.setName(valueHolder);
 
     }
 
     @Test
-    public void T07_addCountryEmptyId_ShouldReturnStatus_CONFLICT(){
+    public void T06_addCountryEmptyId_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getCountryId();
         requestDto.setCountryId("");
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+
+        CountryValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.setCountryId(valueHolder);
 
     }
 
     @Test
-    public void T08_addCountryEmptyPrintableName_ShouldReturnStatus_CONFLICT(){
+    public void T07_addCountryEmptyPrintableName_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getPrintableName();
         requestDto.setPrintableName("");
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+
+        CountryValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.setPrintableName(valueHolder);
 
     }
 
     @Test
-    public void T09_addCountryEmptyIso3_ShouldReturnStatus_CONFLICT(){
+    public void T08_addCountryEmptyIso3_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getIso3();
         requestDto.setIso3("");
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addCountry)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        CountryValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.setIso3(valueHolder);
 

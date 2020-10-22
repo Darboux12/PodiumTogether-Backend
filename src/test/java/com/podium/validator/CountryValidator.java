@@ -2,9 +2,11 @@ package com.podium.validator;
 
 import com.podium.helper.Endpoint;
 import com.podium.helper.Path;
+import com.podium.model.dto.request.CityRequestDto;
+import com.podium.model.dto.request.CountryRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
+import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.EventRequestDto;
-import com.podium.model.dto.response.EventResponseDto;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
@@ -14,61 +16,46 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class EventValidator {
+public class CountryValidator {
 
-    private static EventValidator instance;
+    private static  CountryValidator instance;
 
-    private EventValidator() {}
+    private  CountryValidator() {}
 
-    public static EventValidator getInstance() {
+    public static  CountryValidator getInstance() {
         if(instance == null) {
-            instance = new EventValidator();
+            instance = new  CountryValidator();
         }
         return instance;
     }
 
-    public void add(EventRequestDto requestDto, HttpStatus status){
+    public void add(CountryRequestDto requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addEvent)
+                .when().post(Path.server + Endpoint.addCountry)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public List<EventResponseDto> findAll(){
+    public List<CountryResponseDto> findAll(){
 
-        EventResponseDto[] dtos =
+        CountryResponseDto[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + Endpoint.findAllCity)
+                        .when().get(Path.server + Endpoint.findAllCountry)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)EventResponseDto[].class);
+                        .extract().as((Type)CountryResponseDto[].class);
 
         return Arrays.asList(dtos);
-
-    }
-
-    public EventResponseDto findByTitle(String eventTitle, HttpStatus status){
-
-        return
-
-                given().spec(TestSpecification.buildRequestSpec())
-                        .contentType(ContentType.JSON)
-                        .pathParam("name",eventTitle)
-                        .when()
-                        .get(Path.server + Endpoint.findCityByName)
-                        .then().assertThat().statusCode(status.value())
-                        .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(EventResponseDto.class);
 
     }
 
@@ -84,16 +71,18 @@ public class EventValidator {
 
     }
 
-    public void deleteCityByName(String cityName, HttpStatus status){
+    public void delete(String countryName, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",cityName)
-                .delete(Path.server + Endpoint.deleteCityByName)
+                .pathParam("name",countryName)
+                .delete(Path.server + Endpoint.deleteCountryByName)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec());;
 
     }
+
+
 
 
 

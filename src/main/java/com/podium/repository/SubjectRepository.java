@@ -9,11 +9,11 @@ import javax.transaction.Transactional;
 @Repository
 public interface SubjectRepository extends CrudRepository<Subject,Integer> {
 
-    Subject findByName(String subjectName);
+    Subject findBySubject(String subjectName);
 
-    boolean existsByName(String subjectName);
+    boolean existsBySubject(String subjectName);
 
     @Transactional
-    void deleteByName(String name);
+    void deleteBySubject(String name);
 
 }

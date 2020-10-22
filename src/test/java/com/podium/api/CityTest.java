@@ -1,11 +1,10 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.entity.City;
 import com.podium.validator.CityValidator;
-import io.restassured.http.ContentType;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -14,8 +13,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 

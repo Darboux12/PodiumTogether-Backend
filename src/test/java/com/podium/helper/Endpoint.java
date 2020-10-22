@@ -9,7 +9,7 @@ public class Endpoint {
     public static final String addUserEndpoint = "/user/add";
 
     /** DELETE -  Username path variable requested */
-    public static final String deleteUserEndpoint = "/user/{username}";
+    public static final String deleteUserEndpoint = "/user/delete/{username}";
 
     /** GET - Username path variable requested */
     public static final String getUserByUsernameEndpoint = "/user/find/{username}";
@@ -76,6 +76,18 @@ public class Endpoint {
     public static final String findCityByName = "/city/find/name/{name}";
 
     public static final String addEvent= "/event/add";
+
+    public static final String deleteEvent = "/event/delete/{title}";
+
+
+    public static final String findAllContact = "/contact/find/all";
+
+    public static final String findAllContactByEmail = "/contact/find/email/{email}";
+
+    public static final String findAllContactBySubject = "/contact/find/subject/{subject}";
+
+
+
 
 
 

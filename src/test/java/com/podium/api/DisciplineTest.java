@@ -1,9 +1,10 @@
 package com.podium.api;
 
 import com.podium.helper.*;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.dto.response.NewsResponseDto;
+import com.podium.specification.TestSpecification;
 import com.podium.validation.validators.PodiumLimits;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;

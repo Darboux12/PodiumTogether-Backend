@@ -1,8 +1,9 @@
 package com.podium.api;
 
 import com.podium.helper.*;
-import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.EventRequestDto;
+import com.podium.specification.TestSpecification;
 import com.podium.validation.validators.PodiumLimits;
 import com.podium.validator.EventValidator;
 import io.restassured.http.ContentType;
@@ -35,7 +36,7 @@ public class EventTest {
     }
 
     @Test
-    public void T01_Add_Event_With__Empty__Title_Should_Return_Status_CONFLICT(){
+    public void T01_Add_Event_With_Empty__Title_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getTitle();
         requestDto.setTitle("");
@@ -204,28 +205,7 @@ public class EventTest {
     }
 
     @Test
-    public void T12_Add_Empty_Number_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        valueHolderInt= requestDto.getNumber();
-        requestDto.setNumber(0);
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addEvent)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-        requestDto.setNumber(valueHolderInt);
-
-    }
-    
-    @Test
-    public void T13_Add_To_ShortNumber_Should_Return_Status_CONFLICT(){
+    public void T12_Add_To_ShortNumber_Should_Return_Status_CONFLICT(){
         
         int valueHolderInt;
 
@@ -243,7 +223,7 @@ public class EventTest {
     }
 
     @Test
-    public void T14_Add_To_Long_Number_Should_Return_Status_CONFLICT(){
+    public void T13_Add_To_Long_Number_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -261,7 +241,7 @@ public class EventTest {
     }
 
     @Test
-    public void T15_Add_Empty_Postal_Should_Return_Status_CONFLICT(){
+    public void T14_Add_Empty_Postal_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getPostal();
         requestDto.setPostal("");
@@ -275,7 +255,7 @@ public class EventTest {
     }
 
     @Test
-    public void T16_Add_To_ShortPostal_Should_Return_Status_CONFLICT(){
+    public void T15_Add_To_ShortPostal_Should_Return_Status_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
 
@@ -291,7 +271,7 @@ public class EventTest {
     }
 
     @Test
-    public void T17_Add_To_Long_Postal_Should_Return_Status_CONFLICT(){
+    public void T16_Add_To_Long_Postal_Should_Return_Status_CONFLICT(){
 
         String toLong= StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
 
@@ -307,7 +287,7 @@ public class EventTest {
     }
 
     @Test
-    public void T18_Add_Empty_Discipline_Should_Return_Status_CONFLICT(){
+    public void T17_Add_Empty_Discipline_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline("");
@@ -321,7 +301,7 @@ public class EventTest {
     }
 
     @Test
-    public void T19_Add_To_Short_Discipline_Should_Return_Status_CONFLICT(){
+    public void T18_Add_To_Short_Discipline_Should_Return_Status_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
 
@@ -337,7 +317,7 @@ public class EventTest {
     }
 
     @Test
-    public void T20_Add_To_Long_Discipline_Should_Return_Status_CONFLICT(){
+    public void T19_Add_To_Long_Discipline_Should_Return_Status_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
 
@@ -353,7 +333,7 @@ public class EventTest {
     }
 
     @Test
-    public void T21_Add_Empty_People_Should_Return_Status_CONFLICT(){
+    public void T20_Add_Empty_People_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -369,7 +349,7 @@ public class EventTest {
     }
 
     @Test
-    public void T22_Add_To_Short_People_Should_Return_Status_CONFLICT(){
+    public void T21_Add_To_Short_People_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -387,7 +367,7 @@ public class EventTest {
     }
 
     @Test
-    public void T23_Add_To_Long_People_Should_Return_Status_CONFLICT(){
+    public void T22_Add_To_Long_People_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -405,7 +385,7 @@ public class EventTest {
     }
 
     @Test
-    public void T24_Add_Empty_Min_Age_Should_Return_Status_CONFLICT(){
+    public void T23_Add_Empty_Min_Age_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -421,7 +401,7 @@ public class EventTest {
     }
 
     @Test
-    public void T25_Add_To_ShortMin_Age_Should_Return_Status_CONFLICT(){
+    public void T24_Add_To_ShortMin_Age_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -439,7 +419,7 @@ public class EventTest {
     }
 
     @Test
-    public void T26_Add_To_Long_Min_Age_Should_Return_Status_CONFLICT(){
+    public void T25_Add_To_Long_Min_Age_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -457,7 +437,7 @@ public class EventTest {
     }
 
     @Test
-    public void T27_Add_Empty_Max_Age_Should_Return_Status_CONFLICT(){
+    public void T26_Add_Empty_Max_Age_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -473,11 +453,11 @@ public class EventTest {
     }
 
     @Test
-    public void T28_Add_To_Short_MaxAge_Should_Return_Status_CONFLICT(){
+    public void T27_Add_To_Short_MaxAge_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
-        int toShort = PodiumLimits.maxEventMaxAge - 1;
+        int toShort = PodiumLimits.minEventMaxAge - 1;
 
         valueHolderInt = requestDto.getMaxAge();
         requestDto.setMaxAge(toShort);
@@ -491,7 +471,7 @@ public class EventTest {
     }
 
     @Test
-    public void T29_Add_To_Long_MaxAge_Should_Return_Status_CONFLICT(){
+    public void T28_Add_To_Long_MaxAge_Should_Return_Status_CONFLICT(){
 
         int valueHolderInt;
 
@@ -509,34 +489,71 @@ public class EventTest {
     }
 
     @Test
-    public void T30_Add_Valid_Event_Should_Return_Status_OK(){
+    public void T29_Add_Valid_Event_Should_Return_Status_OK(){
+
+        EventValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.OK);
+
+    }
+
+    @Test
+    public void T30_Add_Same_Event_Should_Return_Status_CONFLICT(){
+
+        EventValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
+
+    }
+
+    @Test
+    public void T31_Add_Event_Nonexistent_Discipline_Should_Return_Status_CONFLICT(){
+
+        String valueHolder = requestDto.getTitle();
+
+        requestDto.setTitle("AnotherEventTitle");
+
+        requestDto.setDiscipline("NonExistentDiscipline");
+
+        EventValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
+
+        requestDto.setTitle(valueHolder);
+
+    }
+
+    @Test
+    public void T32_Add_Event_Nonexistent_User_Should_Return_Status_CONFLICT(){
+
+        String author = requestDto.getAuthor();
+        String title = requestDto.getTitle();
+
+        requestDto.setTitle("AnotherEventTitle");
+        requestDto.setAuthor("NonExistentUsername");
+
+        EventValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
+
+        requestDto.setTitle(title);
+        requestDto.setAuthor(author);
+
+    }
+
+    @Test
+    public void T33_Delete_Created_Event_Should_Return_Status_OK(){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addEvent)
+                .pathParam("title",requestDto.getTitle())
+                .when().delete(Path.server + Endpoint.deleteEvent)
                 .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
+                .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
-
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
 
     /*
 

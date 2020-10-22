@@ -16,14 +16,10 @@ import java.util.Set;
 @Table(name = "SUBJECT")
 public class Subject {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Id
-    @Column(name = "subject_id")
-    private int subjectId;
-
     @NotNull
-    @Column(name = "name")
-    private String name;
+    @Id
+    @Column(name = "subject")
+    private String subject;
 
     @OneToMany(mappedBy="subject")
     private Set<Contact> contacts = new HashSet<>();

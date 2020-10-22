@@ -68,7 +68,7 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/user/{username}")
+    @DeleteMapping("/user/delete/{username}")
     public ResponseEntity deleteUser(@PathVariable String username){
 
         if(this.userService.existUserByUsername(username)){

@@ -15,7 +15,6 @@ import java.util.*;
 @Getter
 @Setter
 public class UserResponseDto {
-
     private int id;
     private String username;
     private String email;

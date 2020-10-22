@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ContactResponseDto {
-    private int id;
-    private String email;
-    private String message;
+public class SubjectResponseDto {
+
     private String subject;
 }

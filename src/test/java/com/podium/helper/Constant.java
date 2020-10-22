@@ -21,20 +21,26 @@ public class Constant {
     private static GenderRequestDto validGenderRequestDto = new GenderRequestDto();
     private static EventRequestDto validEventRequestDto = new EventRequestDto();
     private static CityRequestDto validCityRequestDto = new CityRequestDto();
+    private static  JwtRequestDto validSignInRequestDto = new JwtRequestDto();
 
+    private static String existingUsername = "JohnDoe126";
+    private static String existingPassword = "johndoe123";
+    private static String existingCity = "London";
+    private static String existingDiscipline = "Football";
+    private static String existingStreet = "Polna";
+    private static String existingSubject = "Technical";
 
     public Constant() throws ParseException { }
 
     public static SignUpRequestDto getValidSignUpRequestDtoOne() throws ParseException {
 
-        validSignUpRequestDtoOne.setUsername("test_username_one");
+        validSignUpRequestDtoOne.setUsername("TEST USERNAME");
         validSignUpRequestDtoOne.setCountry("POLAND");
-        validSignUpRequestDtoOne.setEmail("testemail_one@gmail.com");
+        validSignUpRequestDtoOne.setEmail("TEST_MAIL@gmail.com");
         Date birthdayOne = new SimpleDateFormat(
                 "yyyy-MM-dd").parse("1998-02-13");
         validSignUpRequestDtoOne.setBirthday(birthdayOne);
-        validSignUpRequestDtoOne.setPassword("test_password_one");
-
+        validSignUpRequestDtoOne.setPassword("TEST PASSWORD");
         return validSignUpRequestDtoOne;
     }
 
@@ -108,11 +114,11 @@ public class Constant {
 
         validEventRequestDto.setDateFrom(dateFrom);
         validEventRequestDto.setDateTo(dateTo);
-        validEventRequestDto.setCity("TestCity");
+        validEventRequestDto.setCity(existingCity);
         validEventRequestDto.setNumber(433);
-        validEventRequestDto.setStreet("TestStreet");
+        validEventRequestDto.setStreet(existingStreet);
         validEventRequestDto.setPostal("23-203");
-        validEventRequestDto.setDiscipline("TestDiscipline");
+        validEventRequestDto.setDiscipline(existingDiscipline);
         validEventRequestDto.setPeople(12);
 
         List<String> genders = new ArrayList<>();
@@ -124,9 +130,7 @@ public class Constant {
         validEventRequestDto.setMaxAge(43);
         validEventRequestDto.setCost(12);
         validEventRequestDto.setDescription("This is test description");
-        validEventRequestDto.setAuthor("test_username_one");
-
-
+        validEventRequestDto.setAuthor(existingUsername);
 
         return validEventRequestDto;
 
@@ -138,8 +142,15 @@ public class Constant {
         return validCityRequestDto;
     }
 
+    public static String getExistingUsername(){
+        return existingUsername;
+    }
 
+    public static JwtRequestDto getSignInRequest(){
 
-
+        validSignInRequestDto.setUsername(existingUsername);
+        validSignInRequestDto.setPassword(existingPassword);
+        return  validSignInRequestDto;
+    }
 
 }

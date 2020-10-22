@@ -1,6 +1,8 @@
 package com.podium.controller;
 
 import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.ContactResponseDto;
+import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.model.entity.Subject;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.service.ContactService;
@@ -44,15 +46,20 @@ public class ContactController {
         return ResponseEntity.ok().body("Contact deleted");
     }
 
-    @GetMapping("/contact/find")
-    public ResponseEntity findContact(
-            @RequestParam String userEmail,
-            @RequestParam String message,
-            @RequestParam String subject){
+    @GetMapping("/contact/find/email/{email}")
+    public ResponseEntity findContactByEmail(@PathVariable String email){
 
         return ResponseEntity
                 .ok()
-                .body(this.contactService.findContact(userEmail,message,subject));
+                .body(this.contactService.findAllByEmail(email));
+    }
+
+    @GetMapping("/contact/find/subject/{subject}")
+    public ResponseEntity findContactBySubject(@PathVariable String subject){
+
+        return ResponseEntity
+                .ok()
+                .body(this.contactService.findAllBySubject(subject));
     }
 
     @PostMapping("/subject/add")
@@ -77,8 +84,13 @@ public class ContactController {
     }
 
     @GetMapping("/subject/find/all")
-    public Iterable<Subject> findAllSubjects(){
+    public Iterable<SubjectResponseDto> findAllSubjects(){
         return this.contactService.findAllSubjects();
+    }
+
+    @GetMapping("/contact/find/all")
+    public Iterable<ContactResponseDto> findAllContact(){
+        return this.contactService.findAllContact();
     }
 
     @GetMapping("/subject/find/{name}")

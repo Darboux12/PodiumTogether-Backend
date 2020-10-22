@@ -34,7 +34,7 @@ public class Contact {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name="subject_id", nullable=false)
+    @JoinColumn(name="subject", nullable=false)
     private Subject subject;
 
 }
