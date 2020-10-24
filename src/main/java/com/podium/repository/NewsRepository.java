@@ -17,4 +17,6 @@ public interface NewsRepository extends CrudRepository<News,Integer> {
 
     boolean existsByDate(Date date);
 
+    Iterable<News> findAllByOrderByDateDesc();
+
 }

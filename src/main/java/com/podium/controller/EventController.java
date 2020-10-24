@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.EventRequestDto;
 import com.podium.service.DisciplineService;
 import com.podium.service.EventService;
@@ -29,7 +30,7 @@ public class EventController {
         this.userService = userService;
     }
 
-    @PostMapping("/event/add")
+    @PostMapping(PodiumEndpoint.addEvent)
     public ResponseEntity addEvent(@RequestBody EventRequestDto requestDto){
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
@@ -59,7 +60,7 @@ public class EventController {
 
     }
 
-    @DeleteMapping("/event/delete/{title}")
+    @DeleteMapping(PodiumEndpoint.deleteEvent)
     public ResponseEntity deleteEventByTitle(@PathVariable String title){
 
         if(this.eventService.existEventByTitle(title)){

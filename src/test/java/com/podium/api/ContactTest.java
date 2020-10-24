@@ -3,19 +3,8 @@ package com.podium.api;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
 import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Subject;
-import com.podium.model.dto.request.SubjectRequestDto;
-import com.podium.specification.TestSpecification;
-import com.podium.validation.validators.PodiumLimits;
-import com.podium.validator.CityValidator;
 import com.podium.validator.ContactValidator;
-import com.podium.validator.SubjectValidator;
-import io.restassured.http.ContentType;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -27,7 +16,6 @@ import org.springframework.http.HttpStatus;
 
 
 import java.text.ParseException;
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 

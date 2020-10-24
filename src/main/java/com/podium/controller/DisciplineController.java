@@ -1,6 +1,7 @@
 package com.podium.controller;
 
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.service.DisciplineService;
@@ -20,12 +21,17 @@ public class DisciplineController {
         this.disciplineService = disciplineService;
     }
 
-    @GetMapping("/discipline/find/all")
+    @GetMapping(PodiumEndpoint.findAllDiscipline)
     public ResponseEntity<Iterable<DisciplineResponseDto>> findAllDiscipline(){
         return ResponseEntity.ok().body(this.disciplineService.findAllDiscipline());
     }
 
-    @PostMapping("/discipline/add")
+    @GetMapping(PodiumEndpoint.findByDisciplineName)
+    public ResponseEntity findDisciplineByName(@PathVariable String discipline){
+        return ResponseEntity.ok().body(this.disciplineService.findByDisciplineName(discipline));
+    }
+
+    @PostMapping(PodiumEndpoint.addDiscipline)
     public ResponseEntity addDiscipline(@RequestBody DisciplineRequestDto requestDto){
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
@@ -39,7 +45,7 @@ public class DisciplineController {
 
     }
 
-    @GetMapping("/discipline/exist/{discipline}")
+    @GetMapping(PodiumEndpoint.existDisciplineByName)
     public ResponseEntity existDisciplineByName(@PathVariable String discipline){
 
         if(this.disciplineService.existByDisciplineName(discipline))
@@ -49,7 +55,7 @@ public class DisciplineController {
             return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/discipline/delete/{discipline}")
+    @DeleteMapping(PodiumEndpoint.deleteDisciplineByName)
     public ResponseEntity deleteDisciplineByName(@PathVariable String discipline){
 
         if(!this.disciplineService.existByDisciplineName(discipline))

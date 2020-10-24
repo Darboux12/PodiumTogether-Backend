@@ -1,7 +1,7 @@
 package com.podium.validation.main;
 
 import com.podium.validation.annotation.*;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import com.podium.validation.validators.ValidationHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

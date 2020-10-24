@@ -1,16 +1,13 @@
 package com.podium.api;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Subject;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.specification.TestSpecification;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import com.podium.validator.SubjectValidator;
-import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -119,7 +116,7 @@ public class SubjectTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("name","TestSubject")
                 .when()
-                .delete(Path.server + Endpoint.deleteSubject)
+                .delete(Path.server + PodiumEndpoint.deleteSubject)
                 .then().assertThat()
                 .statusCode(200)
                 .spec(TestSpecification.buildResponseSpec());

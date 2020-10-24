@@ -4,7 +4,7 @@ import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
@@ -291,7 +291,7 @@ public class SignUpTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409);
 
@@ -311,7 +311,7 @@ public class SignUpTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());
@@ -330,7 +330,7 @@ public class SignUpTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
@@ -350,7 +350,7 @@ public class SignUpTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
@@ -366,7 +366,7 @@ public class SignUpTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .pathParam("username","NotExistingUsername")
                 .when()
-                .delete(Path.server + Endpoint.deleteUserEndpoint)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(404)
                 .spec(TestSpecification.buildResponseSpec());
     }
@@ -376,7 +376,7 @@ public class SignUpTest {
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .get(Path.server + Endpoint.findAllUsers)
+                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
                 .then().assertThat().statusCode(200)
                 .spec(TestSpecification.buildResponseSpec());
     }
@@ -387,7 +387,7 @@ public class SignUpTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllUsers)
+                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
                 .then().assertThat().statusCode(200)
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(User[].class);
@@ -401,7 +401,7 @@ public class SignUpTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .pathParam("username",signUpRequestDtoTwo.getUsername())
                 .when()
-                .delete(Path.server + Endpoint.deleteUserEndpoint)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(404)
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -423,7 +423,7 @@ public class SignUpTest {
                 .contentType(ContentType.JSON)
                 .with().body(jwtRequest)
                 .when()
-                .post(Path.server + Endpoint.authenticateEndpoint)
+                .post(PodiumPath.server + PodiumEndpoint.authenticateEndpoint)
                 .then().assertThat().statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());
 

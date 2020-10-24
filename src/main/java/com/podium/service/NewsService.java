@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.configuration.Paths;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.model.entity.News;
 import com.podium.model.entity.PodiumResource;
@@ -10,7 +10,6 @@ import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.repository.NewsRepository;
 import com.podium.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +42,7 @@ public class NewsService {
 
         List<NewsResponseDto> newsResponseDtos = new ArrayList<>();
 
-        for(News news : this.newsRepository.findAll())
+        for(News news : this.newsRepository.findAllByOrderByDateDesc())
             newsResponseDtos.add(this.convertEntityToResponseDto(news));
 
         return newsResponseDtos;
@@ -82,7 +81,7 @@ public class NewsService {
 
         for (MultipartFile image : requestDto.getFiles()) {
 
-            String path = Paths.getImages() + image.getOriginalFilename();
+            String path = PodiumPath.images + image.getOriginalFilename();
 
             File file = new File(path);
 

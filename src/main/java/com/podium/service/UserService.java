@@ -81,7 +81,7 @@ public class UserService {
     }
 
     public boolean existUserByUsername(String username){
-       return this.userRepository.existsByUsername(username);
+        return this.userRepository.existsByUsername(username);
     }
 
     public boolean existUserByEmail(String email){

@@ -1,13 +1,18 @@
 package com.podium.api;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.specification.TestSpecification;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
+import com.podium.validator.DisciplineValidator;
+import com.podium.validator.UserValidator;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -34,14 +39,11 @@ public class DisciplineTest {
     @Test
     public void T01_addValidDiscipline_ShouldReturnStatus_OK(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addDiscipline)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        DisciplineValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.OK);
+
+
 
     }
 
@@ -51,112 +53,111 @@ public class DisciplineTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllNews)
+                .when().get(Path.server + PodiumEndpoint.findAllNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
+    }
+
+    @Test
+    public void T03_find_All_Discipline_ShouldReturnIterable_DisciplineResponse(){
+
+        boolean isPresent = DisciplineValidator
+                .getInstance()
+                .findAll()
+                .stream()
+                .map(DisciplineResponseDto::getDiscipline)
+                .anyMatch(requestDto.getDiscipline()::equals);
+
+        Assert.assertTrue(isPresent);
 
     }
 
     @Test
-    public void T03_getAllDiscipline_ShouldReturnIterable_DisciplineResponse(){
+    public void T04_find_Discipline_By_Name_ShouldReturn_DisciplineResponse(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(Path.server + Endpoint.findAllDiscipline)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(DisciplineResponseDto[].class);
+        DisciplineResponseDto responseDto =
 
-    }
+                DisciplineValidator
+                        .getInstance()
+                        .findByName(requestDto.getDiscipline(),HttpStatus.OK);
 
-    @Test
-    public void T04_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("discipline",requestDto.getDiscipline())
-                .delete(Path.server + Endpoint.deleteDisciplineByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
+        Assert.assertEquals(responseDto.getDiscipline(),responseDto.getDiscipline());
 
     }
 
     @Test
-    public void T05_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T05_exist_Discipline_By_Name_ShouldReturn_Status_OK(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("discipline",requestDto.getDiscipline())
-                .delete(Path.server + Endpoint.deleteDisciplineByName)
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
-                .spec(TestSpecification.buildResponseSpec());
+        DisciplineValidator
+                .getInstance()
+                .existDisciplineByName(requestDto.getDiscipline(),HttpStatus.OK);
 
     }
 
     @Test
-    public void T06_addDisciplineEmptyName_ShouldReturnStatus_CONFLICT(){
+    public void T06_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
+
+        DisciplineValidator
+                .getInstance()
+                .deleteDisciplineByName(requestDto.getDiscipline(),HttpStatus.OK);
+
+
+    }
+
+    @Test
+    public void T07_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
+
+        DisciplineValidator
+                .getInstance()
+                .deleteDisciplineByName(requestDto.getDiscipline(),HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    public void T08_addDisciplineEmptyName_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline("");
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addDiscipline)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        DisciplineValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.setDiscipline(valueHolder);
 
     }
 
     @Test
-    public void T07_addDisciplineToShortName_ShouldReturnStatus_CONFLICT(){
+    public void T09_addDisciplineToShortName_ShouldReturnStatus_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
 
         valueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(toShort);
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addDiscipline)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        DisciplineValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
        requestDto.setDiscipline(valueHolder);
 
     }
 
     @Test
-    public void T08_addDisciplineToLongName_ShouldReturnStatus_CONFLICT(){
+    public void T10_addDisciplineToLongName_ShouldReturnStatus_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
 
         valueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(toLong);
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + Endpoint.addDiscipline)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        DisciplineValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
        requestDto.setDiscipline(valueHolder);
 
     }
-
-
 
 }

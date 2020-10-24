@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.service.CountryService;
@@ -21,12 +22,12 @@ public class CountryController {
         this.countryService = countryService;
     }
 
-    @GetMapping("/country/find/all")
+    @GetMapping(PodiumEndpoint.findAllCountry)
        public ResponseEntity<Iterable<CountryResponseDto>> findAllCountry(){
         return ResponseEntity.ok().body(this.countryService.findAllCountry());
     }
 
-    @PostMapping("/country/add")
+    @PostMapping(PodiumEndpoint.addCountry)
     public ResponseEntity addCountry(@RequestBody CountryRequestDto requestDto){
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
@@ -40,7 +41,7 @@ public class CountryController {
 
     }
 
-    @GetMapping("/country/exist/{name}")
+    @GetMapping(PodiumEndpoint.existCountryByName)
     public ResponseEntity existDisciplineByName(@PathVariable String name){
 
         if(this.countryService.existCountryByName(name))
@@ -50,7 +51,7 @@ public class CountryController {
             return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/country/delete/{name}")
+    @DeleteMapping(PodiumEndpoint.deleteCountryByName)
     public ResponseEntity deleteDisciplineByName(@PathVariable String name){
 
         if(!this.countryService.existCountryByName(name))

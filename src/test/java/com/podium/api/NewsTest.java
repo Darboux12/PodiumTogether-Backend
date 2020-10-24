@@ -1,11 +1,12 @@
 package com.podium.api;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.specification.TestSpecification;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
@@ -39,7 +40,7 @@ public class NewsTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllNews)
+                .when().get(Path.server + PodiumEndpoint.findAllNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -52,7 +53,7 @@ public class NewsTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllNews)
+                .get(Path.server + PodiumEndpoint.findAllNews)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(NewsResponseDto[].class);
@@ -69,7 +70,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -88,7 +89,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -107,7 +108,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -126,7 +127,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -142,7 +143,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -158,7 +159,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -176,7 +177,7 @@ public class NewsTest {
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
                         .pathParam("title",newsRequest.getTitle())
-                        .when().get(Path.server + Endpoint.findNewsByTitle)
+                        .when().get(Path.server + PodiumEndpoint.findNewsByTitle)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -187,7 +188,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("id", newsResponseDto.getId())
-                .when().delete(Path.server + Endpoint.deleteNewsById)
+                .when().delete(Path.server + PodiumEndpoint.deleteNewsById)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -206,7 +207,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -227,7 +228,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -248,7 +249,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -269,7 +270,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -290,7 +291,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -311,7 +312,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -332,7 +333,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -353,7 +354,7 @@ public class NewsTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(newsRequest)
-                .when().post(Path.server + Endpoint.addNews)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());

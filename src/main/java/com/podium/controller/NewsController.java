@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.service.NewsService;
@@ -24,7 +25,7 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    @PostMapping("/news/add")
+    @PostMapping(PodiumEndpoint.addNews)
     public ResponseEntity addNews(@RequestBody NewsRequestDto request) throws IllegalAccessException, ParseException {
 
        PodiumValidator.getInstance().validateRequestBody(request);
@@ -38,7 +39,7 @@ public class NewsController {
 
     }
 
-    @GetMapping("/news/find/all")
+    @GetMapping(PodiumEndpoint.findAllNews)
     public ResponseEntity<Iterable<NewsResponseDto>> findAllNews() throws IOException {
 
         return ResponseEntity
@@ -47,7 +48,7 @@ public class NewsController {
 
     }
 
-    @GetMapping("/news/find/id/{id}")
+    @GetMapping(PodiumEndpoint.findNewsById)
     public ResponseEntity<NewsResponseDto> findNewsById(@PathVariable int id) throws IOException {
 
         if(!this.newsService.existNewsById(id))
@@ -60,7 +61,7 @@ public class NewsController {
 
     }
 
-    @GetMapping("/news/find/title/{title}")
+    @GetMapping(PodiumEndpoint.findNewsByTitle)
     public ResponseEntity<NewsResponseDto> findNewsByTitle(@PathVariable String title) throws IOException {
 
         if(!this.newsService.existNewsByTitle(title))
@@ -73,7 +74,7 @@ public class NewsController {
 
     }
 
-    @DeleteMapping("/news/delete/{id}")
+    @DeleteMapping(PodiumEndpoint.deleteNewsById)
     public ResponseEntity deleteNewsById(@PathVariable int id) throws IOException {
 
         if(!this.newsService.existNewsById(id))

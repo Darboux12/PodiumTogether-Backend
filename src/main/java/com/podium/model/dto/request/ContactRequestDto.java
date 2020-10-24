@@ -3,7 +3,7 @@ package com.podium.model.dto.request;
 import com.podium.validation.annotation.PodiumLength;
 import com.podium.validation.annotation.PodiumTextNotEmpty;
 import com.podium.validation.annotation.PodiumValidEmail;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import lombok.Getter;
 import lombok.Setter;
 

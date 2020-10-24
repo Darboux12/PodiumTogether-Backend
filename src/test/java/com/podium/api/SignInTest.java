@@ -122,7 +122,7 @@ public class SignInTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409);
 
@@ -142,7 +142,7 @@ public class SignInTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());
@@ -161,7 +161,7 @@ public class SignInTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
@@ -181,7 +181,7 @@ public class SignInTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(signUpRequestDtoTwo)
-                .when().post(Path.server + Endpoint.addUserEndpoint)
+                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
                 .then().assertThat()
                 .statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());;
@@ -197,7 +197,7 @@ public class SignInTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .pathParam("username","NotExistingUsername")
                 .when()
-                .delete(Path.server + Endpoint.deleteUserEndpoint)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(404)
                 .spec(TestSpecification.buildResponseSpec());
     }
@@ -207,7 +207,7 @@ public class SignInTest {
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .get(Path.server + Endpoint.findAllUsers)
+                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
                 .then().assertThat().statusCode(200)
                 .spec(TestSpecification.buildResponseSpec());
     }
@@ -218,7 +218,7 @@ public class SignInTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllUsers)
+                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
                 .then().assertThat().statusCode(200)
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(User[].class);
@@ -232,7 +232,7 @@ public class SignInTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .pathParam("username",signUpRequestDtoTwo.getUsername())
                 .when()
-                .delete(Path.server + Endpoint.deleteUserEndpoint)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
                 .then().assertThat().statusCode(404)
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -254,7 +254,7 @@ public class SignInTest {
                 .contentType(ContentType.JSON)
                 .with().body(jwtRequest)
                 .when()
-                .post(Path.server + Endpoint.authenticateEndpoint)
+                .post(PodiumPath.server + PodiumEndpoint.authenticateEndpoint)
                 .then().assertThat().statusCode(409)
                 .spec(TestSpecification.buildResponseSpec());
 

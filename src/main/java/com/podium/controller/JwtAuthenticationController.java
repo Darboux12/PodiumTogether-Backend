@@ -1,6 +1,7 @@
 package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.model.dto.response.JwtResponseDto;
 import com.podium.service.JwtUserDetailsService;
@@ -34,7 +35,7 @@ public class JwtAuthenticationController {
         this.userService = userService;
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping(PodiumEndpoint.authenticate)
     public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody JwtRequestDto authenticationRequest) throws Exception {
 
         PodiumValidator.getInstance().validateRequestBody(authenticationRequest);

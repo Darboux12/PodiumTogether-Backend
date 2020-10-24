@@ -3,6 +3,7 @@ package com.podium.service;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.model.entity.Discipline;
 import com.podium.model.entity.News;
@@ -49,6 +50,12 @@ public class DisciplineService {
 
         return responseDtos;
 
+    }
+
+    public DisciplineResponseDto findByDisciplineName(String disciplineName){
+
+        return this.convertEntityToResponseDto(
+                this.disciplineRepository.findByDiscipline(disciplineName));
     }
 
     public void deleteDisciplineByName(String discipline){

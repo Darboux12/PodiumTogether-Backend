@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.SubjectResponseDto;
@@ -24,7 +25,7 @@ public class ContactController {
         this.contactService = contactService;
     }
 
-    @PostMapping("/contact/add")
+    @PostMapping(PodiumEndpoint.addContact)
     public ResponseEntity addContact(@RequestBody ContactRequestDto request){
 
         PodiumValidator.getInstance().validateRequestBody(request);
@@ -39,14 +40,14 @@ public class ContactController {
 
     }
 
-    @DeleteMapping("/contact/delete/{id}")
+    @DeleteMapping(PodiumEndpoint.deleteContact)
     public ResponseEntity deleteContact(@PathVariable int id){
 
         this.contactService.deleteContact(id);
         return ResponseEntity.ok().body("Contact deleted");
     }
 
-    @GetMapping("/contact/find/email/{email}")
+    @GetMapping(PodiumEndpoint.findAllContactByEmail)
     public ResponseEntity findContactByEmail(@PathVariable String email){
 
         return ResponseEntity
@@ -54,7 +55,7 @@ public class ContactController {
                 .body(this.contactService.findAllByEmail(email));
     }
 
-    @GetMapping("/contact/find/subject/{subject}")
+    @GetMapping(PodiumEndpoint.findAllContactBySubject)
     public ResponseEntity findContactBySubject(@PathVariable String subject){
 
         return ResponseEntity
@@ -62,7 +63,7 @@ public class ContactController {
                 .body(this.contactService.findAllBySubject(subject));
     }
 
-    @PostMapping("/subject/add")
+    @PostMapping(PodiumEndpoint.addSubject)
     public ResponseEntity addSubject(@RequestBody SubjectRequestDto request){
 
         PodiumValidator.getInstance().validateRequestBody(request);
@@ -76,19 +77,19 @@ public class ContactController {
 
     }
 
-    @DeleteMapping("/subject/delete/{name}")
+    @DeleteMapping(PodiumEndpoint.deleteSubject)
     public ResponseEntity deleteSubject(@PathVariable String name){
 
         this.contactService.deleteSubjectByName(name);
         return ResponseEntity.ok().body("Subject deleted");
     }
 
-    @GetMapping("/subject/find/all")
+    @GetMapping(PodiumEndpoint.findAllSubject)
     public Iterable<SubjectResponseDto> findAllSubjects(){
         return this.contactService.findAllSubjects();
     }
 
-    @GetMapping("/contact/find/all")
+    @GetMapping(PodiumEndpoint.findAllContact)
     public Iterable<ContactResponseDto> findAllContact(){
         return this.contactService.findAllContact();
     }
@@ -99,5 +100,19 @@ public class ContactController {
                 .ok()
                 .body(this.contactService.findSubjectByName(name));
     }
+
+    @GetMapping(PodiumEndpoint.existSubjectByName)
+    public ResponseEntity existSubjectByName(@PathVariable String name){
+
+        if(this.contactService.existSubjectByName(name))
+            return ResponseEntity.ok().build();
+
+        else
+            return ResponseEntity.badRequest().build();
+
+    }
+
+
+
 
 }

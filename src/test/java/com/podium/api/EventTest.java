@@ -1,10 +1,11 @@
 package com.podium.api;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.EventRequestDto;
 import com.podium.specification.TestSpecification;
-import com.podium.validation.validators.PodiumLimits;
+import com.podium.constant.PodiumLimits;
 import com.podium.validator.EventValidator;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
@@ -548,7 +549,7 @@ public class EventTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("title",requestDto.getTitle())
-                .when().delete(Path.server + Endpoint.deleteEvent)
+                .when().delete(Path.server + PodiumEndpoint.deleteEvent)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -564,7 +565,7 @@ public class EventTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.AddEvent)
+                .when().post(PodiumPath.server + PodiumEndpoint.AddEvent)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -578,7 +579,7 @@ public class EventTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.AddEvent)
+                .when().post(PodiumPath.server + PodiumEndpoint.AddEvent)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -591,7 +592,7 @@ public class EventTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllEvent)
+                .when().get(PodiumPath.server + PodiumEndpoint.findAllEvent)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -604,7 +605,7 @@ public class EventTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllEvent)
+                .get(PodiumPath.server + PodiumEndpoint.findAllEvent)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(EventResponseDto[].class);
@@ -618,7 +619,7 @@ public class EventTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getEvent())
                 .when()
-                .get(Path.server + Endpoint.findEventByName)
+                .get(PodiumPath.server + PodiumEndpoint.findEventByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -632,7 +633,7 @@ public class EventTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getEvent())
                 .when()
-                .get(Path.server + Endpoint.findEventByName)
+                .get(PodiumPath.server + PodiumEndpoint.findEventByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(EventResponseDto.class);
@@ -645,7 +646,7 @@ public class EventTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getEvent())
                 .when()
-                .get(Path.server + Endpoint.existEventByName)
+                .get(PodiumPath.server + PodiumEndpoint.existEventByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -657,7 +658,7 @@ public class EventTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",requestDto.getEvent())
-                .delete(Path.server + Endpoint.deleteEventByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteEventByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -669,7 +670,7 @@ public class EventTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",requestDto.getEvent())
-                .delete(Path.server + Endpoint.deleteEventByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteEventByName)
                 .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
                 .spec(TestSpecification.buildResponseSpec());
 

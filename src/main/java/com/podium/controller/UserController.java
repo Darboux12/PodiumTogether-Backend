@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.service.CountryService;
@@ -8,10 +9,8 @@ import com.podium.validation.main.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.text.ParseException;
 
 @RestController
@@ -19,15 +18,13 @@ import java.text.ParseException;
 public class UserController {
 
     private UserService userService;
-    private CountryService countryService;
 
     @Autowired
-    public UserController(UserService userService, CountryService countryService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.countryService = countryService;
     }
 
-    @PostMapping("/user/add")
+    @PostMapping(PodiumEndpoint.addUser)
     public ResponseEntity addUser(@RequestBody SignUpRequestDto request) throws ParseException, IllegalAccessException {
 
         PodiumValidator.getInstance().validateRequestBody(request);
@@ -45,7 +42,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/find/{username}")
+    @GetMapping(PodiumEndpoint.findUserByUsername)
     public ResponseEntity<UserResponseDto> findUser(@PathVariable String username){
 
         if(this.userService.existUserByUsername(username))
@@ -59,7 +56,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/find/all")
+    @GetMapping(PodiumEndpoint.findAllUsers)
     public ResponseEntity<Iterable<UserResponseDto>> findAllUsers(){
 
         return ResponseEntity
@@ -68,7 +65,7 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/user/delete/{username}")
+    @DeleteMapping(PodiumEndpoint.deleteUser)
     public ResponseEntity deleteUser(@PathVariable String username){
 
         if(this.userService.existUserByUsername(username)){
@@ -82,7 +79,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/exist/username/{username}")
+    @GetMapping(PodiumEndpoint.existUserByUsername)
     public ResponseEntity existUserByUsername(@PathVariable String username){
 
         if(this.userService.existUserByUsername(username))
@@ -94,7 +91,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/user/exist/email/{email}")
+    @GetMapping(PodiumEndpoint.existUserByEmail)
     public ResponseEntity existUserByEmail(@PathVariable String email){
 
         if(this.userService.existUserByEmail(email))

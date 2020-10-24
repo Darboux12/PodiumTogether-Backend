@@ -29,14 +29,14 @@ public class MavenWrapperDownloader {
             + WRAPPER_VERSION + "/maven-wrapper-" + WRAPPER_VERSION + ".jar";
 
     /**
-     * Path to the maven-wrapper.properties file, which might contain a downloadUrl property to
+     * PodiumPath to the maven-wrapper.properties file, which might contain a downloadUrl property to
      * use instead of the default one.
      */
     private static final String MAVEN_WRAPPER_PROPERTIES_PATH =
             ".mvn/wrapper/maven-wrapper.properties";
 
     /**
-     * Path where the maven-wrapper.jar will be saved to.
+     * PodiumPath where the maven-wrapper.jar will be saved to.
      */
     private static final String MAVEN_WRAPPER_JAR_PATH =
             ".mvn/wrapper/maven-wrapper.jar";

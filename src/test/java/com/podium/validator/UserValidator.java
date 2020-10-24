@@ -1,6 +1,6 @@
 package com.podium.validator;
 
-import com.podium.helper.Endpoint;
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
 import com.podium.specification.TestSpecification;
 import com.podium.model.dto.request.JwtRequestDto;
@@ -35,7 +35,7 @@ public class UserValidator {
                 .contentType(ContentType.JSON)
                 .body(requestDto)
                 .when()
-                .post(Path.server + Endpoint.addUserEndpoint)
+                .post(Path.server + PodiumEndpoint.addUser)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -49,7 +49,7 @@ public class UserValidator {
                 .contentType(ContentType.JSON)
                 .body(requestDto)
                 .when()
-                .post(Path.server + Endpoint.authenticateEndpoint)
+                .post(Path.server + PodiumEndpoint.authenticate)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -66,7 +66,7 @@ public class UserValidator {
                     .contentType(ContentType.JSON)
                     .pathParam("username", username)
                     .when()
-                    .get(Path.server + Endpoint.getUserByUsernameEndpoint)
+                    .get(Path.server + PodiumEndpoint.findUserByUsername)
                     .then().assertThat()
                     .statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec())
@@ -79,7 +79,7 @@ public class UserValidator {
                     .contentType(ContentType.JSON)
                     .pathParam("username",username)
                     .when()
-                    .get(Path.server + Endpoint.getUserByUsernameEndpoint)
+                    .get(Path.server + PodiumEndpoint.findUserByUsername)
                     .then().assertThat()
                     .statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec());
@@ -96,7 +96,7 @@ public class UserValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("username", username)
                 .when()
-                .delete(Path.server + Endpoint.deleteUserEndpoint)
+                .delete(Path.server + PodiumEndpoint.deleteUser)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -111,7 +111,7 @@ public class UserValidator {
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
                         .when()
-                        .get(Path.server + Endpoint.findAllUsers)
+                        .get(Path.server + PodiumEndpoint.findAllUsers)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())

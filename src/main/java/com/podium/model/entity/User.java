@@ -60,7 +60,7 @@ public class User {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "news_resource",
+    @JoinTable(name = "user_resource",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "resource_id") })
     private Set<PodiumResource> profileImages = new HashSet<>();

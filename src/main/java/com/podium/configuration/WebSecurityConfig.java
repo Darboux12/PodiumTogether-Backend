@@ -125,7 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/subject/delete/{name}")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/user/exist/username{username}")
+                .and().authorizeRequests().antMatchers("/user/exist/username/{username}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/user/exist/email/{email}")
@@ -222,6 +222,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
                 .and().authorizeRequests().antMatchers("/contact/find/email/{email}")
                 .permitAll()
+
+                .and().authorizeRequests().antMatchers("/subject/exist/{name}")
+                .permitAll()
+
+
+                .and().authorizeRequests().antMatchers("/discipline/find/{discipline}")
+                .permitAll()
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
 import com.podium.service.CityService;
@@ -19,17 +20,17 @@ public class CityController {
         this.cityService = cityService;
     }
 
-    @GetMapping("/city/find/all")
+    @GetMapping(PodiumEndpoint.findAllCity)
     public ResponseEntity<Iterable<CityResponseDto>> findAllCity(){
         return ResponseEntity.ok().body(this.cityService.findAllCity());
     }
 
-    @GetMapping("/city/find/name/{name}")
+    @GetMapping(PodiumEndpoint.findCityByName)
     public ResponseEntity<CityResponseDto> findCityByName(@PathVariable String name){
         return ResponseEntity.ok().body(this.cityService.findCityByName(name));
     }
 
-    @PostMapping("/city/add")
+    @PostMapping(PodiumEndpoint.addCity)
     public ResponseEntity addCity(@RequestBody CityRequestDto requestDto){
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
@@ -43,7 +44,7 @@ public class CityController {
 
     }
 
-    @GetMapping("/city/exist/{name}")
+    @GetMapping(PodiumEndpoint.existCityByName)
     public ResponseEntity existCityByName(@PathVariable String name){
 
         if(this.cityService.existByCityName(name))
@@ -53,7 +54,7 @@ public class CityController {
             return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/city/delete/{name}")
+    @DeleteMapping(PodiumEndpoint.deleteCityByName)
     public ResponseEntity deleteCityByName(@PathVariable String name){
 
         if(!this.cityService.existByCityName(name))

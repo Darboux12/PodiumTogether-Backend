@@ -1,5 +1,7 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
+import com.podium.constant.PodiumLimits;
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.service.GenderService;
@@ -21,17 +23,17 @@ public class GenderController {
         this.genderService = genderService;
     }
 
-    @GetMapping("/gender/find/all")
+    @GetMapping(PodiumEndpoint.findAllGender)
     public ResponseEntity<Iterable<GenderResponseDto>> findAllGender(){
         return ResponseEntity.ok().body(this.genderService.findAllGenders());
     }
 
-    @GetMapping("/gender/find/name/{name}")
+    @GetMapping(PodiumEndpoint.findGenderByName)
     public ResponseEntity<GenderResponseDto> findGenderByName(@PathVariable String name){
         return ResponseEntity.ok().body(this.genderService.findByGenderName(name));
     }
 
-    @PostMapping("/gender/add")
+    @PostMapping(PodiumEndpoint.addGender)
     public ResponseEntity addGender(@RequestBody GenderRequestDto requestDto){
 
         PodiumValidator.getInstance().validateRequestBody(requestDto);
@@ -45,7 +47,7 @@ public class GenderController {
 
     }
 
-    @GetMapping("/gender/exist/{name}")
+    @GetMapping(PodiumEndpoint.existGenderByName)
     public ResponseEntity existGenderByName(@PathVariable String name){
 
         if(this.genderService.existByGenderName(name))
@@ -55,7 +57,7 @@ public class GenderController {
             return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/gender/delete/{name}")
+    @DeleteMapping(PodiumEndpoint.deleteGenderByName)
     public ResponseEntity deleteGenderByName(@PathVariable String name){
 
         if(!this.genderService.existByGenderName(name))

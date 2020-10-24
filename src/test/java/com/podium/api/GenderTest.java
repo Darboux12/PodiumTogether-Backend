@@ -2,6 +2,7 @@ package com.podium.api;
 
 
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.GenderRequestDto;
@@ -38,7 +39,7 @@ public class GenderTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addGender)
+                .when().post(Path.server + PodiumEndpoint.addGender)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -52,7 +53,7 @@ public class GenderTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addGender)
+                .when().post(Path.server + PodiumEndpoint.addGender)
                 .then().assertThat()
                 .statusCode(HttpStatus.CONFLICT.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -65,7 +66,7 @@ public class GenderTest {
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .when().get(Path.server + Endpoint.findAllGender)
+                .when().get(Path.server + PodiumEndpoint.findAllGender)
                 .then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -78,7 +79,7 @@ public class GenderTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .when()
-                .get(Path.server + Endpoint.findAllGender)
+                .get(Path.server + PodiumEndpoint.findAllGender)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(GenderResponseDto[].class);
@@ -92,7 +93,7 @@ public class GenderTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getGender())
                 .when()
-                .get(Path.server + Endpoint.findGenderByName)
+                .get(Path.server + PodiumEndpoint.findGenderByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -106,7 +107,7 @@ public class GenderTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getGender())
                 .when()
-                .get(Path.server + Endpoint.findGenderByName)
+                .get(Path.server + PodiumEndpoint.findGenderByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(GenderResponseDto.class);
@@ -119,7 +120,7 @@ public class GenderTest {
                 .contentType(ContentType.JSON)
                 .pathParam("name",requestDto.getGender())
                 .when()
-                .get(Path.server + Endpoint.existGenderByName)
+                .get(Path.server + PodiumEndpoint.existGenderByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -131,7 +132,7 @@ public class GenderTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",requestDto.getGender())
-                .delete(Path.server + Endpoint.deleteGenderByName)
+                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
                 .then().assertThat().statusCode(HttpStatus.OK.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -143,7 +144,7 @@ public class GenderTest {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",requestDto.getGender())
-                .delete(Path.server + Endpoint.deleteGenderByName)
+                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
                 .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
                 .spec(TestSpecification.buildResponseSpec());
 

@@ -1,5 +1,6 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ResourceImageRequestDto;
 import com.podium.service.NewsService;
 import com.podium.validation.main.PodiumValidator;
@@ -22,7 +23,7 @@ public class ResourceController {
         this.newsService = newsService;
     }
 
-    @PostMapping("/image/upload/news")
+    @PostMapping(PodiumEndpoint.addNewsImage)
     public ResponseEntity uploadImageNews(
             @RequestParam("title") String title,
             @RequestParam("images") List<MultipartFile> images) throws IOException {

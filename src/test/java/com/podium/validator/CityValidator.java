@@ -1,6 +1,6 @@
 package com.podium.validator;
 
-import com.podium.helper.Endpoint;
+import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
 import com.podium.specification.TestSpecification;
 import com.podium.model.dto.request.CityRequestDto;
@@ -33,7 +33,7 @@ public class CityValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + Endpoint.addCity)
+                .when().post(Path.server + PodiumEndpoint.addCity)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -47,7 +47,7 @@ public class CityValidator {
         given()
           .spec(TestSpecification.buildRequestSpec())
           .contentType(ContentType.JSON)
-          .when().get(Path.server + Endpoint.findAllCity)
+          .when().get(Path.server + PodiumEndpoint.findAllCity)
           .then().assertThat()
           .statusCode(HttpStatus.OK.value())
           .spec(TestSpecification.buildResponseSpec())
@@ -65,7 +65,7 @@ public class CityValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + Endpoint.findCityByName)
+                .get(Path.server + PodiumEndpoint.findCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(CityResponseDto.class);
@@ -78,7 +78,7 @@ public class CityValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + Endpoint.existCityByName)
+                .get(Path.server + PodiumEndpoint.existCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -89,7 +89,7 @@ public class CityValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",cityName)
-                .delete(Path.server + Endpoint.deleteCityByName)
+                .delete(Path.server + PodiumEndpoint.deleteCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
