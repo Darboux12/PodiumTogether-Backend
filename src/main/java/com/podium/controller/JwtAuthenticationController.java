@@ -4,6 +4,7 @@ import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.model.dto.response.JwtResponseDto;
+import com.podium.model.dto.response.UsernameFromTokenResponseDto;
 import com.podium.service.JwtUserDetailsService;
 import com.podium.service.UserService;
 import com.podium.validation.main.PodiumValidator;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +56,43 @@ public class JwtAuthenticationController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Authentication failed");
     }
+
+    @PostMapping(PodiumEndpoint.authenticateNoToken)
+    public ResponseEntity<JwtResponseDto> authenticateWithoutToken(@RequestBody JwtRequestDto authenticationRequest) throws Exception {
+
+
+        PodiumValidator.getInstance().validateRequestBody(authenticationRequest);
+
+        final UserDetails userDetails =
+                userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+        final boolean accessPermission = this.passwordEncoder.matches(
+                authenticationRequest.getPassword(),
+                userDetails.getPassword());
+
+        if(accessPermission)
+            return ResponseEntity.ok().build();
+
+        else
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Authentication failed");
+    }
+
+    @PostMapping("/token/find/username")
+    public ResponseEntity<UsernameFromTokenResponseDto> findUsernameFromToken(@RequestParam("token") String token){
+
+        String username = this.jwtTokenUtil.getUsernameFromToken(token);
+
+        UsernameFromTokenResponseDto response
+                = new UsernameFromTokenResponseDto();
+
+        response.setUsername(username);
+
+        return ResponseEntity
+                .ok()
+                .body(response);
+
+    }
+
 
 }

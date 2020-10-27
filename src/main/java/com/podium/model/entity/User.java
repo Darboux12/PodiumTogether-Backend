@@ -19,7 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "user_id")
-    private int userId;
+    private int id;
 
     @NotNull
     @Column(name = "username")
@@ -77,5 +77,9 @@ public class User {
 
     @OneToMany(mappedBy="author")
     private Set<Event> eventsCreated = new HashSet<>();
+
+    @Column(name = "description")
+    @Type(type = "text")
+    private String description;
 
 }

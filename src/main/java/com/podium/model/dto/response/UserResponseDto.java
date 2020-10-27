@@ -25,4 +25,5 @@ public class UserResponseDto {
     private List<PodiumFile> profileImages = new ArrayList<>();
     private Set<Event> eventsJoined;
     private Set<Event> eventsCreated;
+    private String description;
 }

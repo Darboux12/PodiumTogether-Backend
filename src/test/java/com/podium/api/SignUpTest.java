@@ -60,7 +60,7 @@ public class SignUpTest {
                 .getInstance()
                 .findUserByUsername(signUpRequestDtoOne.getUsername(),HttpStatus.OK);
 
-        Assert.assertEquals(responseDto.getUsername(),responseDto.getUsername());
+        Assert.assertEquals(signUpRequestDtoOne.getUsername(),responseDto.getUsername());
     }
 
     @Test

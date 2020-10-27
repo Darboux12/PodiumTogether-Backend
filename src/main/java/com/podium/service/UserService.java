@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.model.dto.response.CountryResponseDto;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.entity.Country;
 import com.podium.model.entity.Role;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,12 @@ public class UserService {
     }
 
     public void addUser(SignUpRequestDto signUpRequestDto){
-        this.userRepository.save(this.convertRequestDtoToEntity(signUpRequestDto));
+        this.userRepository.save(this.convertSignUpRequestDtoToEntity(signUpRequestDto));
     }
 
     public UserResponseDto findUserByUsername(String username){
        return this.convertEntityToResponseDto(
-               this.userRepository.findByUsername(username));
+               Objects.requireNonNull(this.userRepository.findByUsername(username).orElse(null)));
     }
 
     public Iterable<UserResponseDto> findAllUsers(){
@@ -88,8 +89,39 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    public void updateUserUsername(String presentUsername, String newUsername){
-        this.userRepository.updateUserUsername(presentUsername,newUsername);
+    public void updateUser(ProfileUpdateRequestDto requestDto){
+
+        this.userRepository.save(
+                this.convertProfileUpdateRequestDtoToEntity(requestDto));
+    }
+
+    public boolean isUpdateDataConsistent(ProfileUpdateRequestDto requestDto){
+
+        User userById = this.userRepository.findById(requestDto.getId()).orElse(null);
+
+        if (userById != null && !userById.getUsername().equals(requestDto.getUsername())
+                && userById.getEmail().equals(requestDto.getEmail())) {
+
+            return !this.userRepository.existsByUsername(requestDto.getUsername());
+        }
+
+        if (userById != null && userById.getUsername().equals(requestDto.getUsername())
+                && !userById.getEmail().equals(requestDto.getEmail())) {
+
+            return !this.userRepository.existsByEmail(requestDto.getEmail());
+        }
+
+        if (userById != null && !userById.getUsername().equals(requestDto.getUsername())
+                && !userById.getEmail().equals(requestDto.getEmail())) {
+
+            return !this.userRepository.existsByEmail(requestDto.getEmail())
+                    && !this.userRepository.existsByUsername(requestDto.getUsername());
+
+
+        }
+
+        return true;
+
     }
 
     public void deleteUserByUsername(String username){
@@ -97,7 +129,30 @@ public class UserService {
         this.userRepository.deleteByUsername(username);
     }
 
-    private User convertRequestDtoToEntity(SignUpRequestDto requestDto){
+    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequestDto requestDto){
+
+        User user = this.userRepository.findById(requestDto.getId()).orElse(null);
+
+
+
+        if (user != null) {
+
+            user.setUsername(requestDto.getUsername());
+            Country country = this.countryRepository.findByName(requestDto.getCountry());
+            user.setCountry(country);
+            user.setEmail(requestDto.getEmail());
+            user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+            user.setBirthday(requestDto.getBirthday());
+            user.setDescription(requestDto.getDescription());
+
+            return user;
+
+        }
+
+        return null;
+    }
+
+    private User convertSignUpRequestDtoToEntity(SignUpRequestDto requestDto){
 
         User user = new User();
         user.setUsername(requestDto.getUsername());
@@ -124,7 +179,7 @@ public class UserService {
     private UserResponseDto convertEntityToResponseDto(User user){
 
         UserResponseDto responseDto = new UserResponseDto();
-        responseDto.setId(user.getUserId());
+        responseDto.setId(user.getId());
         responseDto.setUsername(user.getUsername());
         responseDto.setEmail(user.getEmail());
         responseDto.setPassword(user.getPassword());
@@ -132,6 +187,7 @@ public class UserService {
         Set<String> roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
         responseDto.setRoles(roles);
         responseDto.setBirthday(user.getBirthday());
+        responseDto.setDescription(user.getDescription());
         return responseDto;
 
     }

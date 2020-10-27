@@ -22,13 +22,9 @@ public class Constant {
     private static EventRequestDto validEventRequestDto = new EventRequestDto();
     private static CityRequestDto validCityRequestDto = new CityRequestDto();
     private static  JwtRequestDto validSignInRequestDto = new JwtRequestDto();
+    private static  ProfileUpdateRequestDto profileUpdateRequestDto = new ProfileUpdateRequestDto();
 
     private static String existingUsername = "JohnDoe126";
-    private static String existingPassword = "johndoe123";
-    private static String existingCity = "London";
-    private static String existingDiscipline = "Football";
-    private static String existingStreet = "Polna";
-    private static String existingSubject = "Technical";
 
     public Constant() throws ParseException { }
 
@@ -114,10 +110,13 @@ public class Constant {
 
         validEventRequestDto.setDateFrom(dateFrom);
         validEventRequestDto.setDateTo(dateTo);
+        String existingCity = "London";
         validEventRequestDto.setCity(existingCity);
         validEventRequestDto.setNumber(433);
+        String existingStreet = "Polna";
         validEventRequestDto.setStreet(existingStreet);
         validEventRequestDto.setPostal("23-203");
+        String existingDiscipline = "Football";
         validEventRequestDto.setDiscipline(existingDiscipline);
         validEventRequestDto.setPeople(12);
 
@@ -149,8 +148,11 @@ public class Constant {
     public static JwtRequestDto getSignInRequest(){
 
         validSignInRequestDto.setUsername(existingUsername);
+        String existingPassword = "johndoe123";
         validSignInRequestDto.setPassword(existingPassword);
         return  validSignInRequestDto;
     }
+
+
 
 }

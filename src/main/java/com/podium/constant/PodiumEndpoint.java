@@ -5,6 +5,9 @@ public class PodiumEndpoint {
     /** POST | Sign in user | JwtRequest body required */
     public static final String authenticate = "/authenticate";
 
+    /** POST | Check if password is correct for user | JwtRequest body required */
+    public static final String authenticateNoToken = "/authenticate/check";
+
     /** POST | Sign up user | SignUpRequest body required */
     public static final String addUser = "/user/add";
 
@@ -22,6 +25,12 @@ public class PodiumEndpoint {
 
     /** GET | Exist user by email | Email path variable required */
     public static final String existUserByEmail = "/user/exist/email/{email}";
+
+
+    public static final String updateUserProfile = "/user/update/profile";
+
+
+
 
 
 

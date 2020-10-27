@@ -2,6 +2,7 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.specification.TestSpecification;
 import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
@@ -119,6 +120,20 @@ public class UserValidator {
 
         return Arrays.asList(dtos);
 
+
+    }
+
+    public void updateUser(ProfileUpdateRequestDto requestDto, HttpStatus status ){
+
+        given()
+                .spec(TestSpecification.buildRequestSpec())
+                .contentType(ContentType.JSON)
+                .body(requestDto)
+                .when()
+                .post(Path.server + PodiumEndpoint.updateUserProfile)
+                .then().assertThat()
+                .statusCode(status.value())
+                .spec(TestSpecification.buildResponseSpec());
 
     }
 

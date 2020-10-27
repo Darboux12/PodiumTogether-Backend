@@ -1,6 +1,8 @@
 package com.podium.controller;
 
+import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.service.CountryService;
@@ -18,10 +20,13 @@ import java.text.ParseException;
 public class UserController {
 
     private UserService userService;
+    private CountryService countryService;
+
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CountryService countryService) {
         this.userService = userService;
+        this.countryService = countryService;
     }
 
     @PostMapping(PodiumEndpoint.addUser)
@@ -36,6 +41,10 @@ public class UserController {
         if(this.userService.existUserByEmail(request.getEmail()))
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "User with given email already exists");
+
+        if(!this.countryService.existCountryByName(request.getCountry()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Given country does not exist");
 
         this.userService.addUser(request);
         return ResponseEntity.ok().body("User successfully signed up");
@@ -102,5 +111,29 @@ public class UserController {
                     HttpStatus.NOT_FOUND, "Email not found");
 
     }
+
+    @PostMapping(PodiumEndpoint.updateUserProfile)
+    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequestDto request){
+
+        PodiumValidator
+                .getInstance()
+                .validateRequestBody(request);
+
+        if(!this.userService.isUpdateDataConsistent(request))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "User with given username or email already exist");
+
+        if(!this.countryService.existCountryByName(request.getCountry()))
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "Given country does not exist");
+
+        this.userService.updateUser(request);
+
+        return ResponseEntity.ok().build();
+
+    }
+
+
+
 
 }

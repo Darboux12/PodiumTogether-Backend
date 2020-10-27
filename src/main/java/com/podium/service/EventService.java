@@ -126,9 +126,11 @@ public class EventService {
         event.setCost(requestDto.getCost());
         event.setDescription(requestDto.getDescription());
 
-        User user = this.userRepository.findByUsername(requestDto.getAuthor());
+        User user = this.userRepository.findByUsername(requestDto.getAuthor()).orElse(null);
 
-        System.out.println(user.getEmail());
+        if (user != null) {
+            System.out.println(user.getEmail());
+        }
 
         event.setAuthor(user);
 

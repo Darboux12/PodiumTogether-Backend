@@ -105,6 +105,8 @@ public class PodiumLimits {
     /** AGE LIMIT */
     public static final int minSignUpAge = 13;
 
+    public static final int maxUserDescriptionLength = 500;
+
 
 
 

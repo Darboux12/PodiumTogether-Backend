@@ -10,13 +10,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User,Integer> {
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     boolean existsByUsername(String username);
 
@@ -26,17 +27,8 @@ public interface UserRepository extends CrudRepository<User,Integer> {
 
     Iterable<User> findAllByCountry(Country country);
 
-    @Modifying(clearAutomatically = true)
-    @Query("update User user set user.username =:newUsername where user.username =:oldUsername")
-    void updateUserUsername
-            (@Param("oldUsername") String oldUsername,
-             @Param("newUsername") String newUsername);
-
     @Transactional
     void deleteByUsername(String username);
-
-
-
 
 
 
