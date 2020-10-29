@@ -3,11 +3,14 @@ package com.podium.controller;
 import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.model.dto.response.ExpirationDateTokenResponse;
 import com.podium.model.dto.response.JwtResponseDto;
 import com.podium.model.dto.response.UsernameFromTokenResponseDto;
 import com.podium.service.JwtUserDetailsService;
 import com.podium.service.UserService;
 import com.podium.validation.main.PodiumValidator;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +19,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Date;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -50,7 +56,7 @@ public class JwtAuthenticationController {
                 userDetails.getPassword());
 
         if(accessPermission)
-            return ResponseEntity.ok(new JwtResponseDto(jwtTokenUtil.generateToken(userDetails),authenticationRequest.getUsername()));
+            return ResponseEntity.ok(new JwtResponseDto(jwtTokenUtil.generateToken(userDetails)));
 
         else
             throw new ResponseStatusException(
@@ -81,16 +87,60 @@ public class JwtAuthenticationController {
     @PostMapping("/token/find/username")
     public ResponseEntity<UsernameFromTokenResponseDto> findUsernameFromToken(@RequestParam("token") String token){
 
-        String username = this.jwtTokenUtil.getUsernameFromToken(token);
+        try{
 
-        UsernameFromTokenResponseDto response
-                = new UsernameFromTokenResponseDto();
 
-        response.setUsername(username);
+                String username = this.jwtTokenUtil.getUsernameFromToken(token);
 
-        return ResponseEntity
-                .ok()
-                .body(response);
+                UsernameFromTokenResponseDto response
+                        = new UsernameFromTokenResponseDto();
+
+                response.setUsername(username);
+
+                return ResponseEntity
+                        .ok()
+                        .body(response);
+
+        }
+        catch (ExpiredJwtException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token has expired");
+        }
+
+        catch (MalformedJwtException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Token in invalid");
+        }
+
+
+    }
+
+    @PostMapping("/token/find/expiration")
+    public ResponseEntity<ExpirationDateTokenResponse> findExpirationFromToken(@RequestParam("token") String token){
+
+        try{
+
+            ExpirationDateTokenResponse response =
+                    new ExpirationDateTokenResponse();
+
+            Date expirationDate =
+                    this.jwtTokenUtil.getExpirationDateFromToken(token);
+
+            response.setExpirationDate(expirationDate);
+
+
+
+            return ResponseEntity
+                    .ok()
+                    .body(response);
+
+        }
+        catch (ExpiredJwtException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token has expired");
+        }
+
+        catch (MalformedJwtException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Token in invalid");
+        }
+
 
     }
 

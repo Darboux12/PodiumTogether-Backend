@@ -32,6 +32,13 @@ public class PodiumValidator {
             field.setAccessible(true);
 
             try {
+
+                if(field.get(object) == null)
+                    throw new ResponseStatusException(
+                            HttpStatus.CONFLICT, field.getName() +" cannot be null");
+
+
+
                 this.podiumTextNotEmpty(object,field);
                 this.podiumNotNull(object,field);
                 this.podiumDatePast(object,field);

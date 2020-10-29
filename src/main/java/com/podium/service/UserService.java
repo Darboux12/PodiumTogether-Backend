@@ -173,6 +173,8 @@ public class UserService {
         user.getRoles().add(role);
         user.setBirthday(requestDto.getBirthday());
 
+        user.setDescription("");
+
         return user;
     }
 

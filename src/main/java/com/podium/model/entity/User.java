@@ -55,15 +55,9 @@ public class User {
     @Column(name = "birthday")
     private Date birthday;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinTable(name = "user_resource",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "resource_id") })
-    private Set<PodiumResource> profileImages = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "resource_id", referencedColumnName = "resource_id")
+    private PodiumResource profileImage;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {

@@ -243,6 +243,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .permitAll()
 
 
+                .and().authorizeRequests().antMatchers("/token/find/expiration")
+                .permitAll()
+
 
 
 
