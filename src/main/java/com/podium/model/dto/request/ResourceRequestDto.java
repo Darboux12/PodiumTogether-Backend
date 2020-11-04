@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ResourceImageRequestDto {
+public class ResourceRequestDto {
 
    @PodiumNotNull
    private List<MultipartFile> files;

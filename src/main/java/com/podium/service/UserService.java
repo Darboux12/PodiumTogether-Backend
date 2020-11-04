@@ -3,16 +3,21 @@ package com.podium.service;
 import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.entity.Country;
+import com.podium.model.entity.PodiumResource;
 import com.podium.model.entity.Role;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.entity.User;
+import com.podium.model.other.PodiumFile;
 import com.podium.repository.CountryRepository;
 import com.podium.repository.RoleRepository;
 import com.podium.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -190,6 +195,36 @@ public class UserService {
         responseDto.setRoles(roles);
         responseDto.setBirthday(user.getBirthday());
         responseDto.setDescription(user.getDescription());
+
+        if(user.getProfileImage() != null) {
+
+            PodiumFile podiumFile = new PodiumFile();
+
+            PodiumResource resource = user.getProfileImage();
+
+            try {
+                podiumFile.setContent(FileCopyUtils
+                        .copyToByteArray(new File(resource.getPath())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            podiumFile.setName(resource.getName());
+            podiumFile.setType(resource.getType());
+
+            responseDto.setProfileImage(podiumFile);
+        }
+
+        else {
+            responseDto.setProfileImage(null);
+        }
+
+
+
+
+
+
+
         return responseDto;
 
     }

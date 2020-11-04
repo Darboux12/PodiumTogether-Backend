@@ -52,11 +52,9 @@ public class EventController {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT, "Given event author does not exist");
 
-
         this.eventService.addEvent(requestDto);
 
         return ResponseEntity.ok().build();
-
 
     }
 

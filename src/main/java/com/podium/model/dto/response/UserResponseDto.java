@@ -22,7 +22,7 @@ public class UserResponseDto {
     private String country;
     private Set<String> roles;
     private Date birthday;
-    private List<PodiumFile> profileImages = new ArrayList<>();
+    private PodiumFile profileImage = new PodiumFile();
     private Set<Event> eventsJoined;
     private Set<Event> eventsCreated;
     private String description;

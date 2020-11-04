@@ -29,6 +29,8 @@ public class PodiumEndpoint {
 
     public static final String updateUserProfile = "/user/update/profile";
 
+    public static final String uploadUserProfileImage = "/image/upload/profile";
+
 
 
 
@@ -124,6 +126,11 @@ public class PodiumEndpoint {
     public static final String addEvent= "/event/add";
 
     public static final String deleteEvent = "/event/delete/{title}";
+
+
+    public static final String uploadEventImages= "/image/upload/event";
+
+    public static final String uploadEventFiles = "/file/upload/event";
 
 
 

@@ -1,7 +1,7 @@
 package com.podium.service;
 
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.ResourceImageRequestDto;
+import com.podium.model.dto.request.ResourceRequestDto;
 import com.podium.model.entity.News;
 import com.podium.model.entity.PodiumResource;
 import com.podium.model.other.PodiumFile;
@@ -77,7 +77,7 @@ public class NewsService {
     }
 
 
-    public void uploadImages(ResourceImageRequestDto requestDto) throws IOException {
+    public void uploadImages(ResourceRequestDto requestDto) throws IOException {
 
         for (MultipartFile image : requestDto.getFiles()) {
 
