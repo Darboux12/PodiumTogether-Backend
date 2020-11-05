@@ -108,7 +108,7 @@ public class ContactController {
             return ResponseEntity.ok().build();
 
         else
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
 
     }
 

@@ -52,7 +52,7 @@ public class DisciplineController {
             return ResponseEntity.ok().build();
 
         else
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping(PodiumEndpoint.deleteDisciplineByName)
