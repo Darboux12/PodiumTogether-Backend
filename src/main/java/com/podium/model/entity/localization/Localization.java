@@ -1,6 +1,7 @@
-package com.podium.model.entity;
+package com.podium.model.entity.localization;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.podium.model.entity.event.Event;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,12 +40,16 @@ public class Localization {
 
 
     @NotNull
-    @Column(name = "number")
-    private int number;
+    @Column(name = "building_number")
+    private int buildingNumber;
 
     @NotNull
     @Column(name = "postal_code")
     private String postalCode;
+
+    @NotNull
+    @Column(name = "remarks")
+    private String remarks;
 
     @OneToMany(mappedBy="localization")
     private Set<Event> events = new HashSet<>();

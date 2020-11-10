@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Discipline;
+import com.podium.model.entity.discipline.Discipline;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

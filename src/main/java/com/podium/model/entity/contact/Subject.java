@@ -1,4 +1,4 @@
-package com.podium.model.entity;
+package com.podium.model.entity.contact;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;

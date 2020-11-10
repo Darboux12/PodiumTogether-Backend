@@ -1,6 +1,7 @@
-package com.podium.model.entity;
+package com.podium.model.entity.discipline;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.podium.model.entity.event.Event;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class Discipline {
 
     @OneToMany(mappedBy="discipline")
     private Set<Event> events = new HashSet<>();
+
+
 
 
 

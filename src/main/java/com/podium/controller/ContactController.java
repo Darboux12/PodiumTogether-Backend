@@ -4,7 +4,6 @@ import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.entity.Subject;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.service.ContactService;
 import com.podium.validation.main.PodiumValidator;

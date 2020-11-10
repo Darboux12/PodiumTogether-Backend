@@ -125,6 +125,8 @@ public class PodiumEndpoint {
 
     public static final String addEvent= "/event/add";
 
+    public static final String addPlace = "/place/add";
+
     public static final String deleteEvent = "/event/delete/{title}";
 
 

@@ -1,7 +1,8 @@
-package com.podium.model.entity;
+package com.podium.model.entity.user;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.podium.model.entity.user.User;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;

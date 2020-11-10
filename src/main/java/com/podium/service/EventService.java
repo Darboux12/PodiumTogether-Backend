@@ -2,7 +2,14 @@ package com.podium.service;
 
 import com.podium.model.dto.request.EventRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
-import com.podium.model.entity.*;
+import com.podium.model.entity.discipline.Discipline;
+import com.podium.model.entity.event.Event;
+import com.podium.model.entity.gender.Gender;
+import com.podium.model.entity.localization.City;
+import com.podium.model.entity.localization.Country;
+import com.podium.model.entity.localization.Localization;
+import com.podium.model.entity.localization.Street;
+import com.podium.model.entity.user.User;
 import com.podium.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,18 +90,18 @@ public class EventService {
 
 
         if(this.localizationRepository
-                .existsByCityAndStreetAndNumberAndPostalCode(
+                .existsByCityAndStreetAndBuildingNumberAndPostalCode(
                         city,street,requestDto.getNumber(),requestDto.getPostal()
                 ))
         localization =
                 this.localizationRepository
-                        .findByCityAndStreetAndNumberAndPostalCode(
+                        .findByCityAndStreetAndBuildingNumberAndPostalCode(
                                 city,street,requestDto.getNumber(),requestDto.getPostal());
         else{
             localization = new Localization();
             localization.setCity(city);
             localization.setStreet(street);
-            localization.setNumber(requestDto.getNumber());
+            localization.setBuildingNumber(requestDto.getNumber());
             localization.setPostalCode(requestDto.getPostal());
         }
 

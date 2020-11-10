@@ -1,4 +1,4 @@
-package com.podium.model.entity;
+package com.podium.model.entity.user;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,10 +1,9 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Gender;
+import com.podium.model.entity.gender.Gender;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 public interface GenderRepository extends CrudRepository<Gender,Integer> {
 

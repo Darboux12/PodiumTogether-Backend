@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.entity.PodiumResource;
+import com.podium.model.entity.resource.PodiumResource;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;

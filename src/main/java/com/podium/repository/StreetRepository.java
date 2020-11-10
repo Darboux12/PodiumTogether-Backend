@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Street;
+import com.podium.model.entity.localization.Street;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

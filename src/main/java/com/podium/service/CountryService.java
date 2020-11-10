@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
-import com.podium.model.entity.Country;
+import com.podium.model.entity.localization.Country;
 import com.podium.repository.CountryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

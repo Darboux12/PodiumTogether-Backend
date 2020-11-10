@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
-import com.podium.model.entity.Gender;
+import com.podium.model.entity.gender.Gender;
 import com.podium.repository.GenderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,11 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.request.SubjectRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.entity.City;
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Subject;
+import com.podium.model.entity.contact.Contact;
+import com.podium.model.entity.contact.Subject;
 import com.podium.repository.ContactRepository;
 import com.podium.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;

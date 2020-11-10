@@ -1,12 +1,9 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Country;
-import com.podium.model.entity.Role;
-import com.podium.model.entity.User;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import com.podium.model.entity.localization.Country;
+import com.podium.model.entity.user.Role;
+import com.podium.model.entity.user.User;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;

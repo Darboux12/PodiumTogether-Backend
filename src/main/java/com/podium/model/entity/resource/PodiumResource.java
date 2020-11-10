@@ -1,9 +1,11 @@
-package com.podium.model.entity;
+package com.podium.model.entity.resource;
 
+import com.podium.model.entity.event.Event;
+import com.podium.model.entity.news.News;
+import com.podium.model.entity.user.User;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.HashSet;

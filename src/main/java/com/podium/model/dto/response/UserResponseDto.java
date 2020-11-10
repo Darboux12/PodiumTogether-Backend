@@ -1,15 +1,10 @@
 package com.podium.model.dto.response;
 
-import com.podium.model.entity.Country;
-import com.podium.model.entity.Event;
-import com.podium.model.entity.Role;
+import com.podium.model.entity.event.Event;
 import com.podium.model.other.PodiumFile;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
 import java.util.*;
 
 @Getter

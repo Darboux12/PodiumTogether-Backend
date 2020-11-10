@@ -2,8 +2,8 @@ package com.podium.service;
 
 import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.ResourceRequestDto;
-import com.podium.model.entity.News;
-import com.podium.model.entity.PodiumResource;
+import com.podium.model.entity.news.News;
+import com.podium.model.entity.resource.PodiumResource;
 import com.podium.model.other.PodiumFile;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;

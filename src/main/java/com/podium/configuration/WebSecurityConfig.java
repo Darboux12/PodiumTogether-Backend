@@ -258,7 +258,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/file/upload/event")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/place/add")
+                .permitAll()
 
+                .and().authorizeRequests().antMatchers("/weekday/find/all")
+                .permitAll()
 
 
 

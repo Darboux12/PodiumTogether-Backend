@@ -1,5 +1,8 @@
-package com.podium.model.entity;
+package com.podium.model.entity.user;
 
+import com.podium.model.entity.event.Event;
+import com.podium.model.entity.resource.PodiumResource;
+import com.podium.model.entity.localization.Country;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;

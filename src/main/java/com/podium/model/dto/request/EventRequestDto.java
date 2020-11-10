@@ -22,7 +22,7 @@ public class EventRequestDto {
     @PodiumLength(min = PodiumLimits.minCityLength, max = PodiumLimits.maxCityLength)
     private String city;
     @PodiumNotNull
-    @PodiumNumberInt(min = PodiumLimits.minEventNumberLength, max = PodiumLimits.maxEventNumberLength)
+    @PodiumNumberInt(min = PodiumLimits.minBuildingNumberLength, max = PodiumLimits.maxBuildingNumberLength)
     private int number;
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minStreetLength, max = PodiumLimits.maxStreetLength)
@@ -45,7 +45,7 @@ public class EventRequestDto {
     @PodiumNumberInt(min = PodiumLimits.minEventMaxAge, max = PodiumLimits.maxEventMaxAge)
     private int maxAge;
     @PodiumNotNull
-    @PodiumNumberDouble(min = PodiumLimits.minEvenCost, max = PodiumLimits.maxEventCost)
+    @PodiumNumberDouble(min = PodiumLimits.minCost, max = PodiumLimits.maxCost)
     private double cost;
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minEventDescriptionLength, max = PodiumLimits.maxEventDescriptionLength)

@@ -1,24 +1,14 @@
 package com.podium.service;
 
 import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.dto.response.GenderResponseDto;
-import com.podium.model.dto.response.NewsResponseDto;
-import com.podium.model.entity.Discipline;
-import com.podium.model.entity.News;
-import com.podium.model.entity.PodiumResource;
-import com.podium.model.other.PodiumFile;
+import com.podium.model.entity.discipline.Discipline;
 import com.podium.repository.DisciplineRepository;
 import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service

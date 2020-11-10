@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.entity.News;
+import com.podium.model.entity.news.News;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

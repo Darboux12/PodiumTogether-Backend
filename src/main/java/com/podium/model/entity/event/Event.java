@@ -1,7 +1,12 @@
-package com.podium.model.entity;
+package com.podium.model.entity.event;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.podium.model.entity.gender.Gender;
+import com.podium.model.entity.resource.PodiumResource;
+import com.podium.model.entity.discipline.Discipline;
+import com.podium.model.entity.localization.Localization;
+import com.podium.model.entity.user.User;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;

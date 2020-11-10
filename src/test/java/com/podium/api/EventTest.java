@@ -210,7 +210,7 @@ public class EventTest {
         
         int valueHolderInt;
 
-        int toShort = PodiumLimits.minEventNumberLength - 1;
+        int toShort = PodiumLimits.minBuildingNumberLength - 1;
 
         valueHolderInt = requestDto.getNumber();
         requestDto.setNumber(toShort);
@@ -228,7 +228,7 @@ public class EventTest {
 
         int valueHolderInt;
 
-        int toLong =  PodiumLimits.maxEventNumberLength + 1;
+        int toLong =  PodiumLimits.maxBuildingNumberLength + 1;
 
         valueHolderInt = requestDto.getNumber();
         requestDto.setNumber(toLong);

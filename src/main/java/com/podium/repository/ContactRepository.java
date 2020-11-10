@@ -1,7 +1,7 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Subject;
+import com.podium.model.entity.contact.Contact;
+import com.podium.model.entity.contact.Subject;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

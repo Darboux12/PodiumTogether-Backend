@@ -1,6 +1,6 @@
 package com.podium.repository;
 
-import com.podium.model.entity.Country;
+import com.podium.model.entity.localization.Country;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
