@@ -1,9 +1,8 @@
 package com.podium.model.entity.localization;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","localizations"})
+@NoArgsConstructor
 @Table(name = "CITY")
 public class City {
 
@@ -24,4 +23,9 @@ public class City {
 
     @OneToMany(mappedBy="city")
     private Set<Localization> localizations = new HashSet<>();
+
+    public City(String city){
+        this.city = city;
+    }
+
 }

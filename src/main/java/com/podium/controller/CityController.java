@@ -27,7 +27,13 @@ public class CityController {
 
     @GetMapping(PodiumEndpoint.findCityByName)
     public ResponseEntity<CityResponseDto> findCityByName(@PathVariable String name){
-        return ResponseEntity.ok().body(this.cityService.findCityByName(name));
+
+        if(this.cityService.existByCityName(name))
+            return ResponseEntity.ok().body(this.cityService.findCityByName(name));
+
+        else throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "City with given name cannot be found");
+
     }
 
     @PostMapping(PodiumEndpoint.addCity)
@@ -40,6 +46,7 @@ public class CityController {
                     HttpStatus.CONFLICT, "City already exists");
 
         this.cityService.addCity(requestDto);
+
         return ResponseEntity.ok().body("City successfully added");
 
     }
@@ -51,7 +58,8 @@ public class CityController {
             return ResponseEntity.ok().build();
 
         else
-            return ResponseEntity.badRequest().build();
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "City with given name does not exist");
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCityByName)
@@ -62,6 +70,7 @@ public class CityController {
                     HttpStatus.NOT_FOUND, "City not found");
 
         this.cityService.deleteCityByName(name);
+
         return ResponseEntity.ok().body("City successfully deleted");
     }
 

@@ -5,7 +5,6 @@ import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.service.CountryService;
 import com.podium.validation.main.PodiumValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,6 @@ public class CountryController {
 
     private CountryService countryService;
 
-    @Autowired
     public CountryController(CountryService countryService) {
         this.countryService = countryService;
     }
@@ -42,17 +40,17 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.existCountryByName)
-    public ResponseEntity existDisciplineByName(@PathVariable String name){
+    public ResponseEntity existCountryByName(@PathVariable String name){
 
         if(this.countryService.existCountryByName(name))
             return ResponseEntity.ok().build();
 
-        else
-            return ResponseEntity.badRequest().build();
+        else throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Country with given name does not exist");
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCountryByName)
-    public ResponseEntity deleteDisciplineByName(@PathVariable String name){
+    public ResponseEntity deleteCountryByName(@PathVariable String name){
 
         if(!this.countryService.existCountryByName(name))
             throw new ResponseStatusException(
@@ -61,11 +59,5 @@ public class CountryController {
         this.countryService.deleteCountryByName(name);
         return ResponseEntity.ok().body("Country successfully deleted");
     }
-
-
-
-
-
-
 
 }

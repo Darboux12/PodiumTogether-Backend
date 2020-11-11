@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.podium.model.entity.event.Event;
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","events"})
+@NoArgsConstructor
 @Table(name = "DISCIPLINE")
 public class Discipline {
 
@@ -25,9 +26,8 @@ public class Discipline {
     @OneToMany(mappedBy="discipline")
     private Set<Event> events = new HashSet<>();
 
-
-
-
-
+    public Discipline(String discipline) {
+        this.discipline = discipline;
+    }
 
 }

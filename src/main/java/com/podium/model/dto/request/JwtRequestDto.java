@@ -1,39 +1,20 @@
 package com.podium.model.dto.request;
 
 import com.podium.validation.annotation.PodiumTextNotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serializable;
-
-public class JwtRequestDto implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class JwtRequestDto{
 
     @PodiumTextNotEmpty
     private String username;
     @PodiumTextNotEmpty
     private String password;
 
-
-    public JwtRequestDto() {
-
-    }
-
-    public JwtRequestDto(String username, String password) {
-        this.setUsername(username);
-        this.setPassword(password);
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

@@ -2,8 +2,10 @@ package com.podium.controller;
 
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -12,20 +14,17 @@ public class AdminController {
 
     private UserService userService;
 
+
     public AdminController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/find/role")
-    public Iterable<UserResponseDto> getRole(){
+    @GetMapping("/find/role/{role}")
+    public ResponseEntity<Iterable<UserResponseDto>>
+    findAllUsersByRole(@PathVariable String role){
 
-        return this.userService.findAllByRole("subscriber");
-
-
-
-
-
-
+        return ResponseEntity
+                .ok().build();
 
     }
 

@@ -1,10 +1,9 @@
 package com.podium.model.entity.news;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.podium.model.entity.resource.PodiumResource;
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
@@ -17,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "NEWS")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","newsResources"})
+@NoArgsConstructor
 public class News {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -58,6 +57,11 @@ public class News {
     private Set<PodiumResource> newsResources = new HashSet<>();
 
 
-
-
+    public News(String title, String shortText, String text, String linkText, Date date) {
+        this.title = title;
+        this.shortText = shortText;
+        this.text = text;
+        this.linkText = linkText;
+        this.date = date;
+    }
 }

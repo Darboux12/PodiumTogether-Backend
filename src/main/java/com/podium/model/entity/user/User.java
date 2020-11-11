@@ -5,6 +5,7 @@ import com.podium.model.entity.resource.PodiumResource;
 import com.podium.model.entity.localization.Country;
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "USER")
 public class User {
@@ -52,7 +54,7 @@ public class User {
     @JoinTable(name = "user_role",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role") })
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     @NotNull
     @Column(name = "birthday")
@@ -79,4 +81,16 @@ public class User {
     @Type(type = "text")
     private String description;
 
+    public User(String username, String email, String password,
+                Country country, Set<Role> roles, Date birthday,
+                PodiumResource profileImage, String description) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.roles = roles;
+        this.birthday = birthday;
+        this.profileImage = profileImage;
+        this.description = description;
+    }
 }

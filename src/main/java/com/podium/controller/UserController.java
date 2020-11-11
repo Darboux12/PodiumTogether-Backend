@@ -1,6 +1,5 @@
 package com.podium.controller;
 
-import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
@@ -22,15 +21,13 @@ public class UserController {
     private UserService userService;
     private CountryService countryService;
 
-
-    @Autowired
     public UserController(UserService userService, CountryService countryService) {
         this.userService = userService;
         this.countryService = countryService;
     }
 
     @PostMapping(PodiumEndpoint.addUser)
-    public ResponseEntity addUser(@RequestBody SignUpRequestDto request) throws ParseException, IllegalAccessException {
+    public ResponseEntity addUser(@RequestBody SignUpRequestDto request){
 
         PodiumValidator.getInstance().validateRequestBody(request);
 
@@ -56,7 +53,7 @@ public class UserController {
 
         if(this.userService.existUserByUsername(username))
             return ResponseEntity
-                    .status(200)
+                    .status(HttpStatus.OK)
                     .body(this.userService.findUserByUsername(username));
 
         else
@@ -69,7 +66,7 @@ public class UserController {
     public ResponseEntity<Iterable<UserResponseDto>> findAllUsers(){
 
         return ResponseEntity
-                .status(200)
+                .status(HttpStatus.OK)
                 .body(this.userService.findAllUsers());
 
     }
@@ -96,7 +93,7 @@ public class UserController {
 
         else
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User not found");
+                    HttpStatus.BAD_REQUEST, "User not found");
 
     }
 
@@ -132,8 +129,5 @@ public class UserController {
         return ResponseEntity.ok().build();
 
     }
-
-
-
 
 }

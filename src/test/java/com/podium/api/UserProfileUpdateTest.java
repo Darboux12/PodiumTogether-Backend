@@ -1,6 +1,5 @@
 package com.podium.api;
 
-import com.podium.helper.Constant;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
@@ -29,7 +28,14 @@ public class UserProfileUpdateTest {
     @BeforeClass
     public static void beforeClass() throws ParseException {
         TestLogger.setUp();
-        signUpRequestDtoOne = Constant.getValidSignUpRequestDtoOne();
+        signUpRequestDtoOne = new SignUpRequestDto(
+                "TEST USERNAME_ONE",
+                "TEST_MAIL_ONE@gmail.com",
+                "TEST PASSWORD ONE",
+                "POLAND",
+                new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
+        );
+
         updateRequestDto = new ProfileUpdateRequestDto();
         updateRequestDto.setUsername(signUpRequestDtoOne.getUsername());
         updateRequestDto.setEmail(signUpRequestDtoOne.getEmail());
@@ -180,15 +186,5 @@ public class UserProfileUpdateTest {
                 .deleteUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

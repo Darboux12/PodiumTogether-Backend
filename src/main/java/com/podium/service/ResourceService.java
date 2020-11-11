@@ -44,7 +44,7 @@ public class ResourceService {
             resource = this.createPodiumResourceImage(image);
             User user = this.userRepository.findByUsername(requestDto.getId()).orElse(null);
 
-            PodiumResource resourceToDelete = null;
+            PodiumResource resourceToDelete;
 
             if (user != null) {
 
@@ -52,11 +52,15 @@ public class ResourceService {
 
                 user.setProfileImage(resource);
 
-                this.resourceRepository.
-                        deleteByResourceId(resourceToDelete.getResourceId());
+                if(resourceToDelete != null) {
 
-                if(!this.resourceRepository.existsByResourceId(resourceToDelete.getResourceId())){
-                    this.deleteResourceFromServer(resourceToDelete);
+                    this.resourceRepository.
+                            deleteByResourceId(resourceToDelete.getResourceId());
+
+                    if(!this.resourceRepository.existsByResourceId(resourceToDelete.getResourceId())){
+                        this.deleteResourceFromServer(resourceToDelete);
+                    }
+
                 }
 
             }

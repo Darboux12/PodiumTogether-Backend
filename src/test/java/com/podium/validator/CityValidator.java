@@ -59,16 +59,26 @@ public class CityValidator {
 
     public CityResponseDto findByName(String cityName, HttpStatus status){
 
-        return
+        if(status == HttpStatus.OK)
 
-        given().spec(TestSpecification.buildRequestSpec())
+        return given().spec(TestSpecification.buildRequestSpec())
+                  .contentType(ContentType.JSON)
+                  .pathParam("name",cityName)
+                  .when()
+                  .get(Path.server + PodiumEndpoint.findCityByName)
+                  .then().assertThat().statusCode(status.value())
+                  .spec(TestSpecification.buildResponseSpec())
+                  .extract().as(CityResponseDto.class);
+
+        else given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
                 .get(Path.server + PodiumEndpoint.findCityByName)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(CityResponseDto.class);
+                .spec(TestSpecification.buildResponseSpec());
+
+        return null;
 
     }
 
@@ -94,15 +104,5 @@ public class CityValidator {
                 .spec(TestSpecification.buildResponseSpec());
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

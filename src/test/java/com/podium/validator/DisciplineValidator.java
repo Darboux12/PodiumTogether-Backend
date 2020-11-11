@@ -45,7 +45,7 @@ public class DisciplineValidator {
 
     }
 
-    public List<DisciplineResponseDto> findAll(){
+    public List<DisciplineResponseDto> findAll(HttpStatus status){
 
         DisciplineResponseDto[] dtos =
 
@@ -64,17 +64,28 @@ public class DisciplineValidator {
 
     public DisciplineResponseDto findByName(String disciplineName, HttpStatus status){
 
-        return
+        if(status == HttpStatus.OK)
 
-                given()
-                        .spec(TestSpecification.buildRequestSpec())
-                        .pathParam("discipline",disciplineName)
-                        .when()
-                        .get(Path.server + PodiumEndpoint.findByDisciplineName)
-                        .then().assertThat()
-                        .statusCode(status.value())
-                        .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(DisciplineResponseDto.class);
+        return  given()
+                .spec(TestSpecification.buildRequestSpec())
+                .pathParam("discipline",disciplineName)
+                .when()
+                .get(Path.server + PodiumEndpoint.findByDisciplineName)
+                .then().assertThat()
+                .statusCode(status.value())
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(DisciplineResponseDto.class);
+
+        else given()
+                .spec(TestSpecification.buildRequestSpec())
+                .pathParam("discipline",disciplineName)
+                .when()
+                .get(Path.server + PodiumEndpoint.findByDisciplineName)
+                .then().assertThat()
+                .statusCode(status.value())
+                .spec(TestSpecification.buildResponseSpec());
+
+        return null;
 
     }
 

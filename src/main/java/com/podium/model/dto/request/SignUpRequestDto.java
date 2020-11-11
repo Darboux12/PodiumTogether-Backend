@@ -5,13 +5,17 @@ import com.podium.validation.annotation.PodiumLength;
 import com.podium.validation.annotation.PodiumTextNotEmpty;
 import com.podium.validation.annotation.PodiumValidEmail;
 import com.podium.constant.PodiumLimits;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpRequestDto {
 
     @PodiumTextNotEmpty

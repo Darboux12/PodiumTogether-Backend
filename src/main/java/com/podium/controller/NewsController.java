@@ -20,13 +20,12 @@ public class NewsController {
 
     private NewsService newsService;
 
-    @Autowired
     public NewsController(NewsService newsService) {
         this.newsService = newsService;
     }
 
     @PostMapping(PodiumEndpoint.addNews)
-    public ResponseEntity addNews(@RequestBody NewsRequestDto request) throws IllegalAccessException, ParseException {
+    public ResponseEntity addNews(@RequestBody NewsRequestDto request){
 
        PodiumValidator.getInstance().validateRequestBody(request);
 
@@ -49,33 +48,35 @@ public class NewsController {
     }
 
     @GetMapping(PodiumEndpoint.findNewsById)
-    public ResponseEntity<NewsResponseDto> findNewsById(@PathVariable int id) throws IOException {
+    public ResponseEntity<NewsResponseDto>
+    findNewsById(@PathVariable int id) throws IOException {
 
-        if(!this.newsService.existNewsById(id))
-            throw new ResponseStatusException(
+        if(this.newsService.existNewsById(id))
+            return ResponseEntity
+                    .ok()
+                    .body(this.newsService.findNewsById(id));
+
+        else throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News not found");
-
-        return ResponseEntity
-                .ok()
-                .body(this.newsService.findNewsById(id));
 
     }
 
     @GetMapping(PodiumEndpoint.findNewsByTitle)
-    public ResponseEntity<NewsResponseDto> findNewsByTitle(@PathVariable String title) throws IOException {
+    public ResponseEntity<NewsResponseDto>
+    findNewsByTitle(@PathVariable String title) throws IOException {
 
-        if(!this.newsService.existNewsByTitle(title))
-            throw new ResponseStatusException(
+        if(this.newsService.existNewsByTitle(title))
+            return ResponseEntity
+                    .ok()
+                    .body(this.newsService.findNewsByTitle(title));
+
+        else throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "News not found");
-
-        return ResponseEntity
-                .ok()
-                .body(this.newsService.findNewsByTitle(title));
 
     }
 
     @DeleteMapping(PodiumEndpoint.deleteNewsById)
-    public ResponseEntity deleteNewsById(@PathVariable int id) throws IOException {
+    public ResponseEntity deleteNewsById(@PathVariable int id) {
 
         if(!this.newsService.existNewsById(id))
             throw new ResponseStatusException(

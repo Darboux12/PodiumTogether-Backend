@@ -8,7 +8,6 @@ import com.podium.model.entity.contact.Contact;
 import com.podium.model.entity.contact.Subject;
 import com.podium.repository.ContactRepository;
 import com.podium.repository.SubjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ public class ContactService {
     private ContactRepository contactRepository;
     private SubjectRepository subjectRepository;
 
-    @Autowired
     public ContactService(ContactRepository contactRepository, SubjectRepository subjectRepository) {
         this.contactRepository = contactRepository;
         this.subjectRepository = subjectRepository;
@@ -28,16 +26,9 @@ public class ContactService {
 
     public void addContact(ContactRequestDto contactRequestDTO){
 
-        Contact contact = new Contact();
-
-        contact.setUserEmail(contactRequestDTO.getUserEmail());
-        contact.setMessage(contactRequestDTO.getMessage());
-
-        Subject subject = this.subjectRepository.findBySubject(contactRequestDTO.getSubject());
-
-        contact.setSubject(subject);
-
-        this.contactRepository.save(contact);
+        this.contactRepository.save(
+                this.convertContactRequestDtoToEntity(contactRequestDTO)
+        );
 
     }
 
@@ -45,52 +36,30 @@ public class ContactService {
         this.contactRepository.deleteById(id);
     }
 
-    public void addSubject(String subjectName){
-
-        Subject subject = new Subject();
-
-        subject.setSubject(subjectName);
-
-        this.subjectRepository.save(subject);
-
-    }
-
-    public boolean existSubjectByName(String subjectName){
-       return this.subjectRepository.existsBySubject(subjectName);
-    }
-
-    public void deleteSubjectByName(String name){
-        this.subjectRepository.deleteBySubject(name);
-    }
-
-    public Iterable<SubjectResponseDto> findAllSubjects(){
-
-        List<SubjectResponseDto> responseDtos = new ArrayList<>();
-
-        for(Subject subject : this.subjectRepository.findAll())
-            responseDtos.add(this.convertSubjectEntityToResponseDto(subject));
-
-        return responseDtos;
-    }
-
     public Iterable<ContactResponseDto> findAllContact(){
 
         List<ContactResponseDto> responseDtos = new ArrayList<>();
 
-        for(Contact contact : this.contactRepository.findAll())
-            responseDtos.add(this.convertContactEntityToResponseDto(contact));
+        this.contactRepository
+                .findAll()
+                .forEach(x -> responseDtos.add(
+                        this.convertContactEntityToResponseDto(x)
+                ));
 
         return responseDtos;
     }
 
     public Iterable<ContactResponseDto> findAllByEmail(String email){
 
-        List<ContactResponseDto> dtos = new ArrayList<>();
+        List<ContactResponseDto> responseDtos = new ArrayList<>();
 
-        for(Contact contact : this.contactRepository.findAllByUserEmail(email))
-            dtos.add(this.convertContactEntityToResponseDto(contact));
+        this.contactRepository
+                .findAllByUserEmail(email)
+                .forEach(x -> responseDtos.add(
+                        this.convertContactEntityToResponseDto(x)
+                ));
 
-        return dtos;
+        return responseDtos;
 
     }
 
@@ -98,57 +67,44 @@ public class ContactService {
 
         Subject sub = this.subjectRepository.findBySubject(subject);
 
-        List<ContactResponseDto> dtos = new ArrayList<>();
+        List<ContactResponseDto> responseDtos = new ArrayList<>();
 
-        for(Contact contact : this.contactRepository.findAllBySubject(sub))
-            dtos.add(this.convertContactEntityToResponseDto(contact));
+        this.contactRepository
+                .findAllBySubject(sub)
+                .forEach(x -> responseDtos.add(
+                        this.convertContactEntityToResponseDto(x)
+                ));
 
-        return dtos;
+        return responseDtos;
 
     }
 
-    public SubjectResponseDto findSubjectByName(String subjectName){
-        return this.convertSubjectEntityToResponseDto
-                (this.subjectRepository.findBySubject(subjectName));
+    public boolean existContactById(int id){
+        return this.contactRepository.existsById(id);
     }
 
     private Contact convertContactRequestDtoToEntity(ContactRequestDto requestDto){
 
-        Contact contact = new Contact();
-        Subject subject = this.subjectRepository.findBySubject(requestDto.getSubject());
-        contact.setSubject(subject);
-        contact.setUserEmail(requestDto.getUserEmail());
-        contact.setMessage(requestDto.getMessage());
+        Subject subject = this.subjectRepository
+                .findBySubject(requestDto.getSubject());
 
-        return contact;
+        return new Contact(
+                requestDto.getUserEmail(),
+                requestDto.getMessage(),
+                subject
+        );
 
     }
 
     private ContactResponseDto convertContactEntityToResponseDto(Contact contact){
 
-        ContactResponseDto responseDto = new ContactResponseDto();
-        responseDto.setEmail(contact.getUserEmail());
-        responseDto.setId(contact.getContactId());
-        responseDto.setMessage(contact.getMessage());
-        responseDto.setSubject(contact.getSubject().getSubject());
-        return responseDto;
+        return new ContactResponseDto(
+                contact.getContactId(),
+                contact.getUserEmail(),
+                contact.getMessage(),
+                contact.getSubject().getSubject()
+        );
 
     }
 
-    private Subject convertSubjectRequestDtoToEntity(SubjectRequestDto requestDto){
-
-        Subject subject = new Subject();
-        subject.setSubject(requestDto.getSubject());
-        return subject;
-
-    }
-
-    private SubjectResponseDto convertSubjectEntityToResponseDto(Subject subject){
-
-        SubjectResponseDto responseDto = new SubjectResponseDto();
-        responseDto.setSubject(subject.getSubject());
-        return responseDto;
-
-
-    }
 }

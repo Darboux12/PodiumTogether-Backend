@@ -19,88 +19,57 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class NewsService {
 
     private NewsRepository newsRepository;
-    private ResourceRepository resourcesRepository;
 
-    @Autowired
-    public NewsService(NewsRepository newsRepository, ResourceRepository resourcesRepository) {
+    public NewsService(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
-        this.resourcesRepository = resourcesRepository;
     }
 
     public void addNews(NewsRequestDto request) {
-
         this.newsRepository.save(this.convertRequestDtoToEntity(request));
-
     }
 
-    public Iterable<NewsResponseDto> findAllNews() throws IOException {
+    public Iterable<NewsResponseDto> findAllNews(){
 
-        List<NewsResponseDto> newsResponseDtos = new ArrayList<>();
+        List<NewsResponseDto> responseDtos = new ArrayList<>();
 
-        for(News news : this.newsRepository.findAllByOrderByDateDesc())
-            newsResponseDtos.add(this.convertEntityToResponseDto(news));
+        this.newsRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
-        return newsResponseDtos;
+        return responseDtos;
 }
 
     public NewsResponseDto findNewsById(int id) throws IOException {
 
-        News news = this.newsRepository.findById(id).orElse(null);
-
-        return news != null ? this.convertEntityToResponseDto(news) : null;
+        return
+                this.convertEntityToResponseDto(Objects.requireNonNull
+                        (this.newsRepository.findById(id).orElse(null)));
 
     }
 
     public NewsResponseDto findNewsByTitle(String title) throws IOException {
 
-        News news = this.newsRepository.findByTitle(title);
-
-        return news != null ? this.convertEntityToResponseDto(news) : null;
-
+        return this.convertEntityToResponseDto(
+                this.newsRepository.findByTitle(title));
     }
 
-    public NewsResponseDto findNewsByDate(Date date) throws IOException {
+    public NewsResponseDto findNewsByDate(Date date){
 
-        News news = this.newsRepository.findByDate(date);
-
-        return news != null ? this.convertEntityToResponseDto(news) : null;
+        return this.convertEntityToResponseDto(
+                this.newsRepository.findByDate(date));
 
     }
 
     public boolean existNewsById(int id){
         return this.newsRepository.existsById(id);
-    }
-
-
-    public void uploadImages(ResourceRequestDto requestDto) throws IOException {
-
-        for (MultipartFile image : requestDto.getFiles()) {
-
-            String path = PodiumPath.images + image.getOriginalFilename();
-
-            File file = new File(path);
-
-            image.transferTo(file);
-
-            PodiumResource resource = new PodiumResource();
-            resource.setName(image.getOriginalFilename());
-            resource.setType(image.getContentType());
-            resource.setPath(path);
-
-            News news = this.newsRepository.findByTitle(requestDto.getId());
-
-            news.getNewsResources().add(resource);
-
-            resource.getNews().add(news);
-
-            this.resourcesRepository.save(resource);
-        }
-
     }
 
     public boolean existNewsByTitle(String newsTitle){
@@ -117,47 +86,46 @@ public class NewsService {
 
     private News convertRequestDtoToEntity(NewsRequestDto requestDto){
 
-        News news = new News();
-        news.setTitle(requestDto.getTitle());
-        news.setShortText(requestDto.getShortText());
-        news.setLinkText(requestDto.getLinkText());
-        news.setText(requestDto.getText());
-        Date date = new Date();
-        news.setDate(date);
-
-        return news;
+        return new News(
+                requestDto.getTitle(),
+                requestDto.getShortText(),
+                requestDto.getText(),
+                requestDto.getLinkText(),
+                new Date()
+        );
 
     }
 
     private NewsResponseDto convertEntityToResponseDto(News news){
 
-        NewsResponseDto responseDto = new NewsResponseDto();
-        responseDto.setId(news.getNewsId());
-        responseDto.setShortText(news.getShortText());
-        responseDto.setLinkText(news.getLinkText());
-        responseDto.setText(news.getText());
-        responseDto.setDate(news.getDate());
-        responseDto.setTitle(news.getTitle());
+        List<PodiumFile> podiumFiles = new ArrayList<>();
 
-        for(PodiumResource resource : news.getNewsResources()){
+        news
+                .getNewsResources()
+                .forEach(x -> {
 
-            PodiumFile podiumFile = new PodiumFile();
+                        try {
 
-            try {
-                podiumFile.setContent(FileCopyUtils
-                        .copyToByteArray(new File(resource.getPath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                            podiumFiles.add(new PodiumFile(
+                                    x.getName(),
+                                    x.getType(),
+                                    FileCopyUtils.copyToByteArray(new File(x.getPath()))
+                            ));
 
-            podiumFile.setName(resource.getName());
-            podiumFile.setType(resource.getType());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                });
 
-            responseDto.getPodiumFiles().add(podiumFile);
-
-        }
-
-        return responseDto;
+        return new NewsResponseDto(
+                news.getNewsId(),
+                news.getTitle(),
+                news.getShortText(),
+                news.getText(),
+                news.getLinkText(),
+                news.getDate(),
+                podiumFiles
+        );
 
     }
 }

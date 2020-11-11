@@ -33,8 +33,11 @@ public class CityService {
 
         List<CityResponseDto> responseDtos = new ArrayList<>();
 
-        for(City city : this.cityRepository.findAll())
-            responseDtos.add(this.convertEntityToResponseDto(city));
+        this.cityRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                                .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
     }
@@ -48,18 +51,12 @@ public class CityService {
     }
 
     private City convertRequestDtoToEntity(CityRequestDto requestDto){
-
-        City city = new City();
-        city.setCity(requestDto.getCity());
-        return city;
-
+        return  new City(requestDto.getCity());
     }
 
     private CityResponseDto convertEntityToResponseDto(City city){
 
-        CityResponseDto responseDto = new CityResponseDto();
-        responseDto.setCity(city.getCity());
-        return responseDto;
+        return new CityResponseDto(city.getCity());
 
     }
 

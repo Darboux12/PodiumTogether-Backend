@@ -1,14 +1,10 @@
 package com.podium.api;
 
-
-
-import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
-import com.podium.specification.TestSpecification;
-import io.restassured.http.ContentType;
+import com.podium.validator.GenderValidator;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -16,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
-
-import static io.restassured.RestAssured.given;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -29,124 +23,87 @@ public class GenderTest {
     @BeforeClass
     public static void beforeClass(){
         TestLogger.setUp();
-        requestDto = Constant.getValidGenderRequestDto();
+        requestDto = new GenderRequestDto("TestGender");
     }
 
     @Test
-    public void T01_addValidGender_ShouldReturnStatus_OK(){
+    public void T01_Add_Valid_Gender_ShouldReturnStatus_OK(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addGender)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        GenderValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.OK);
 
     }
 
     @Test
-    public void T02_addSameGenderAgain_ShouldReturnStatus_CONFLICT(){
+    public void T02_Add_Same_Gender_Again_ShouldReturnStatus_CONFLICT(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addGender)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
+        GenderValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
     }
 
     @Test
-    public void T03_getAllGender_ShouldReturnStatus_OK(){
+    public void T03_Add_Empty_Gender_ShouldReturnStatus_CONFLICT(){
 
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when().get(Path.server + PodiumEndpoint.findAllGender)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        GenderValidator
+                .getInstance()
+                .add(new GenderRequestDto(""),HttpStatus.CONFLICT);
 
     }
 
     @Test
-    public void T04_getAllGender_ShouldReturnIterable_GenderResponse(){
+    public void T04_Find_All_Gender_ShouldReturn_Iterable_Containing_Added_Gender(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(Path.server + PodiumEndpoint.findAllGender)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(GenderResponseDto[].class);
+        boolean isPresent = GenderValidator
+                .getInstance()
+                .findAll(HttpStatus.OK)
+                .stream()
+                .map(GenderResponseDto::getGender)
+                .anyMatch(requestDto.getGender()::equals);
 
-    }
-
-    @Test
-    public void T05_findCreatedGender_ShouldReturnStatus_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getGender())
-                .when()
-                .get(Path.server + PodiumEndpoint.findGenderByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
+        Assert.assertTrue(isPresent);
 
     }
 
     @Test
-    public void T06_findCreatedGender_ShouldReturn_GenderResponse(){
+    public void T05_Find_Created_Gender_ShouldReturnStatus_OK_Containing_Added_Gender(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getGender())
-                .when()
-                .get(Path.server + PodiumEndpoint.findGenderByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(GenderResponseDto.class);
-    }
+        GenderResponseDto responseDto =
 
-    @Test
-    public void T07_existCreatedGender_ShouldReturnStatus_OK(){
+                GenderValidator
+                        .getInstance()
+                        .findByName(requestDto.getGender(),HttpStatus.OK);
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getGender())
-                .when()
-                .get(Path.server + PodiumEndpoint.existGenderByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        Assert.assertEquals(responseDto.getGender(),responseDto.getGender());
 
     }
 
     @Test
-    public void T08_deleteCreatedGender_ShouldReturnStatus_OK(){
+    public void T06_Exist_Created_Gender_ShouldReturnStatus_OK(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getGender())
-                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
+        GenderValidator
+                .getInstance()
+                .existGenderByName(requestDto.getGender(),HttpStatus.OK);
 
     }
 
     @Test
-    public void T09_deleteCreatedGenderAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T07_Delete_Created_Gender_ShouldReturnStatus_OK(){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getGender())
-                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
-                .spec(TestSpecification.buildResponseSpec());
+        GenderValidator
+                .getInstance()
+                .deleteGenderByName(requestDto.getGender(),HttpStatus.OK);
+
+    }
+
+    @Test
+    public void T08_Delete_Created_Gender_Again_ShouldReturnStatus_NOTFOUND(){
+
+        GenderValidator
+                .getInstance()
+                .deleteGenderByName(requestDto.getGender(),HttpStatus.NOT_FOUND);
 
     }
 

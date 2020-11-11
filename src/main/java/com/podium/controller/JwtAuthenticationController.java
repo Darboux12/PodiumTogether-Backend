@@ -66,7 +66,6 @@ public class JwtAuthenticationController {
     @PostMapping(PodiumEndpoint.authenticateNoToken)
     public ResponseEntity<JwtResponseDto> authenticateWithoutToken(@RequestBody JwtRequestDto authenticationRequest) throws Exception {
 
-
         PodiumValidator.getInstance().validateRequestBody(authenticationRequest);
 
         final UserDetails userDetails =
@@ -84,12 +83,10 @@ public class JwtAuthenticationController {
                     HttpStatus.BAD_REQUEST, "Authentication failed");
     }
 
-    @PostMapping("/token/find/username")
+    @PostMapping(PodiumEndpoint.findUsernameFromToken)
     public ResponseEntity<UsernameFromTokenResponseDto> findUsernameFromToken(@RequestParam("token") String token){
 
         try{
-
-
                 String username = this.jwtTokenUtil.getUsernameFromToken(token);
 
                 UsernameFromTokenResponseDto response
@@ -113,7 +110,7 @@ public class JwtAuthenticationController {
 
     }
 
-    @PostMapping("/token/find/expiration")
+    @PostMapping(PodiumEndpoint.findTokenExpirationDate)
     public ResponseEntity<ExpirationDateTokenResponse> findExpirationFromToken(@RequestParam("token") String token){
 
         try{
@@ -125,8 +122,6 @@ public class JwtAuthenticationController {
                     this.jwtTokenUtil.getExpirationDateFromToken(token);
 
             response.setExpirationDate(expirationDate);
-
-
 
             return ResponseEntity
                     .ok()
@@ -143,6 +138,5 @@ public class JwtAuthenticationController {
 
 
     }
-
 
 }

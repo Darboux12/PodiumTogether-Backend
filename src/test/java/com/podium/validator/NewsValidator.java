@@ -3,7 +3,9 @@ package com.podium.validator;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
 import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -14,63 +16,61 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class ContactValidator {
+public class NewsValidator {
 
-    private static ContactValidator instance;
+    private static NewsValidator instance;
 
-    private ContactValidator() {}
+    private NewsValidator() {}
 
-    public static ContactValidator getInstance() {
+    public static NewsValidator getInstance() {
         if(instance == null) {
-            instance = new ContactValidator();
+            instance = new NewsValidator();
         }
         return instance;
     }
 
-    public void add(ContactRequestDto requestDto, HttpStatus status){
+    public void add(NewsRequestDto requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addContact)
+                .when().post(Path.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public List<ContactResponseDto> findAll(){
+    public List<NewsResponseDto> findAll(){
 
-        ContactResponseDto[] dtos =
+        NewsResponseDto[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllContact)
+                        .when().get(Path.server + PodiumEndpoint.findAllNews)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)ContactResponseDto[].class);
+                        .extract().as((Type)NewsResponseDto[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public List<ContactResponseDto> findByEmail(String email, HttpStatus status){
+    public NewsResponseDto findByTitle(String title, HttpStatus status){
 
-        ContactResponseDto[] dtos =
+        return
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .pathParam("email",email)
+                        .pathParam("title",title)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findAllContactByEmail)
+                        .get(Path.server + PodiumEndpoint.findNewsByTitle)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) ContactResponseDto[].class);
-
-        return Arrays.asList(dtos);
+                        .extract().as((Type) NewsResponseDto.class);
 
     }
 
@@ -91,25 +91,17 @@ public class ContactValidator {
 
     }
 
-    public void deleteContactById(int id, HttpStatus status){
+    public void deleteNewsById(int id, HttpStatus status){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("id",id)
-                .delete(Path.server + PodiumEndpoint.deleteContact)
-                .then().assertThat().statusCode(status.value())
+        given()
+                .spec(TestSpecification.buildRequestSpec())
+                .contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .when().delete(Path.server + PodiumEndpoint.deleteNewsById)
+                .then().assertThat()
+                .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

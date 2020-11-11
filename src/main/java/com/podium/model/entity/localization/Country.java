@@ -3,7 +3,9 @@ package com.podium.model.entity.localization;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.podium.model.entity.user.User;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","users"})
+@NoArgsConstructor
 @Table(name = "COUNTRY")
 public class Country {
 
@@ -27,7 +29,7 @@ public class Country {
 
     @NotNull
     @Column(name = "printable_name")
-    private String printable_name;
+    private String printableName;
 
     @Column(name = "iso3", columnDefinition = "char")
     private String iso3;
@@ -37,4 +39,12 @@ public class Country {
 
     @OneToMany(mappedBy="country")
     private Set<User> users = new HashSet<>();
+
+    public Country(String countryId, String name, String printableName, String iso3, Integer numCode) {
+        this.countryId = countryId;
+        this.name = name;
+        this.printableName = printableName;
+        this.iso3 = iso3;
+        this.numCode = numCode;
+    }
 }

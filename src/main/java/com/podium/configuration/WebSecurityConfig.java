@@ -181,7 +181,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/gender/delete/{name}")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/gender/find/name/{name}")
+                .and().authorizeRequests().antMatchers("/gender/find/{name}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/event/add")
@@ -217,10 +217,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/contact/find/all")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/contact/find/subject/{subject}")
+                .and().authorizeRequests().antMatchers("/contact/find/all/subject/{subject}")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/contact/find/email/{email}")
+                .and().authorizeRequests().antMatchers("/contact/find/all/email/{email}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/subject/exist/{name}")

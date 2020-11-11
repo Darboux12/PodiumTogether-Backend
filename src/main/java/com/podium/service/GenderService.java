@@ -15,7 +15,6 @@ public class GenderService {
 
     private GenderRepository genderRepository;
 
-    @Autowired
     public GenderService(GenderRepository genderRepository) {
         this.genderRepository = genderRepository;
     }
@@ -34,8 +33,11 @@ public class GenderService {
 
         List<GenderResponseDto> responseDtos = new ArrayList<>();
 
-        for(Gender gender : this.genderRepository.findAll())
-            responseDtos.add(this.convertEntityToResponseDto(gender));
+        this.genderRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
     }
@@ -49,24 +51,11 @@ public class GenderService {
     }
 
     private Gender convertRequestDtoToEntity(GenderRequestDto requestDto){
-
-        Gender gender = new Gender();
-        gender.setGender(requestDto.getGender());
-        return gender;
-
+        return new Gender(requestDto.getGender());
     }
 
     private GenderResponseDto convertEntityToResponseDto(Gender gender){
-
-        GenderResponseDto responseDto = new GenderResponseDto();
-        responseDto.setGender(gender.getGender());
-        return responseDto;
-
+        return new GenderResponseDto(gender.getGender());
     }
-
-
-
-
-
 
 }

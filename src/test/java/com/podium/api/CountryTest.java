@@ -32,8 +32,17 @@ public class CountryTest {
 
     @BeforeClass
     public static void beforeClass(){
+
         TestLogger.setUp();
-        requestDto = Constant.getValidCountryRequestDto();
+
+        requestDto = new CountryRequestDto(
+                "QQ",
+                "TestCountry",
+                "PrintableTestName",
+                "QQQ",
+                0
+        );
+
     }
 
     @Test
@@ -69,7 +78,7 @@ public class CountryTest {
     }
 
     @Test
-    public void T04_deleteCreatedCountryAgain_ShouldReturnStatus_NOTFOUND(){
+    public void T04_Delete_Created_Country_Again_ShouldReturnStatus_NOTFOUND(){
 
         CountryValidator
                 .getInstance()
@@ -78,7 +87,7 @@ public class CountryTest {
     }
 
     @Test
-    public void T05_addCountryEmptyName_ShouldReturnStatus_CONFLICT(){
+    public void T05_Add_Country_Empty_Name_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getName();
         requestDto.setName("");
@@ -92,7 +101,7 @@ public class CountryTest {
     }
 
     @Test
-    public void T06_addCountryEmptyId_ShouldReturnStatus_CONFLICT(){
+    public void T06_Add_Country_Empty_Id_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = requestDto.getCountryId();
         requestDto.setCountryId("");
@@ -107,7 +116,7 @@ public class CountryTest {
     }
 
     @Test
-    public void T07_addCountryEmptyPrintableName_ShouldReturnStatus_CONFLICT(){
+    public void T07_Add_Country_Empty_Printable_Name_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getPrintableName();
         requestDto.setPrintableName("");
@@ -122,7 +131,7 @@ public class CountryTest {
     }
 
     @Test
-    public void T08_addCountryEmptyIso3_ShouldReturnStatus_CONFLICT(){
+    public void T08_Add_Country_Empty_Iso3_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getIso3();
         requestDto.setIso3("");

@@ -2,8 +2,10 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
+import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
+import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
@@ -15,87 +17,83 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class SubjectValidator {
+public class GenderValidator {
 
-    private static SubjectValidator instance;
+    private static GenderValidator instance;
 
-    private SubjectValidator() {}
+    private GenderValidator() {}
 
-    public static SubjectValidator getInstance() {
+    public static GenderValidator getInstance() {
         if(instance == null) {
-            instance = new SubjectValidator();
+            instance = new GenderValidator();
         }
         return instance;
     }
 
-    public void add(SubjectRequestDto requestDto, HttpStatus status){
+    public void add(GenderRequestDto requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when()
-                .post(Path.server + PodiumEndpoint.addSubject)
+                .when().post(Path.server + PodiumEndpoint.addGender)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public List<SubjectResponseDto> findAll(){
+    public List<GenderResponseDto> findAll(HttpStatus status){
 
-        SubjectResponseDto[] dtos =
+        GenderResponseDto[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllContact)
+                        .when().get(Path.server + PodiumEndpoint.findAllGender)
                         .then().assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)ContactResponseDto[].class);
+                        .extract().as((Type) GenderResponseDto[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public SubjectResponseDto findByName(String subjectName, HttpStatus status){
+    public GenderResponseDto findByName(String genderName, HttpStatus status){
 
         return
 
-                given()
-                        .spec(TestSpecification.buildRequestSpec())
-                        .pathParam("name",subjectName)
+                given().spec(TestSpecification.buildRequestSpec())
+                        .contentType(ContentType.JSON)
+                        .pathParam("name",genderName)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findSubjectByName)
-                        .then().assertThat()
-                        .statusCode(status.value())
+                        .get(Path.server + PodiumEndpoint.findGenderByName)
+                        .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(SubjectResponseDto.class);
+                        .extract().as(GenderResponseDto.class);
 
     }
 
-    public void existCityByName(String cityName, HttpStatus status){
+    public void existGenderByName(String genderName, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
-                .pathParam("name",cityName)
+                .pathParam("name",genderName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existCityByName)
+                .get(Path.server + PodiumEndpoint.existGenderByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public void deleteCityByName(String cityName, HttpStatus status){
+    public void deleteGenderByName(String genderName, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",cityName)
-                .delete(Path.server + PodiumEndpoint.deleteCityByName)
+                .pathParam("name",genderName)
+                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
-
     }
-
 }

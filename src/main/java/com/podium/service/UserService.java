@@ -18,24 +18,17 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private UserRepository userRepository;
-
+    private RoleRepository roleRepository;
+    private CountryRepository countryRepository;
     private PasswordEncoder passwordEncoder;
 
-    private RoleRepository roleRepository;
-
-    private CountryRepository countryRepository;
-
-    @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CountryRepository countryRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -56,8 +49,11 @@ public class UserService {
 
         List<UserResponseDto> responseDtos = new ArrayList<>();
 
-        for(User user : this.userRepository.findAll())
-            responseDtos.add(this.convertEntityToResponseDto(user));
+        this.userRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
     }
@@ -68,8 +64,11 @@ public class UserService {
 
         Role role = this.roleRepository.findByRole(roleName);
 
-        for(User user : this.userRepository.findAllByRolesContaining(role))
-            responseDtos.add(this.convertEntityToResponseDto(user));
+        this.userRepository
+                .findAllByRolesContaining(role)
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
     }
@@ -80,8 +79,11 @@ public class UserService {
 
         Country country = this.countryRepository.findByName(countryName);
 
-        for(User user : this.userRepository.findAllByCountry(country))
-            responseDtos.add(this.convertEntityToResponseDto(user));
+        this.userRepository
+                .findAllByCountry(country)
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
     }
@@ -122,7 +124,6 @@ public class UserService {
             return !this.userRepository.existsByEmail(requestDto.getEmail())
                     && !this.userRepository.existsByUsername(requestDto.getUsername());
 
-
         }
 
         return true;
@@ -130,15 +131,12 @@ public class UserService {
     }
 
     public void deleteUserByUsername(String username){
-
         this.userRepository.deleteByUsername(username);
     }
 
     private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequestDto requestDto){
 
         User user = this.userRepository.findById(requestDto.getId()).orElse(null);
-
-
 
         if (user != null) {
 
@@ -159,14 +157,7 @@ public class UserService {
 
     private User convertSignUpRequestDtoToEntity(SignUpRequestDto requestDto){
 
-        User user = new User();
-        user.setUsername(requestDto.getUsername());
-        user.setEmail(requestDto.getEmail());
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-
         Country country = countryRepository.findByName(requestDto.getCountry());
-        user.setCountry(country);
-
         Role role = this.roleRepository.findByRole("subscriber");
 
         if(role == null){
@@ -175,57 +166,59 @@ public class UserService {
             this.roleRepository.save(role);
         }
 
-        user.getRoles().add(role);
-        user.setBirthday(requestDto.getBirthday());
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
 
-        user.setDescription("");
-
-        return user;
+        return new User(
+                requestDto.getUsername(),
+                requestDto.getEmail(),
+                passwordEncoder.encode(requestDto.getPassword()),
+                country,
+                roles,
+                requestDto.getBirthday(),
+                null,
+                ""
+        );
     }
 
     private UserResponseDto convertEntityToResponseDto(User user){
 
-        UserResponseDto responseDto = new UserResponseDto();
-        responseDto.setId(user.getId());
-        responseDto.setUsername(user.getUsername());
-        responseDto.setEmail(user.getEmail());
-        responseDto.setPassword(user.getPassword());
-        responseDto.setCountry(user.getCountry().getPrintable_name());
-        Set<String> roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet());
-        responseDto.setRoles(roles);
-        responseDto.setBirthday(user.getBirthday());
-        responseDto.setDescription(user.getDescription());
+        try {
+            return new UserResponseDto(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getPassword(),
+                    user.getCountry().getPrintableName(),
+                    user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet()),
+                    user.getBirthday(),
+                    this.loadProfileImage(user),
+                    null,
+                    null,
+                    user.getDescription()
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    private PodiumFile loadProfileImage(User user) throws IOException {
 
         if(user.getProfileImage() != null) {
 
-            PodiumFile podiumFile = new PodiumFile();
-
             PodiumResource resource = user.getProfileImage();
 
-            try {
-                podiumFile.setContent(FileCopyUtils
-                        .copyToByteArray(new File(resource.getPath())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            podiumFile.setName(resource.getName());
-            podiumFile.setType(resource.getType());
-
-            responseDto.setProfileImage(podiumFile);
+            return new PodiumFile(
+                    resource.getName(),
+                    resource.getType(),
+                    FileCopyUtils.copyToByteArray(new File(resource.getPath()))
+            );
         }
 
-        else {
-            responseDto.setProfileImage(null);
-        }
-
-
-
-
-
-
-
-        return responseDto;
+        return null;
 
     }
 }

@@ -36,10 +36,26 @@ public class SignUpTest {
     public static void beforeClass() throws ParseException {
 
         TestLogger.setUp();
-        signUpRequestDtoOne = Constant.getValidSignUpRequestDtoOne();
-        signUpRequestDtoTwo = Constant.getValidSignUpRequestDtoTwo();
-        initialUsernameTwo = Constant.getValidSignUpRequestDtoTwo().getUsername();
-        initialEmailTwo = Constant.getValidSignUpRequestDtoTwo().getEmail();
+
+        signUpRequestDtoOne = new SignUpRequestDto(
+                "TEST USERNAME_ONE",
+                "TEST_MAIL_ONE@gmail.com",
+                "TEST PASSWORD ONE",
+                "POLAND",
+                new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
+        );
+
+        signUpRequestDtoTwo = new SignUpRequestDto(
+                "TEST USERNAME_TWO",
+                "TEST_MAIL_TWO@gmail.com",
+                "TEST PASSWORD TWO",
+                "POLAND",
+                new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
+        );
+
+        initialUsernameTwo = signUpRequestDtoTwo.getUsername();
+        initialEmailTwo =  signUpRequestDtoTwo.getEmail();
+
     }
 
     @Test
@@ -277,158 +293,5 @@ public class SignUpTest {
                 .getInstance()
                 .deleteUserByUsername(signUpRequestDtoOne.getUsername(),HttpStatus.NOT_FOUND);
     }
-
-
-
-
-    /*
-    @Test
-    public void T10_tryToAddUser_WithoutUsername_Should_Return_Status_409() throws ParseException {
-
-        signUpRequestDtoTwo.setUsername("");
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(signUpRequestDtoTwo)
-                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
-                .then().assertThat()
-                .statusCode(409);
-
-        signUpRequestDtoTwo.setUsername(initialUsernameTwo);
-
-
-
-    }
-
-
-    @Test
-    public void T12_tryToAddUser_WithoutEmail_Should_Return_Status_409() throws ParseException {
-
-        signUpRequestDtoTwo.setEmail("");
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(signUpRequestDtoTwo)
-                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
-                .then().assertThat()
-                .statusCode(409)
-                .spec(TestSpecification.buildResponseSpec());
-
-        signUpRequestDtoTwo.setEmail(initialEmailTwo);
-    }
-
-
-
-    @Test
-    public void T14_tryToAddUser_WithToLongUsername_Should_Return_Status_409() throws ParseException {
-
-        signUpRequestDtoTwo.setUsername("ThisUsernameIsExtremelyDefinitelyToLong");
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(signUpRequestDtoTwo)
-                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
-                .then().assertThat()
-                .statusCode(409)
-                .spec(TestSpecification.buildResponseSpec());;
-
-        signUpRequestDtoTwo.setUsername(initialUsernameTwo);
-
-    }
-
-
-
-    @Test
-    public void T16_tryToAddUser_WithWrongCountry_Should_Return_Status_409() throws ParseException {
-
-        signUpRequestDtoTwo.setCountry("NotExistingCountryName");
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(signUpRequestDtoTwo)
-                .when().post(PodiumPath.server + PodiumEndpoint.addUserEndpoint)
-                .then().assertThat()
-                .statusCode(409)
-                .spec(TestSpecification.buildResponseSpec());;
-
-        signUpRequestDtoTwo.setCountry(initialCountryTwo);
-    }
-
-
-
-    @Test
-    public void T17_tryToDeleteUser_NotExist_Should_Return_Status_404(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .pathParam("username","NotExistingUsername")
-                .when()
-                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
-                .then().assertThat().statusCode(404)
-                .spec(TestSpecification.buildResponseSpec());
-    }
-
-    @Test
-    public void T18_getAllSUsers_Should_Return_Status_200(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
-                .then().assertThat().statusCode(200)
-                .spec(TestSpecification.buildResponseSpec());
-    }
-
-    @Test
-    public void T19_getAllSUsers_Should_Return_Iterable_Users(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.findAllUsers)
-                .then().assertThat().statusCode(200)
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(User[].class);
-    }
-
-    @Test
-    public void T20_deleteNotExistingUser_Should_Return_Status_404() throws ParseException {
-
-        signUpRequestDtoTwo.setUsername("NotExistingUserName");
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .pathParam("username",signUpRequestDtoTwo.getUsername())
-                .when()
-                .delete(PodiumPath.server + PodiumEndpoint.deleteUserEndpoint)
-                .then().assertThat().statusCode(404)
-                .spec(TestSpecification.buildResponseSpec());
-
-        signUpRequestDtoOne.setUsername(initialUsernameTwo);
-
-    }
-
-    @Test
-    public void T21_signInWithoutUsername_Should_Return_Status_409() throws ParseException {
-
-        String username = "";
-        String password = "testPassword";
-
-        JwtRequestDto jwtRequest = new JwtRequestDto();
-        jwtRequest.setUsername(username);
-        jwtRequest.setPassword(password);
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .with().body(jwtRequest)
-                .when()
-                .post(PodiumPath.server + PodiumEndpoint.authenticateEndpoint)
-                .then().assertThat().statusCode(409)
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-*/
 
 }

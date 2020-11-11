@@ -33,7 +33,7 @@ public class SubjectTest {
     public static void beforeClass(){
 
         TestLogger.setUp();
-        subjectRequestDto = Constant.getValidSubjectRequestDto();
+        subjectRequestDto = new SubjectRequestDto("TestSubject");
     }
 
     @Test

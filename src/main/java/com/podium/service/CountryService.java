@@ -15,7 +15,6 @@ public class CountryService {
 
     private CountryRepository countryRepository;
 
-    @Autowired
     public CountryService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
@@ -36,8 +35,11 @@ public class CountryService {
 
         List<CountryResponseDto> responseDtos = new ArrayList<>();
 
-        for(Country country : this.countryRepository.findAll())
-            responseDtos.add(this.convertEntityToResponseDto(country));
+        this.countryRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
 
@@ -45,27 +47,24 @@ public class CountryService {
 
     private Country convertRequestDtoToEntity(CountryRequestDto requestDto){
 
-        Country country = new Country();
-        country.setCountryId(requestDto.getCountryId());
-        country.setIso3(requestDto.getIso3());
-        country.setName(requestDto.getName());
-        country.setPrintable_name(requestDto.getPrintableName());
-        country.setNumCode(requestDto.getNumCode());
-
-        return country;
-
+        return new Country(
+                requestDto.getCountryId(),
+                requestDto.getName(),
+                requestDto.getPrintableName(),
+                requestDto.getIso3(),
+                requestDto.getNumCode()
+        );
     }
 
     private CountryResponseDto convertEntityToResponseDto(Country country){
 
-        CountryResponseDto responseDto = new CountryResponseDto();
-        responseDto.setCountryId(country.getCountryId());
-        responseDto.setIso3(country.getIso3());
-        responseDto.setName(country.getName());
-        responseDto.setPrintable_name(country.getPrintable_name());
-        responseDto.setNumCode(country.getNumCode());
-
-        return responseDto;
+        return new CountryResponseDto(
+                country.getCountryId(),
+                country.getName(),
+                country.getPrintableName(),
+                country.getIso3(),
+                country.getNumCode()
+        );
 
     }
 

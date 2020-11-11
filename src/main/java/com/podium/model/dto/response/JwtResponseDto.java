@@ -1,19 +1,16 @@
 package com.podium.model.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 
-public class JwtResponseDto implements Serializable
-{
-
-    private final String token;
-
-    public JwtResponseDto(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return this.token;
-    }
-
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class JwtResponseDto implements Serializable {
+    private String token;
 }

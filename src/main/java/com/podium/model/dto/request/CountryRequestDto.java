@@ -1,12 +1,16 @@
 package com.podium.model.dto.request;
 
-
+import com.podium.validation.annotation.PodiumNotNull;
 import com.podium.validation.annotation.PodiumTextNotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CountryRequestDto {
 
     @PodiumTextNotEmpty
@@ -17,5 +21,6 @@ public class CountryRequestDto {
     private String printableName;
     @PodiumTextNotEmpty
     private String iso3;
-    private Integer numCode;
+    @PodiumNotNull
+    private int numCode;
 }

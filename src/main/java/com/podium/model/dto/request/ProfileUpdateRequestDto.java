@@ -2,13 +2,17 @@ package com.podium.model.dto.request;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.validation.annotation.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfileUpdateRequestDto {
 
     @PodiumNotNull

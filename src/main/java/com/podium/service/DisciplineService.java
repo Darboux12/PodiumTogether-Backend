@@ -5,7 +5,6 @@ import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.model.entity.discipline.Discipline;
 import com.podium.repository.DisciplineRepository;
 import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public class DisciplineService {
 
     private DisciplineRepository disciplineRepository;
 
-    @Autowired
     public DisciplineService(DisciplineRepository disciplineRepository) {
         this.disciplineRepository = disciplineRepository;
     }
@@ -35,8 +33,12 @@ public class DisciplineService {
     public Iterable<DisciplineResponseDto> findAllDiscipline(){
 
         List<DisciplineResponseDto> responseDtos = new ArrayList<>();
-        for(Discipline discipline : this.disciplineRepository.findAll() )
-            responseDtos.add(this.convertEntityToResponseDto(discipline));
+
+        this.disciplineRepository
+                .findAll()
+                .forEach(x -> responseDtos
+                        .add(this.convertEntityToResponseDto(x))
+                );
 
         return responseDtos;
 
@@ -53,18 +55,11 @@ public class DisciplineService {
     }
 
     private Discipline convertRequestDtoToEntity(DisciplineRequestDto requestDto){
-
-        Discipline discipline = new Discipline();
-        discipline.setDiscipline(requestDto.getDiscipline());
-        return discipline;
-
+        return new Discipline(requestDto.getDiscipline());
     }
 
     private DisciplineResponseDto convertEntityToResponseDto(Discipline discipline){
-
-        DisciplineResponseDto responseDto = new DisciplineResponseDto();
-        responseDto.setDiscipline(discipline.getDiscipline());
-        return responseDto;
+        return new DisciplineResponseDto(discipline.getDiscipline());
     }
 
 }

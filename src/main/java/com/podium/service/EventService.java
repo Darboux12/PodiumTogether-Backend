@@ -74,8 +74,8 @@ public class EventService {
         if(this.cityRepository.existsByCity(requestDto.getCity()))
             city = this.cityRepository.findByCity(requestDto.getCity());
         else{
-            city = new City();
-            city.setCity(requestDto.getCity());
+            city = new City(requestDto.getCity());
+
         }
 
 
@@ -155,7 +155,7 @@ public class EventService {
         responseDto.setCountryId(country.getCountryId());
         responseDto.setIso3(country.getIso3());
         responseDto.setName(country.getName());
-        responseDto.setPrintable_name(country.getPrintable_name());
+        responseDto.setPrintable_name(country.getPrintableName());
         responseDto.setNumCode(country.getNumCode());
 
         return responseDto;
