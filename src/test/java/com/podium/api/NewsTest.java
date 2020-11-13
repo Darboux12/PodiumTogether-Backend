@@ -1,17 +1,10 @@
 package com.podium.api;
 
-import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.NewsResponseDto;
-import com.podium.model.entity.news.News;
-import com.podium.specification.TestSpecification;
 import com.podium.constant.PodiumLimits;
-import com.podium.validator.ContactValidator;
 import com.podium.validator.NewsValidator;
-import io.restassured.http.ContentType;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,7 +15,6 @@ import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
 
-import static io.restassured.RestAssured.given;
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

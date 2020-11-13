@@ -3,7 +3,7 @@ package com.podium.controller;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ResourceRequestDto;
 import com.podium.service.ResourceService;
-import com.podium.validation.main.PodiumValidator;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

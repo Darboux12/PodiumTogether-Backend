@@ -18,6 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class SignUpRequestDto {
 
+
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minUsernameLength, max = PodiumLimits.maxUsernameLength)
     private String username;
@@ -31,5 +32,4 @@ public class SignUpRequestDto {
     private String country;
     @PodiumDatePast
     private Date birthday;
-
 }

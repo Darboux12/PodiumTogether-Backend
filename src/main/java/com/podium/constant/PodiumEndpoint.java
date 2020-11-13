@@ -121,6 +121,11 @@ public class PodiumEndpoint {
     /** GET | Exist user by email | Email path variable required */
     public static final String existUserByEmail = "/user/exist/email/{email}";
 
+    // WEEK DAY
+
+    /** GET | Find all week day */
+    public static final String findAllWeekDay = "/weekday/find/all";
+
 
 
 

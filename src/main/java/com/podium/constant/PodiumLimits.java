@@ -54,13 +54,17 @@ public class PodiumLimits {
     public static final int minEventTitleLength = 3;
     public static final int maxEventTitleLength = 200;
 
-    /** OBJECT NAME */
-    public static final int minObjectNameLength = 3;
-    public static final int maxObjectNameLength = 200;
+    /** Place NAME */
+    public static final int minPlaceNameLength = 3;
+    public static final int maxPlaceNameLength = 150;
+
+    /** PLACE LOCALIZATION REMARKS */
+    public static final int minLocalizationRemarksLength = 3;
+    public static final int maxLocalizationRemarksLength  = 150;
 
     /** CITY */
     public static final int minCityLength = 3;
-    public static final int maxCityLength = 200;
+    public static final int maxCityLength = 150;
 
     /** HOUSE NUMBER */
     public static final int minBuildingNumberLength = 0;
@@ -86,13 +90,13 @@ public class PodiumLimits {
     public static final int minEventMaxAge = 3;
     public static final int maxEventMaxAge = 100;
 
-    /** OBJECT MIN AGE */
-    public static final int minObjectMinAge = 3;
-    public static final int maxObjectMinAge = 100;
+    /** Place MIN AGE */
+    public static final int minPlaceMinAge = 3;
+    public static final int maxPlaceMinAge = 100;
 
-    /** OBJECT MAX AGE */
-    public static final int minObjectMaxAge = 3;
-    public static final int maxObjectMaxAge = 100;
+    /** Place MAX AGE */
+    public static final int minPlaceMaxAge = 3;
+    public static final int maxPlaceMaxAge = 100;
 
     /** COST */
     public static final int minCost = 3;

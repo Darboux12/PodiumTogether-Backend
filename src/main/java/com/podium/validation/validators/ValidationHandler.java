@@ -5,16 +5,29 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
-public class ValidationHandler {
+ class ValidationHandler {
 
-    public static boolean isTextEmpty(String text) {
+     private static ValidationHandler instance;
+
+     private ValidationHandler() {}
+
+     static ValidationHandler getInstance() {
+        if(instance == null) {
+            instance = new ValidationHandler();
+        }
+        return instance;
+    }
+    
+    boolean isTextEmpty(String text) {
         return text.isEmpty();
     }
 
-    public static boolean isValidDate(String date) {
+    boolean isValidDate(String date) {
 
         SimpleDateFormat dateFormat =
                 new SimpleDateFormat("dd-MM-yyyy HH:mm:ss:ms");
@@ -29,11 +42,11 @@ public class ValidationHandler {
         return true;
     }
 
-    public static boolean isNull(Object object) {
+    boolean isNull(Object object) {
         return object == null;
     }
 
-    public static boolean isDateInThePast(String date) throws ParseException {
+    boolean isDateInThePast(String date) throws ParseException {
 
         return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss:ms")
                 .parse(date).before(new Date());
@@ -41,42 +54,42 @@ public class ValidationHandler {
 
     }
 
-    public static boolean isDateInTheFuture(String date) throws ParseException {
+    boolean isDateInTheFuture(String date) throws ParseException {
 
         return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss:ms")
                 .parse(date).after(new Date());
     }
 
-    public static boolean isDateInThePast(Date date) throws ParseException {
+    boolean isDateInThePast(Date date) throws ParseException {
         return date.before(new Date());
     }
 
-    public static boolean isDateInTheFuture(Date date) throws ParseException {
+    boolean isDateInTheFuture(Date date) throws ParseException {
 
         return date.after(new Date());
     }
 
-    public static boolean isLongerThan(String text, int lengthLimit) {
+    boolean isLongerThan(String text, int lengthLimit) {
         return text.length() > lengthLimit;
     }
 
-    public static boolean isShorterThan(String text, int lengthLimit) {
+    boolean isShorterThan(String text, int lengthLimit) {
         return text.length() < lengthLimit;
     }
 
-    public static boolean isImageContentType(String imageType, List<String> allowedTypes) {
+    boolean isImageContentType(String imageType, List<String> allowedTypes) {
         return allowedTypes.contains(imageType);
     }
 
-    public static boolean isIntNumberEmpty(int number) {
+    boolean isIntNumberEmpty(int number) {
         return number == 0;
     }
 
-    public boolean isDoubleNumberEmpty(double number) {
+    boolean isDoubleNumberEmpty(double number) {
         return number == 0;
     }
 
-    public static boolean isTextNumericInt(String text) {
+    boolean isTextNumericInt(String text) {
 
         double a = Double.parseDouble(text);
 
@@ -84,26 +97,38 @@ public class ValidationHandler {
 
     }
 
-    public static boolean isEmailValid(String email) {
+    boolean isEmailValid(String email) {
 
         EmailValidator emailValidator = EmailValidator.getInstance();
         return emailValidator.isValid(email);
 
     }
 
-    public static boolean isBiggerThanInt(int number, int limit) {
+    boolean isBiggerThanInt(int number, int limit) {
         return number > limit;
     }
 
-    public static boolean isSmallerThanInt(int number, int limit) {
+    boolean isSmallerThanInt(int number, int limit) {
         return number < limit;
     }
 
-    public static boolean isBiggerThanDouble(double number, double limit){
+    boolean isBiggerThanDouble(double number, double limit){
         return number > limit;
     }
 
-    public static boolean isSmallerThanDouble(double number, double limit){
+    boolean isSmallerThanDouble(double number, double limit){
         return number < limit;
     }
+
+    boolean isTime(String time){
+
+        try {
+            LocalTime.parse(time);
+        } catch (DateTimeParseException | NullPointerException e) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

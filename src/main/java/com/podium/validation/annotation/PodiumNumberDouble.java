@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface PodiumNumberDouble {
     double min() default 1;
     double max() default 30;
+    String message() default "";
 }

@@ -1,18 +1,12 @@
 package com.podium.service;
 
-import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.ResourceRequestDto;
 import com.podium.model.entity.news.News;
-import com.podium.model.entity.resource.PodiumResource;
-import com.podium.model.other.PodiumFile;
+import com.podium.model.dto.other.PodiumFile;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.repository.NewsRepository;
-import com.podium.repository.ResourceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.service.ContactService;
 import com.podium.service.SubjectService;
-import com.podium.validation.main.PodiumValidator;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

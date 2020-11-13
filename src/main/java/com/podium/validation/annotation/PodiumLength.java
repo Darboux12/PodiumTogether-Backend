@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface PodiumLength {
     int min() default 0;
     int max() default 200;
+    String message() default "";
 }

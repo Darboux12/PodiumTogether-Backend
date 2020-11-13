@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.model.dto.response.WeekDayResponse;
+import com.podium.model.dto.response.WeekDayResponseDto;
 import com.podium.model.entity.time.WeekDay;
 import com.podium.repository.WeekDayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,9 @@ public class WeekDayService {
         this.weekDayRepository = weekDayRepository;
     }
 
-    public Iterable<WeekDayResponse> findAllWeekDay(){
+    public Iterable<WeekDayResponseDto> findAllWeekDay(){
 
-        List<WeekDayResponse> responses = new ArrayList<>();
+        List<WeekDayResponseDto> responses = new ArrayList<>();
 
         this.weekDayRepository.findAll()
                 .forEach(x -> responses
@@ -31,9 +31,9 @@ public class WeekDayService {
 
     }
 
-    private WeekDayResponse convertEntityToResponseDto(WeekDay weekDay){
+    private WeekDayResponseDto convertEntityToResponseDto(WeekDay weekDay){
 
-        return new WeekDayResponse(weekDay.getDay());
+        return new WeekDayResponseDto(weekDay.getDay());
 
     }
 

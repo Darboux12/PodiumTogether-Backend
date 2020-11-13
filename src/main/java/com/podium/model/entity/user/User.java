@@ -1,6 +1,7 @@
 package com.podium.model.entity.user;
 
 import com.podium.model.entity.event.Event;
+import com.podium.model.entity.place.Review;
 import com.podium.model.entity.resource.PodiumResource;
 import com.podium.model.entity.localization.Country;
 import com.sun.istack.NotNull;
@@ -80,6 +81,9 @@ public class User {
     @Column(name = "description")
     @Type(type = "text")
     private String description;
+
+    @OneToMany(mappedBy="author")
+    private Set<Review> reviews = new HashSet<>();
 
     public User(String username, String email, String password,
                 Country country, Set<Role> roles, Date birthday,

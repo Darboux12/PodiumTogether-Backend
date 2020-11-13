@@ -1,7 +1,9 @@
 package com.podium.model.entity.resource;
 
+import com.podium.model.entity.discipline.Discipline;
 import com.podium.model.entity.event.Event;
 import com.podium.model.entity.news.News;
+import com.podium.model.entity.place.Review;
 import com.podium.model.entity.user.User;
 import com.sun.istack.NotNull;
 import lombok.Getter;
@@ -43,5 +45,12 @@ public class PodiumResource {
     @OneToOne(mappedBy = "profileImage")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinColumn(name="review_id", nullable=false)
+    private Review review;
 
 }

@@ -1,7 +1,5 @@
 package com.podium.model.entity.event;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.podium.model.entity.gender.Gender;
 import com.podium.model.entity.resource.PodiumResource;
 import com.podium.model.entity.discipline.Discipline;
@@ -20,7 +18,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","eventFiles"})
 @Table(name = "EVENT")
 @SecondaryTable(name = "EVENT_DETAILS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "event_details_id"))
 public class Event {

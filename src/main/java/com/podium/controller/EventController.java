@@ -6,7 +6,7 @@ import com.podium.service.DisciplineService;
 import com.podium.service.EventService;
 import com.podium.service.GenderService;
 import com.podium.service.UserService;
-import com.podium.validation.main.PodiumValidator;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

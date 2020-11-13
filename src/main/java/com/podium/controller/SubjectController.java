@@ -3,16 +3,12 @@ package com.podium.controller;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.entity.contact.Subject;
 import com.podium.service.SubjectService;
-import com.podium.validation.main.PodiumValidator;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class SubjectController {

@@ -2,12 +2,14 @@ package com.podium.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class WeekDayResponse {
+@NoArgsConstructor
+public class WeekDayResponseDto {
 
     private String day;
 }

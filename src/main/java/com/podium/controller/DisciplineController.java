@@ -4,7 +4,7 @@ import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.service.DisciplineService;
-import com.podium.validation.main.PodiumValidator;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

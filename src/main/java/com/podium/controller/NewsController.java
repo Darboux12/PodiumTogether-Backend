@@ -4,15 +4,13 @@ import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.service.NewsService;
-import com.podium.validation.main.PodiumValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.podium.validation.validators.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
-import java.text.ParseException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")

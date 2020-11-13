@@ -1,8 +1,6 @@
 package com.podium.model.entity.time;
 
-import com.podium.model.entity.event.Event;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +19,9 @@ public class WeekDay {
     @Column(name = "day")
     private String day;
 
-    @OneToMany(mappedBy="weekDay")
-    private Set<OpeningHour> openingHours;
+    @OneToMany(mappedBy="day")
+    private Set<BusinessDay> businessDays = new HashSet<>();
+
+
 
 }

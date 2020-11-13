@@ -1,4 +1,4 @@
-package com.podium.model.other;
+package com.podium.model.dto.other;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
