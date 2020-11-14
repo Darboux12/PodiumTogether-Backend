@@ -9,13 +9,7 @@ import com.podium.specification.TestSpecification;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.SubjectValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
 
@@ -23,21 +17,20 @@ import java.text.ParseException;
 
 import static io.restassured.RestAssured.given;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SubjectTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+class SubjectTest {
 
     private static SubjectRequestDto subjectRequestDto;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @BeforeAll
+    static void beforeClass(){
 
         TestLogger.setUp();
         subjectRequestDto = new SubjectRequestDto("TestSubject");
     }
 
     @Test
-    public void T01_addValidSubject_ShouldReturnStatus_OK() throws ParseException {
+    void T01_addValidSubject_ShouldReturnStatus_OK() throws ParseException {
 
         SubjectValidator
                 .getInstance()
@@ -46,7 +39,7 @@ public class SubjectTest {
     }
 
     @Test
-    public void T02_addExistingSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
+    void T02_addExistingSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
         SubjectValidator
                 .getInstance()
@@ -54,7 +47,7 @@ public class SubjectTest {
     }
 
     @Test
-    public void T03_addSubjectEmptySubject_ShouldReturnStatus_CONFLICT() throws ParseException {
+    void T03_addSubjectEmptySubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
         String valueHolder = subjectRequestDto.getSubject();
         subjectRequestDto.setSubject("");
@@ -67,7 +60,7 @@ public class SubjectTest {
     }
 
     @Test
-    public void T04_addSubjectToShortSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
+    void T04_addSubjectToShortSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minSubjectLength - 1);
 
@@ -82,7 +75,7 @@ public class SubjectTest {
     }
 
     @Test
-    public void T05_addSubjectToLongSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
+    void T05_addSubjectToLongSubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxSubjectLength + 1);
 
@@ -97,7 +90,7 @@ public class SubjectTest {
     }
 
     @Test
-    public void T06_findExistingSubject_ShouldReturnStatus_OK_Response_DTO() throws ParseException {
+    void T06_findExistingSubject_ShouldReturnStatus_OK_Response_DTO() throws ParseException {
 
         SubjectResponseDto addedSubject =
 
@@ -105,12 +98,12 @@ public class SubjectTest {
                         .getInstance()
                         .findByName(subjectRequestDto.getSubject(),HttpStatus.OK);
 
-        Assert.assertEquals(subjectRequestDto.getSubject(),addedSubject.getSubject());
+        Assertions.assertEquals(subjectRequestDto.getSubject(),addedSubject.getSubject());
 
     }
 
     @Test
-    public void T07_deleteSubject_ShouldReturnStatus_200() throws ParseException {
+    void T07_deleteSubject_ShouldReturnStatus_200() throws ParseException {
 
         given()
                 .spec(TestSpecification.buildRequestSpec())

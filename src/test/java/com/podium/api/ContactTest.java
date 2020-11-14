@@ -6,24 +6,17 @@ import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.validator.ContactValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class ContactTest {
 
     private static ContactRequestDto contactRequestDTO;
     private static String valueHolder;
     private static int idHolder;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass(){
 
         TestLogger.setUp();
@@ -140,7 +133,7 @@ public class ContactTest {
                 .map(ContactResponseDto::getMessage)
                 .anyMatch(contactRequestDTO.getMessage()::equals);
 
-        Assert.assertTrue(isPresent);
+        Assertions.assertTrue(isPresent);
 
     }
 
@@ -154,7 +147,7 @@ public class ContactTest {
                 .map(ContactResponseDto::getMessage)
                 .anyMatch(contactRequestDTO.getMessage()::equals);
 
-        Assert.assertTrue(isPresent);
+        Assertions.assertTrue(isPresent);
 
     }
 
@@ -168,7 +161,7 @@ public class ContactTest {
                 .map(ContactResponseDto::getMessage)
                 .anyMatch(contactRequestDTO.getMessage()::equals);
 
-        Assert.assertTrue(isPresent);
+        Assertions.assertTrue(isPresent);
     }
 
     @Test

@@ -5,28 +5,21 @@ import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.validator.UserValidator;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserProfileUpdateTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+ class UserProfileUpdateTest {
 
     private static SignUpRequestDto signUpRequestDtoOne;
     private static ProfileUpdateRequestDto updateRequestDto;
 
-    @BeforeClass
-    public static void beforeClass() throws ParseException {
+    @BeforeAll
+    static void beforeClass() throws ParseException {
         TestLogger.setUp();
         signUpRequestDtoOne = new SignUpRequestDto(
                 "TEST USERNAME_ONE",
@@ -46,7 +39,7 @@ public class UserProfileUpdateTest {
     }
 
     @Test
-    public void T01_Sign_Up_Valid_User_Should_Return_Status_OK() throws ParseException {
+    void T01_Sign_Up_Valid_User_Should_Return_Status_OK() throws ParseException {
 
         UserValidator
                 .getInstance()
@@ -55,7 +48,7 @@ public class UserProfileUpdateTest {
     }
 
     @Test
-    public void T02_Find_Signed_Up_User_Id_Fill_Update_Request(){
+    void T02_Find_Signed_Up_User_Id_Fill_Update_Request(){
 
         UserResponseDto responseDto =
 
@@ -66,11 +59,11 @@ public class UserProfileUpdateTest {
         updateRequestDto.setId(responseDto.getId());
 
 
-        Assert.assertEquals(responseDto.getId(),updateRequestDto.getId());
+        Assertions.assertEquals(responseDto.getId(),updateRequestDto.getId());
     }
 
     @Test
-    public void T03_Update_User_Description_Should_Return_Status_OK_And_Update_Data(){
+    void T03_Update_User_Description_Should_Return_Status_OK_And_Update_Data(){
 
         updateRequestDto.setDescription("UPDATE TEST DESCRIPTION TEXT");
 
@@ -84,12 +77,12 @@ public class UserProfileUpdateTest {
                         .getInstance()
                         .findUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
-        Assert.assertEquals(updateRequestDto.getDescription(),responseDto.getDescription());
+        Assertions.assertEquals(updateRequestDto.getDescription(),responseDto.getDescription());
 
     }
 
     @Test
-    public void T04_Update_User_Email_Should_Return_Status_OK_And_Update_Data(){
+    void T04_Update_User_Email_Should_Return_Status_OK_And_Update_Data(){
 
         updateRequestDto.setEmail("UPDATEDEMAIL@gmail.com");
 
@@ -103,12 +96,12 @@ public class UserProfileUpdateTest {
                         .getInstance()
                         .findUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
-        Assert.assertEquals(updateRequestDto.getEmail(),responseDto.getEmail());
+        Assertions.assertEquals(updateRequestDto.getEmail(),responseDto.getEmail());
 
     }
 
     @Test
-    public void T05_Update_User_Password_Should_Return_Status_OK_And_Update_Data(){
+    void T05_Update_User_Password_Should_Return_Status_OK_And_Update_Data(){
 
         updateRequestDto.setPassword("UPDATED PASSWORD");
 
@@ -125,7 +118,7 @@ public class UserProfileUpdateTest {
     }
 
     @Test
-    public void T06_Update_User_Country_Should_Return_Status_OK_And_Update_Data(){
+    void T06_Update_User_Country_Should_Return_Status_OK_And_Update_Data(){
 
         updateRequestDto.setCountry("Armenia");
 
@@ -139,12 +132,12 @@ public class UserProfileUpdateTest {
                         .getInstance()
                         .findUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
-        Assert.assertEquals(updateRequestDto.getCountry(),responseDto.getCountry());
+        Assertions.assertEquals(updateRequestDto.getCountry(),responseDto.getCountry());
 
     }
 
     @Test
-    public void T07_Update_User_Birthday_Should_Return_Status_OK_And_Update_Data() throws ParseException {
+    void T07_Update_User_Birthday_Should_Return_Status_OK_And_Update_Data() throws ParseException {
 
 
         Date birthday = new SimpleDateFormat(
@@ -162,12 +155,12 @@ public class UserProfileUpdateTest {
                         .getInstance()
                         .findUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
-        Assert.assertEquals(updateRequestDto.getBirthday(),responseDto.getBirthday());
+        Assertions.assertEquals(updateRequestDto.getBirthday(),responseDto.getBirthday());
 
     }
 
     @Test
-    public void T08_Update_User_With_Existing_Email_Should_Return_Status_CONFLICT() throws ParseException {
+    void T08_Update_User_With_Existing_Email_Should_Return_Status_CONFLICT() throws ParseException {
 
 
         updateRequestDto.setEmail("johndoe@gmail.com");
@@ -179,7 +172,7 @@ public class UserProfileUpdateTest {
     }
 
     @Test
-    public void T09_Delete_User_Should_Return_Status_OK() throws ParseException {
+    void T09_Delete_User_Should_Return_Status_OK() throws ParseException {
 
         UserValidator
                 .getInstance()

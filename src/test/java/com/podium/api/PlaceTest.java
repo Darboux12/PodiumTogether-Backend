@@ -2,34 +2,29 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.request.PlaceRequestDto;
 import com.podium.model.dto.other.OpeningDay;
 import com.podium.model.dto.other.PlaceLocalization;
 import com.podium.model.dto.other.Rating;
-import com.podium.validator.CityValidator;
 import com.podium.validator.PlaceValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PlaceTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+ class PlaceTest {
 
     private static PlaceRequestDto requestDto;
     private static String textValueHolder;
     private static int intValueHolder;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @BeforeAll
+     static void beforeClass(){
 
         TestLogger.setUp();
 
@@ -81,7 +76,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T01_Add_Place_Empty_Name_Return_Status_CONFLICT(){
+    void T01_Add_Place_Empty_Name_Return_Status_CONFLICT(){
 
         textValueHolder = requestDto.getName();
         requestDto.setName("");
@@ -94,7 +89,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T02_Add_Place_Too_Short_Name_Return_Status_CONFLICT(){
+    void T02_Add_Place_Too_Short_Name_Return_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minPlaceNameLength - 1);
@@ -110,7 +105,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T03_Add_Place_Too_Long_Name_Return_Status_CONFLICT(){
+    void T03_Add_Place_Too_Long_Name_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxPlaceNameLength + 1);
@@ -126,7 +121,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T04_Add_Place_Too_Short_Discipline_Return_Status_CONFLICT(){
+    void T04_Add_Place_Too_Short_Discipline_Return_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
@@ -142,7 +137,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T05_Add_Place_Too_Long_Discipline_Return_Status_CONFLICT(){
+    void T05_Add_Place_Too_Long_Discipline_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
@@ -158,7 +153,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T06_Add_Place_Too_Short_Localization_City_Return_Status_CONFLICT(){
+    void T06_Add_Place_Too_Short_Localization_City_Return_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minCityLength - 1);
@@ -174,7 +169,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T07_Add_Place_Too_Long_Localization_City_Return_Status_CONFLICT(){
+    void T07_Add_Place_Too_Long_Localization_City_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxCityLength + 1);
@@ -190,7 +185,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T08_Add_Place_Too_Short_Localization_Street_Return_Status_CONFLICT(){
+    void T08_Add_Place_Too_Short_Localization_Street_Return_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minStreetLength - 1);
@@ -206,7 +201,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T09_Add_Place_Too_Long_Localization_Street_Return_Status_CONFLICT(){
+    void T09_Add_Place_Too_Long_Localization_Street_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxStreetLength + 1);
@@ -222,7 +217,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T10_Add_Place_Too_Short_Localization_BuildingNumber_Return_Status_CONFLICT(){
+    void T10_Add_Place_Too_Short_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toShort = PodiumLimits.minBuildingNumberLength - 1;
         intValueHolder = requestDto.getPlaceLocalization().getBuildingNumber();
@@ -237,7 +232,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T11_Add_Place_Too_Long_Localization_BuildingNumber_Return_Status_CONFLICT(){
+    void T11_Add_Place_Too_Long_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toLong = PodiumLimits.maxBuildingNumberLength + 1;
         intValueHolder = requestDto.getPlaceLocalization().getBuildingNumber();
@@ -260,7 +255,7 @@ public class PlaceTest {
 
 
     @Test
-    public void T22_Add_Place_Empty_Discipline_Return_Status_CONFLICT(){
+     void T22_Add_Place_Empty_Discipline_Return_Status_CONFLICT(){
 
         textValueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline("");
@@ -273,7 +268,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T23_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(){
+     void T23_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(){
 
         textValueHolder = requestDto.getPlaceLocalization().getCity();
         requestDto.getPlaceLocalization().setCity("");
@@ -286,7 +281,7 @@ public class PlaceTest {
     }
 
     @Test
-    public void T24_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(){
+     void T24_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(){
 
         textValueHolder = requestDto.getOpeningDays().get(1).getDay();
         requestDto.getOpeningDays().get(1).setDay("");
@@ -303,7 +298,7 @@ public class PlaceTest {
 
 
 
-   public void test(){
+    void test(){
 
        for (int i = 0; i < 3; i++) {
 
@@ -316,7 +311,7 @@ public class PlaceTest {
 
 
     @Test
-    public void doSomething(){
+     void doSomething(){
 
     }
 

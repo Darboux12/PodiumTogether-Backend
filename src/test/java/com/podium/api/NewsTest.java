@@ -6,25 +6,18 @@ import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.NewsValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class NewsTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+ class NewsTest {
 
     private static NewsRequestDto newsRequest;
     private static String valueHolder;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @BeforeAll
+    static void beforeClass(){
 
             TestLogger.setUp();
 
@@ -37,7 +30,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T01_Add_News_WithOut_Title_ShouldReturnStatus_CONFLICT(){
+    void T01_Add_News_WithOut_Title_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = newsRequest.getTitle();
         newsRequest.setTitle("");
@@ -49,7 +42,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T02_Add_News_WithOut_FullText_ShouldReturnStatus_CONFLICT(){
+    void T02_Add_News_WithOut_FullText_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = newsRequest.getText();
         newsRequest.setText("");
@@ -61,7 +54,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T03_Add_News_WithOut_ShortText_ShouldReturnStatus_CONFLICT(){
+    void T03_Add_News_WithOut_ShortText_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = newsRequest.getShortText();
         newsRequest.setShortText("");
@@ -73,7 +66,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T04_Add_News_WithOut_LinkText_ShouldReturnStatus_CONFLICT(){
+    void T04_Add_News_WithOut_LinkText_ShouldReturnStatus_CONFLICT(){
 
         valueHolder = newsRequest.getLinkText();
         newsRequest.setLinkText("");
@@ -85,28 +78,28 @@ public class NewsTest {
     }
 
     @Test
-    public void T05_Add_Valid_News_ShouldReturnStatus_OK(){
+    void T05_Add_Valid_News_ShouldReturnStatus_OK(){
         NewsValidator.getInstance().add(newsRequest,HttpStatus.OK);
     }
 
     @Test
-    public void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(){
+    void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(){
         NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
     }
 
     @Test
-    public void T07_Find_AllNews_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
+    void T07_Find_AllNews_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
 
         NewsResponseDto responseDto = NewsValidator
                 .getInstance()
                 .findByTitle(newsRequest.getTitle(),HttpStatus.OK);
 
-        Assert.assertEquals(newsRequest.getTitle(),responseDto.getTitle());
+        Assertions.assertEquals(newsRequest.getTitle(),responseDto.getTitle());
 
     }
     
     @Test
-    public void T08_Find_AndDeleteCreatedValidNews_ShouldReturnStatus_OK(){
+    void T08_Find_AndDeleteCreatedValidNews_ShouldReturnStatus_OK(){
 
         NewsResponseDto newsResponseDto =
 
@@ -120,7 +113,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T09_AddNewsToShortTitle_ShouldReturnStatus_CONFLICT(){
+     void T09_AddNewsToShortTitle_ShouldReturnStatus_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minNewsTitleLength - 1);
 
@@ -134,7 +127,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T10_AddNewsToShortShortText_ShouldReturnStatus_CONFLICT(){
+    void T10_AddNewsToShortShortText_ShouldReturnStatus_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minNewsShortTextLength - 1);
 
@@ -148,7 +141,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T11_AddNewsToShortFullText_ShouldReturnStatus_CONFLICT(){
+    void T11_AddNewsToShortFullText_ShouldReturnStatus_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minNewsFullTextLength - 1);
 
@@ -162,7 +155,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T12_AddNewsToShortLinkText_ShouldReturnStatus_CONFLICT(){
+     void T12_AddNewsToShortLinkText_ShouldReturnStatus_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minNewsLinkTextLength - 1);
 
@@ -176,7 +169,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T13_AddNewsToLongTitle_ShouldReturnStatus_CONFLICT(){
+    void T13_AddNewsToLongTitle_ShouldReturnStatus_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxNewsTitleLength + 1);
 
@@ -190,7 +183,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T14_AddNewsToLongShortText_ShouldReturnStatus_CONFLICT(){
+    void T14_AddNewsToLongShortText_ShouldReturnStatus_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxNewsShortTextLength + 1);
 
@@ -204,7 +197,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T15_AddNewsToLongFullText_ShouldReturnStatus_CONFLICT(){
+    void T15_AddNewsToLongFullText_ShouldReturnStatus_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxNewsFullTextLength + 1);
 
@@ -218,7 +211,7 @@ public class NewsTest {
     }
 
     @Test
-    public void T16_AddNewsToLongLinkText_ShouldReturnStatus_CONFLICT(){
+    void T16_AddNewsToLongLinkText_ShouldReturnStatus_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxNewsLinkTextLength+ 1);
 

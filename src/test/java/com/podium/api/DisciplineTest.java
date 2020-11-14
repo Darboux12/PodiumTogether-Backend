@@ -6,30 +6,23 @@ import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.DisciplineValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DisciplineTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+ class DisciplineTest {
 
    private static DisciplineRequestDto requestDto;
    private static String valueHolder;
 
-    @BeforeClass
-    public static void beforeClass(){
+    @BeforeAll
+    static void beforeClass(){
         TestLogger.setUp();
         requestDto = new DisciplineRequestDto("TestDiscipline");
     }
 
     @Test
-    public void T01_Add_Valid_Discipline_Should_Return_Status_OK(){
+    void T01_Add_Valid_Discipline_Should_Return_Status_OK(){
 
         DisciplineValidator
                 .getInstance()
@@ -38,7 +31,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T02_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(){
+    void T02_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(){
 
         valueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline("");
@@ -52,7 +45,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T03_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(){
+    void T03_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(){
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
 
@@ -68,7 +61,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T04_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(){
+    void T04_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(){
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
 
@@ -84,7 +77,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T05_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Discipline(){
+    void T05_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Discipline(){
 
         boolean isPresent = DisciplineValidator
                 .getInstance()
@@ -93,11 +86,11 @@ public class DisciplineTest {
                 .map(DisciplineResponseDto::getDiscipline)
                 .anyMatch(requestDto.getDiscipline()::equals);
 
-        Assert.assertTrue(isPresent);
+        Assertions.assertTrue(isPresent);
     }
 
     @Test
-    public void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(){
+    void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(){
 
         DisciplineResponseDto responseDto =
 
@@ -105,12 +98,12 @@ public class DisciplineTest {
                         .getInstance()
                         .findByName(requestDto.getDiscipline(),HttpStatus.OK);
 
-        Assert.assertEquals(responseDto.getDiscipline(),responseDto.getDiscipline());
+        Assertions.assertEquals(responseDto.getDiscipline(),responseDto.getDiscipline());
 
     }
 
     @Test
-    public void T07_Find_Discipline_By_Name_Not_Exist_ShouldReturn_Status_NOT_FOUND(){
+    void T07_Find_Discipline_By_Name_Not_Exist_ShouldReturn_Status_NOT_FOUND(){
 
         DisciplineValidator
                 .getInstance()
@@ -119,7 +112,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T08_Exist_Discipline_By_Name_ShouldReturn_Status_OK(){
+    void T08_Exist_Discipline_By_Name_ShouldReturn_Status_OK(){
 
         DisciplineValidator
                 .getInstance()
@@ -128,7 +121,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T09_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_Status_BAD_REQUEST(){
+    void T09_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_Status_BAD_REQUEST(){
 
         DisciplineValidator
                 .getInstance()
@@ -137,7 +130,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T10_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
+    void T10_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
 
         DisciplineValidator
                 .getInstance()
@@ -147,7 +140,7 @@ public class DisciplineTest {
     }
 
     @Test
-    public void T11_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
+    void T11_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
 
         DisciplineValidator
                 .getInstance()

@@ -1,36 +1,19 @@
 package com.podium.api;
 
-import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.CountryResponseDto;
-import com.podium.specification.TestSpecification;
-import com.podium.validator.CityValidator;
-import com.podium.validator.ContactValidator;
 import com.podium.validator.CountryValidator;
-import io.restassured.http.ContentType;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.rootPath;
-
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 public class CountryTest {
 
     private static CountryRequestDto requestDto;
     private static String valueHolder;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass(){
 
         TestLogger.setUp();
@@ -64,7 +47,7 @@ public class CountryTest {
                 .map(CountryResponseDto::getName)
                 .anyMatch(requestDto.getName()::equals);
 
-        Assert.assertTrue(isPresent);
+        Assertions.assertTrue(isPresent);
 
     }
 

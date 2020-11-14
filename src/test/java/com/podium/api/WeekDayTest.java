@@ -2,22 +2,19 @@ package com.podium.api;
 
 import com.podium.model.dto.response.WeekDayResponseDto;
 import com.podium.validator.WeekDayValidator;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RunWith(JUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class WeekDayTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+class WeekDayTest {
 
     @Test
-    public void Find_All_Week_Day_Containing_All_Week_Days(){
+    void Find_All_Week_Day_Containing_All_Week_Days(){
 
         List<String> weekDays = List.of("Monday", "Tuesday", "Wednesday", "Thursday",
                 "Friday", "Saturday", "Sunday"
@@ -29,7 +26,7 @@ public class WeekDayTest {
                         .findAll().stream().map(WeekDayResponseDto::getDay)
                         .collect(Collectors.toList());
 
-        Assert.assertTrue(weekDays.containsAll(responseDtos));
+        Assertions.assertTrue(weekDays.containsAll(responseDtos));
 
     }
 }

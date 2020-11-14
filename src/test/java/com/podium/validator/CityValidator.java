@@ -6,11 +6,13 @@ import com.podium.specification.TestSpecification;
 import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.http.HttpStatus;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 
@@ -37,6 +39,15 @@ public class CityValidator {
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
+
+    }
+
+    public Stream<Arguments> provideArgumentsForAddTest(){
+
+        return Stream.of(
+                Arguments.of("",HttpStatus.OK)
+
+        );
 
     }
 
