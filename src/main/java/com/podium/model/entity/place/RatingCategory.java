@@ -2,6 +2,7 @@ package com.podium.model.entity.place;
 
 import com.podium.model.entity.event.Event;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,9 +13,9 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "RATING_CATEGORY")
+@NoArgsConstructor
 public class RatingCategory {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "category")
     private String category;
@@ -22,10 +23,7 @@ public class RatingCategory {
     @OneToMany(mappedBy="category")
     private Set<StarRating> starRatings = new HashSet<>();
 
-
-
-
-
-
-
+    public RatingCategory(String category) {
+        this.category = category;
+    }
 }

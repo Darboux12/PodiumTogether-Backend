@@ -4,16 +4,12 @@ import com.podium.constant.PodiumLimits;
 import com.podium.model.dto.other.OpeningDay;
 import com.podium.model.dto.other.PlaceLocalization;
 import com.podium.model.dto.other.Rating;
-import com.podium.validation.annotation.PodiumCollectionTextNotEmpty;
-import com.podium.validation.annotation.PodiumLength;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
+import com.podium.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Getter
@@ -30,13 +26,18 @@ public class PlaceRequestDto {
     private String discipline;
     @PodiumCollectionTextNotEmpty
     private PlaceLocalization placeLocalization;
-    @PodiumCollectionTextNotEmpty
+    @PodiumCollectionLength(min = 7, max = 7)
     private List<OpeningDay> openingDays;
+    @PodiumNumberDouble(min = PodiumLimits.minCost, max = PodiumLimits.maxCost)
     private double cost;
+    @PodiumNumberDouble(min = PodiumLimits.minUsageTimeHours, max = PodiumLimits.maxUsageTimeHours)
     private double usageTime;
+    @PodiumNumberInt(min = PodiumLimits.minPlaceMinAge, max = PodiumLimits.maxPlaceMinAge)
     private int minAge;
+    @PodiumNumberInt(min = PodiumLimits.minPlaceMaxAge, max = PodiumLimits.maxPlaceMaxAge)
     private int maxAge;
     private List<Rating> ratings;
+    @PodiumLength(min = PodiumLimits.minPlaceReview, max = PodiumLimits.maxPlaceReview)
     private String review;
 
 }

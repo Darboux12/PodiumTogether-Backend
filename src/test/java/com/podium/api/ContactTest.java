@@ -7,172 +7,194 @@ import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.validator.ContactValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
-public class ContactTest {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-    private static ContactRequestDto contactRequestDTO;
-    private static String valueHolder;
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+class ContactTest {
+
     private static int idHolder;
 
     @BeforeAll
-    public static void beforeClass(){
-
+    static void beforeClass(){
         TestLogger.setUp();
-        contactRequestDTO = new ContactRequestDto(
-                "testemail@gmail.pl",
-                "Technical",
-                "Test contact message"
+    }
+
+    private static Stream<ContactRequestDto> provideContactsForTests(){
+
+        return Stream.of(
+
+                new ContactRequestDto(
+                        "TEST_ONE@gmail.pl",
+                        "Technical",
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_TWO@gmail.pl",
+                        "Feedback",
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_THREE@gmail.pl",
+                        "Review",
+                        "Test contact message"
+                )
+
         );
 
     }
 
-    @Test
-    public void T01_Add_Valid_Contact_Should_Return_Status_OK(){
+    private static Stream<ContactRequestDto> provideEmptyContactsNamesForTests(){
+
+        return Stream.of(
+
+                new ContactRequestDto(
+                        "     ",
+                        "Technical",
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_TWO@gmail.pl",
+                        "   ",
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_THREE@gmail.pl",
+                        "Technical",
+                        ""
+                ),
+
+                new ContactRequestDto(
+                        "   ",
+                        "",
+                        "   "
+                ),
+
+                new ContactRequestDto(
+                        "       ",
+                        "           ",
+                        "             "
+                )
+
+        );
+
+    }
+
+    private static Stream<ContactRequestDto> provideTooLongAndTooShortContactsValuesForTests(){
+
+        return Stream.of(
+
+                new ContactRequestDto(
+                        StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1),
+                        "Technical",
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_ONE@gmail.pl",
+                        StringUtils.repeat("*", PodiumLimits.maxSubjectLength + 1),
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_ONE@gmail.pl",
+                        StringUtils.repeat("*", PodiumLimits.minSubjectLength - 1),
+                        "Test contact message"
+                ),
+
+                new ContactRequestDto(
+                        "TEST_ONE@gmail.pl",
+                        "Technical",
+                        StringUtils.repeat("*", PodiumLimits.maxContactMessageLength + 1)
+                ),
+
+                new ContactRequestDto(
+                        "TEST_ONE@gmail.pl",
+                        "Technical",
+                        StringUtils.repeat("*", PodiumLimits.minContactMessageLength - 1)
+                )
+
+        );
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideContactsForTests")
+    void T01_Add_Valid_Contacts_Return_Status_OK(ContactRequestDto requestDto){
 
         ContactValidator
                 .getInstance()
-                .add(contactRequestDTO,HttpStatus.OK);
+                .add(requestDto,HttpStatus.OK);
     }
 
-    @Test
-    public void T02_Add_Contact_Empty_Email_Should_Return_Status_CONFLICT(){
-
-        valueHolder = contactRequestDTO.getUserEmail();
-        contactRequestDTO.setUserEmail("");
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setUserEmail(valueHolder);
-    }
-
-    @Test
-    public void T03_Add_Contact_Empty_Subject_Should_Return_Status_CONFLICT(){
-
-        valueHolder = contactRequestDTO.getSubject();
-        contactRequestDTO.setSubject("");
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setSubject(valueHolder);
-    }
-
-    @Test
-    public void T04_Add_Contact_Empty_Message_Should_Return_Status_CONFLICT(){
-
-        valueHolder = contactRequestDTO.getMessage();
-        contactRequestDTO.setMessage("");
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setMessage(valueHolder);
-    }
-
-    @Test
-    public void T05_Add_Contact_To_Long_Message_Should_Return_Status_CONFLICT(){
-
-        String toLong =
-                StringUtils.repeat("*", PodiumLimits.maxContactMessageLength + 1);
-
-        valueHolder = contactRequestDTO.getMessage();
-        contactRequestDTO.setMessage(toLong);
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setMessage(valueHolder);
-    }
-
-    @Test
-    public void T06_Add_Contact_To_Short_Message_Should_Return_Status_CONFLICT(){
-
-        String toShort =
-                StringUtils.repeat("*", PodiumLimits.minContactMessageLength - 1);
-
-        valueHolder = contactRequestDTO.getMessage();
-        contactRequestDTO.setMessage(toShort);
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setMessage(valueHolder);
-    }
-
-    @Test
-    public void T07_Add_Contact_To_Long_Email_Should_Return_Status_CONFLICT(){
-
-        String toLong =
-                StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1);
-
-        valueHolder = contactRequestDTO.getUserEmail();
-        contactRequestDTO.setUserEmail(toLong);
-
-        ContactValidator
-                .getInstance()
-                .add(contactRequestDTO,HttpStatus.CONFLICT);
-
-        contactRequestDTO.setUserEmail(valueHolder);
-    }
-
-    @Test
-    public void T08_Find_Contacts_By_Email_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
+    @ParameterizedTest
+    @MethodSource("provideContactsForTests")
+    void T02_Find_Contacts_By_Email_Return_Status_OK_Iterable_Containing_Added_DTO(ContactRequestDto requestDto){
 
         boolean isPresent = ContactValidator
                 .getInstance()
-                .findByEmail(contactRequestDTO.getUserEmail(),HttpStatus.OK)
+                .findByEmail(requestDto.getUserEmail(),HttpStatus.OK)
                 .stream()
-                .map(ContactResponseDto::getMessage)
-                .anyMatch(contactRequestDTO.getMessage()::equals);
+                .map(ContactResponseDto::getEmail)
+                .anyMatch(requestDto.getUserEmail()::equals);
+
+        Assertions.assertTrue(isPresent);
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideContactsForTests")
+    void T03_Find_Contacts_By_Subject_Return_Status_OK_Iterable_Containing_Added_DTO(ContactRequestDto requestDto){
+
+        boolean isPresent =
+
+                ContactValidator
+                .getInstance()
+                .findBySubject(requestDto.getSubject(),HttpStatus.OK)
+                .stream()
+                .map(ContactResponseDto::getEmail)
+                .anyMatch(requestDto.getUserEmail()::equals);
 
         Assertions.assertTrue(isPresent);
 
     }
 
     @Test
-    public void T09_Find_Contacts_By_Subject_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
+    void T04_Find_All_Contact_Return_Status_OK_Iterable_Containing_Added_DTO(){
 
-        boolean isPresent = ContactValidator
-                .getInstance()
-                .findBySubject(contactRequestDTO.getSubject(),HttpStatus.OK)
-                .stream()
-                .map(ContactResponseDto::getMessage)
-                .anyMatch(contactRequestDTO.getMessage()::equals);
+        List<String> expectedEmails = provideContactsForTests()
+                .map(ContactRequestDto::getUserEmail).collect(Collectors.toList());
 
-        Assertions.assertTrue(isPresent);
-
-    }
-
-    @Test
-    public void T10_Find_All_Contact_Should_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
-
-        boolean isPresent = ContactValidator
+        List<String> actualEmails = ContactValidator
                 .getInstance()
                 .findAll()
                 .stream()
-                .map(ContactResponseDto::getMessage)
-                .anyMatch(contactRequestDTO.getMessage()::equals);
+                .map(ContactResponseDto::getEmail)
+                .collect(Collectors.toList());
 
-        Assertions.assertTrue(isPresent);
+        Assertions.assertTrue(actualEmails.containsAll(expectedEmails));
     }
 
-    @Test
-    public void T11_Delete_Contact_Should_Return_Status_OK(){
+    @ParameterizedTest
+    @MethodSource("provideContactsForTests")
+    void T05_Delete_Contacts_Should_Return_Status_OK(ContactRequestDto requestDto){
 
         ContactResponseDto contact = ContactValidator.getInstance()
                 .findByEmail
-                        (contactRequestDTO.getUserEmail(),HttpStatus.OK)
+                        (requestDto.getUserEmail(),HttpStatus.OK)
                 .stream()
-                        .filter(x -> x.getMessage()
-                                .equals(contactRequestDTO.getMessage()))
+                .filter(x -> x.getEmail()
+                        .equals(requestDto.getUserEmail()))
                 .findFirst().orElse(null);
 
         if (contact != null) {
@@ -186,11 +208,30 @@ public class ContactTest {
     }
 
     @Test
-    public void T12_Delete_Contact_Again_Should_Return_Status_NOT_FOUND(){
+    void T06_Delete_Contact_Again_Should_Return_Status_NOT_FOUND(){
 
         ContactValidator
                 .getInstance()
                 .deleteContactById(idHolder,HttpStatus.NOT_FOUND);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptyContactsNamesForTests")
+    void T07_Add_Contact_Empty_Field_Should_Return_Status_CONFLICT(ContactRequestDto requestDto){
+
+        ContactValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTooLongAndTooShortContactsValuesForTests")
+    void T08_Add_Contact_Too_Long_Too_Short_Values_Should_Return_Status_CONFLICT(ContactRequestDto requestDto){
+
+        ContactValidator
+                .getInstance()
+                .add(requestDto,HttpStatus.CONFLICT);
 
     }
 

@@ -4,9 +4,13 @@ import com.podium.model.dto.other.OpeningDay;
 import com.podium.model.dto.other.PlaceLocalization;
 import com.podium.model.dto.other.Rating;
 import com.podium.model.dto.request.PlaceRequestDto;
+import com.podium.validation.annotation.PodiumCollectionLength;
+import com.podium.validation.annotation.PodiumWeekDay;
+import com.podium.validation.exception.WrongAnnotationUsageException;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
+import java.time.LocalTime;
 import java.util.*;
 
 public class PodiumValidator {
@@ -29,6 +33,7 @@ public class PodiumValidator {
 
             // If object is collection => check its class type
             Class elementClass = ((Collection) object).toArray()[0].getClass();
+
 
             // Check if collection elements are one of permitted fields (aka primitive)
             if(this.isPermittedType(elementClass)){
@@ -62,10 +67,14 @@ public class PodiumValidator {
                     // Validate permitted types annotations
                     this.validatePermittedTypesAnnotations(field,object);
 
-                // Else if field is complex object => go deeper
+                // Else if field is complex object => check annotation => go deeper
                 else{
 
+                    // check annotation
+                    this.validateCollectionAnnotations(field,object);
+
                     try {
+                        // go deeper
                         validateRequestBody(field.get(object));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -97,7 +106,8 @@ public class PodiumValidator {
                 Boolean.class,
                 char.class,
                 Character.class,
-                Date.class
+                Date.class,
+                LocalTime.class
         );
 
     }
@@ -116,9 +126,11 @@ public class PodiumValidator {
             AnnotationValidator.getInstance().podiumNumberInt(object,field);
             AnnotationValidator.getInstance().podiumNumberDouble(object,field);
             AnnotationValidator.getInstance().podiumTime(object,field);
+            AnnotationValidator.getInstance().podiumWeekDay(object,field);
 
-        } catch (IllegalAccessException | ParseException e) {
+        } catch (IllegalAccessException | ParseException | WrongAnnotationUsageException e) {
             e.printStackTrace();
+            System.exit(1);
 
         }
 
@@ -126,66 +138,22 @@ public class PodiumValidator {
 
     private void validatePermittedTypeCollectionAnnotations(Object object) {
 
-        AnnotationValidator.getInstance().podiumCollectionTextNotEmpty(object);
+        System.out.println("Hejo");
 
     }
 
-    public static void main(String[] args){
+    private void validateCollectionAnnotations(Field field, Object object){
 
-        PlaceLocalization placeLocalization = new PlaceLocalization(
-                "PlaceTestCityName",
-                "PlaceTestStreetName",
-                123,
-                "24-060",
-                "Place test localization remarks"
-        );
-
-        List<OpeningDay> openingDays = new ArrayList<>();
-
-        openingDays.add(new OpeningDay("Tuesday",true,true,
-                "10:00","17:00"));
-
-
-
-
-
-        List<Rating> ratings = List.of(new Rating("Service",5));
-
-
-
-       PlaceRequestDto requestDto = new PlaceRequestDto(
-                "Test Place Name",
-                "Football",
-                placeLocalization,
-                openingDays,
-                50,
-                2.5,
-                10,
-                20,
-                ratings,
-                "This is test place review"
-        );
-
-
-       List<String> kol = new ArrayList<>();
-       kol.add("Ha");
-        kol.add("Ha");
-        kol.add("Ha");
-
-
-
-
-
-
-
-
-       PodiumValidator.getInstance().validateRequestBody(requestDto);
-
-
-
-
-
+        try {
+            AnnotationValidator.getInstance().podiumCollectionLength(object,field);
+        } catch (IllegalAccessException | WrongAnnotationUsageException e) {
+            e.printStackTrace();
+        }
 
     }
+
+
+
+
 
 }

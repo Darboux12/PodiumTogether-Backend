@@ -51,7 +51,7 @@ public class CityService {
     }
 
     private City convertRequestDtoToEntity(CityRequestDto requestDto){
-        return  new City(requestDto.getCity());
+        return new City(requestDto.getCity());
     }
 
     private CityResponseDto convertEntityToResponseDto(City city){

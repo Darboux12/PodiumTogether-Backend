@@ -119,8 +119,25 @@ public class PodiumLimits {
 
     /** AGE LIMIT */
     public static final int minSignUpAge = 13;
-
     public static final int maxUserDescriptionLength = 500;
+
+    /** RATING CATEGORY */
+    public static final int minRatingCategoryLength = 5;
+    public static final int maxRatingCategoryLength = 130;
+
+    /** PLACE USAGE TIME */
+    public static final int minUsageTimeHours = 13;
+    public static final int maxUsageTimeHours = 500;
+
+    /** PLACE RATING */
+    public static final int minPlaceRating = 0;
+    public static final int maxPlaceRating = 5;
+
+    /** PLACE Review*/
+    public static final int minPlaceReview = 13;
+    public static final int maxPlaceReview = 500;
+
+
 
 
 

@@ -5,31 +5,99 @@ import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.validator.CountryValidator;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
-public class CountryTest {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-    private static CountryRequestDto requestDto;
-    private static String valueHolder;
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+class CountryTest {
 
     @BeforeAll
-    public static void beforeClass(){
+    static void beforeClass(){
 
         TestLogger.setUp();
 
-        requestDto = new CountryRequestDto(
-                "QQ",
-                "TestCountry",
-                "PrintableTestName",
-                "QQQ",
-                0
+    }
+
+    private static Stream<CountryRequestDto> provideCountriesForTests(){
+
+        return Stream.of(
+
+               new CountryRequestDto("QQ",
+                       "COUNTRY_ONE",
+                       "COUNTRY_ONE_PRINTABLE",
+                       "QQQ",
+                       0
+               ),
+
+                new CountryRequestDto("YY",
+                        "COUNTRY_TWO",
+                        "COUNTRY_TWO_PRINTABLE",
+                        "YYY",
+                        1
+                ),
+
+                new CountryRequestDto("XX",
+                        "COUNTRY_THREE",
+                        "COUNTRY_THREE_PRINTABLE",
+                        "XXX",
+                        2
+                )
+
         );
 
     }
 
-    @Test
-    public void T01_Add_Valid_Country_Should_Return_Status_OK(){
+    private static Stream<CountryRequestDto> provideCountriesEmptyValuesForTests(){
+
+        return Stream.of(
+
+                new CountryRequestDto("",
+                        "COUNTRY_ONE",
+                        "COUNTRY_ONE_PRINTABLE",
+                        "QQQ",
+                        0
+                ),
+
+                new CountryRequestDto("YY",
+                        "",
+                        "COUNTRY_TWO_PRINTABLE",
+                        "YYY",
+                        1
+                ),
+
+                new CountryRequestDto("XX",
+                        "COUNTRY_THREE",
+                        "",
+                        "XXX",
+                        2
+                ),
+
+                new CountryRequestDto("XX",
+                        "COUNTRY_THREE",
+                        "COUNTRY_TWO_PRINTABLE",
+                        "",
+                        2
+                ),
+
+                new CountryRequestDto("",
+                        "",
+                        "",
+                        "",
+                        0
+                )
+
+        );
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideCountriesForTests")
+    void T01_Add_Valid_Countries_Should_Return_Status_OK(CountryRequestDto requestDto){
 
         CountryValidator
                 .getInstance()
@@ -38,21 +106,25 @@ public class CountryTest {
     }
 
     @Test
-    public void T02_Find_All_Country_Should_Return_Status_OK_Iterable_Country(){
+    void T02_Find_All_Country_Should_Return_Status_OK_Iterable_Containing_Added_Countries(){
 
-        boolean isPresent = CountryValidator
+        List<String> actualCountries = CountryValidator
                 .getInstance()
                 .findAll()
                 .stream()
                 .map(CountryResponseDto::getName)
-                .anyMatch(requestDto.getName()::equals);
+                .collect(Collectors.toList());
 
-        Assertions.assertTrue(isPresent);
+        List<String> expectedCountries = provideCountriesForTests()
+                .map(CountryRequestDto::getName).collect(Collectors.toList());
+
+        Assertions.assertTrue(actualCountries.containsAll(expectedCountries));
 
     }
 
-    @Test
-    public void T03_Delete_Created_Country_ShouldReturnStatus_OK(){
+    @ParameterizedTest
+    @MethodSource("provideCountriesForTests")
+    void T03_Delete_Created_Countries_ShouldReturnStatus_OK(CountryRequestDto requestDto){
 
         CountryValidator
                 .getInstance()
@@ -60,8 +132,9 @@ public class CountryTest {
 
     }
 
-    @Test
-    public void T04_Delete_Created_Country_Again_ShouldReturnStatus_NOTFOUND(){
+    @ParameterizedTest
+    @MethodSource("provideCountriesForTests")
+    void T04_Delete_Created_Countries_Again_ShouldReturnStatus_NOTFOUND(CountryRequestDto requestDto){
 
         CountryValidator
                 .getInstance()
@@ -69,61 +142,13 @@ public class CountryTest {
 
     }
 
-    @Test
-    public void T05_Add_Country_Empty_Name_ShouldReturnStatus_CONFLICT(){
-
-        valueHolder = requestDto.getName();
-        requestDto.setName("");
+    @ParameterizedTest
+    @MethodSource("provideCountriesEmptyValuesForTests")
+    void T05_Add_Country_Empty_Name_ShouldReturnStatus_CONFLICT(CountryRequestDto requestDto){
 
         CountryValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setName(valueHolder);
-
-    }
-
-    @Test
-    public void T06_Add_Country_Empty_Id_ShouldReturnStatus_CONFLICT(){
-
-        valueHolder = requestDto.getCountryId();
-        requestDto.setCountryId("");
-
-
-        CountryValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setCountryId(valueHolder);
-
-    }
-
-    @Test
-    public void T07_Add_Country_Empty_Printable_Name_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getPrintableName();
-        requestDto.setPrintableName("");
-
-
-        CountryValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPrintableName(valueHolder);
-
-    }
-
-    @Test
-    public void T08_Add_Country_Empty_Iso3_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getIso3();
-        requestDto.setIso3("");
-
-        CountryValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setIso3(valueHolder);
 
     }
 

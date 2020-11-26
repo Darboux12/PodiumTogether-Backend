@@ -4,6 +4,9 @@ import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
 import com.podium.service.CityService;
+import com.podium.validation.exception.PodiumAlreadyExistException;
+import com.podium.validation.exception.PodiumNotExistException;
+import com.podium.validation.exception.PodiumNotFoundException;
 import com.podium.validation.validators.PodiumValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +34,7 @@ public class CityController {
         if(this.cityService.existByCityName(name))
             return ResponseEntity.ok().body(this.cityService.findCityByName(name));
 
-        else throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "City with given name cannot be found");
-
+        else throw new PodiumNotExistException("City");
     }
 
     @PostMapping(PodiumEndpoint.addCity)
@@ -42,8 +43,7 @@ public class CityController {
         PodiumValidator.getInstance().validateRequestBody(requestDto);
 
         if(this.cityService.existByCityName(requestDto.getCity()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "City already exists");
+            throw new PodiumAlreadyExistException("City");
 
         this.cityService.addCity(requestDto);
 
@@ -58,18 +58,16 @@ public class CityController {
             return ResponseEntity.ok().build();
 
         else
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "City with given name does not exist");
+            throw new PodiumNotExistException("City");
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCityByName)
     public ResponseEntity deleteCityByName(@PathVariable String name){
 
-        if(!this.cityService.existByCityName(name))
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "City not found");
+        if(this.cityService.existByCityName(name))
+            this.cityService.deleteCityByName(name);
 
-        this.cityService.deleteCityByName(name);
+        else throw new PodiumNotExistException("City");
 
         return ResponseEntity.ok().body("City successfully deleted");
     }

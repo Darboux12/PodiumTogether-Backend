@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PodiumNumberInt {
+public @interface PodiumCollectionLength {
     int min() default 0;
     int max() default 100000;
-    String message() default "";
 }

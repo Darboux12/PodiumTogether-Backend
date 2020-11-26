@@ -1,13 +1,13 @@
 package com.podium.model.dto.other;
 
-import com.podium.validation.annotation.PodiumCollectionTextNotEmpty;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
-import com.podium.validation.annotation.PodiumTime;
+import com.podium.constant.PodiumLimits;
+import com.podium.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -17,11 +17,13 @@ import java.time.LocalTime;
 public class OpeningDay {
 
     @PodiumTextNotEmpty
+    @PodiumWeekDay
     private String day;
+    @PodiumNotNull
     private boolean isOpen;
-    private boolean isOpenTimeLimit;
-    @PodiumTime
-    private String openingTimeFrom;
-    private String openingTimeTo;
+    @PodiumOptionalValue
+    private LocalTime openingTimeFrom;
+    @PodiumOptionalValue
+    private LocalTime openingTimeTo;
 
 }

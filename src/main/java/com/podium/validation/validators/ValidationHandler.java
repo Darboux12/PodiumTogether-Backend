@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -91,7 +92,12 @@ import java.util.List;
 
     boolean isTextNumericInt(String text) {
 
-        double a = Double.parseDouble(text);
+         try{
+             int a = Integer.parseInt(text);
+
+         } catch (NumberFormatException e) {
+             return false;
+         }
 
         return true;
 
@@ -130,5 +136,20 @@ import java.util.List;
 
         return true;
     }
+
+    boolean isWeekDay(String day){
+
+         return  List.of("Monday","Tuesday","Wednesday",
+                 "Thursday","Friday","Saturday","Sunday").contains(day);
+
+    }
+
+    boolean isCollectionShorterThan(Collection collection, int limit){
+         return collection.size() < limit;
+    }
+
+    boolean isCollectionLongerThan(Collection collection, int limit){
+         return collection.size() > limit;
+     }
 
 }

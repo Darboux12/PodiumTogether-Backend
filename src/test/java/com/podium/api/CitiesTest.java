@@ -25,15 +25,33 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class CitiesTest {
 
-    private static CityRequestDto requestDto;
-
-    private static Stream<Arguments> provideArgumentsForAddTest(){
+    private static Stream<String> provideCityNamesForTests(){
 
         return Stream.of(
-                Arguments.of("",HttpStatus.CONFLICT),
-                Arguments.of(" ",HttpStatus.CONFLICT),
-                Arguments.of("  ",HttpStatus.CONFLICT)
+                "TEST_CITY_NAME_ONE",
+                "TEST_CITY_NAME_TWO",
+                "TEST_CITY_NAME_THREE",
+                "TEST_CITY_NAME_FOUR",
+                "TEST_CITY_NAME_FIVE"
+        );
 
+    }
+
+    private static Stream<String> provideEmptyCityNamesForTests(){
+
+        return Stream.of("", " ", "  ");
+
+    }
+
+    private static Stream<String> provideTooLongAndTooShortCityNamesForTests(){
+
+        return Stream.of(
+                StringUtils.repeat("*", PodiumLimits.maxCityLength + 1),
+                StringUtils.repeat("*", PodiumLimits.maxCityLength + 10),
+                StringUtils.repeat("*", PodiumLimits.maxCityLength + 100),
+                StringUtils.repeat("*", PodiumLimits.minCityLength - 1),
+                StringUtils.repeat("*", PodiumLimits.minCityLength - 10),
+                StringUtils.repeat("*", PodiumLimits.minCityLength - 100)
         );
 
     }
@@ -41,71 +59,45 @@ class CitiesTest {
     @BeforeAll
     static void beforeClass(){
         TestLogger.setUp();
-        requestDto = new CityRequestDto("TestCityName");
-    }
-
-    @Test
-    void T01_Add_Valid_City_Should_Return_Status_OK(){
-
-        CityValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.OK);
-    }
-
-    @Test
-    void T02_Add_Same_City_Again_Should_Return_Status_CONFLICT(){
-        CityValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
-    @MethodSource("provideArgumentsForAddTest")
-    void T03_Add_Empty_City_Should_Return_Status_CONFLICT(String city,HttpStatus status){
+    @MethodSource("provideCityNamesForTests")
+    void T01_Add_Valid_City_Should_Return_Status_OK(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityRequestDto(city),status);
+                .add(new CityRequestDto(city),HttpStatus.OK);
     }
 
-    @Test
-    void T04_Add_To_Long_City_Should_Return_Status_CONFLICT(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
+    void T02_Add_Same_City_Again_Should_Return_Status_CONFLICT(String city){
+        CityValidator
+                .getInstance()
+                .add(new CityRequestDto(city),HttpStatus.CONFLICT);
+    }
 
-        String toLongCityName =
-                StringUtils.repeat("*", PodiumLimits.maxCityLength + 1);
+    @ParameterizedTest
+    @MethodSource("provideEmptyCityNamesForTests")
+    void T03_Add_Empty_City_Should_Return_Status_CONFLICT(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityRequestDto(toLongCityName),HttpStatus.CONFLICT);
+                .add(new CityRequestDto(city),HttpStatus.CONFLICT);
     }
 
-    @Test
-    void T05_Add_To_Short_City_Should_Return_Status_CONFLICT(){
-
-        String toShortCityName =
-                StringUtils.repeat("*", PodiumLimits.minCityLength - 1);
+    @ParameterizedTest
+    @MethodSource("provideTooLongAndTooShortCityNamesForTests")
+    void T04_Add_Too_Long_And_Too_Short_City_Should_Return_Status_CONFLICT(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityRequestDto(toShortCityName),HttpStatus.CONFLICT);
+                .add(new CityRequestDto(city),HttpStatus.CONFLICT);
     }
 
     @Test
-    void T06_Find_All_City_Should_Return_Status_OK_Containing_Added_City_Name(){
-
-        boolean isPresent = CityValidator
-                .getInstance()
-                .findAll()
-                .stream()
-                .map(CityResponseDto::getCity)
-                .anyMatch(requestDto.getCity()::equals);
-
-        Assertions.assertTrue(isPresent);
-
-    }
-
-    @Test
-    void T07_Find_All_City_Should_Return_Status_OK_Containing_Katowice_Cairo(){
+    void T06_Find_All_City_Should_Return_Status_OK_Containing_Added_Cities(){
 
         List<String> responseCities = CityValidator
                 .getInstance()
@@ -115,66 +107,73 @@ class CitiesTest {
                 .collect(Collectors.toList());
 
         Assertions.assertTrue
-                (responseCities.containsAll(List.of("Cairo","Katowice")));
+                (responseCities.containsAll
+                        (provideCityNamesForTests().collect(Collectors.toList())));
 
     }
 
-    @Test
-    void T09_Find_City_By_Name_Should_Return_Status_OK_And_Added_City(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
+    void T07_Find_City_By_Name_Should_Return_Status_OK_And_Added_City(String city){
 
         String cityName =
 
                 CityValidator
                         .getInstance()
-                        .findByName(requestDto.getCity(),HttpStatus.OK)
+                        .findByName(city,HttpStatus.OK)
                         .getCity();
 
-        Assertions.assertEquals(requestDto.getCity(),cityName);
+        Assertions.assertEquals(city,cityName);
 
     }
 
-    @Test
-    void T10_Find_City_By_Name_Not_Exist_Should_Return_Status_NOT_FOUND(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_NOT_EXISTING_CITY"})
+    void T10_Find_City_By_Name_Not_Exist_Should_Return_Status_NOT_FOUND(String city){
 
         CityValidator
                 .getInstance()
-                .findByName("NOT EXISTING CITY NAME",HttpStatus.NOT_FOUND);
+                .findByName(city,HttpStatus.NOT_FOUND);
 
     }
 
-    @Test
-    void T11_Exist_City_By_Name_Should_Return_Status_OK(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
+    void T11_Exist_City_By_Name_Should_Return_Status_OK(String city){
 
         CityValidator
                 .getInstance()
-                .existCityByName(requestDto.getCity(),HttpStatus.OK);
+                .existCityByName(city,HttpStatus.OK);
 
     }
 
-    @Test
-    void T12_Delete_City_Should_Return_Status_OK_Deleting_Created_City(){
+    @ParameterizedTest
+    @MethodSource("provideCityNamesForTests")
+    void T12_Delete_City_Should_Return_Status_OK_Deleting_Added_Cities(String city){
 
         CityValidator
                 .getInstance()
-                .deleteCityByName(requestDto.getCity(),HttpStatus.OK);
+                .deleteCityByName(city,HttpStatus.OK);
 
     }
 
-    @Test
-    void T13_Exist_Deleted_City_By_Name_Should_Return_Status_BAD_REQUEST(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
+    void T13_Exist_Deleted_City_By_Name_Should_Return_Status_BAD_NOT_FOUND(String city){
 
         CityValidator
                 .getInstance()
-                .existCityByName(requestDto.getCity(),HttpStatus.BAD_REQUEST);
+                .existCityByName(city,HttpStatus.NOT_FOUND);
 
     }
 
-    @Test
-    void T14_Delete_Created_City_Again_Should_Return_Status_NOTFOUND(){
+    @ParameterizedTest
+    @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
+    void T14_Delete_Created_City_Again_Should_Return_Status_NOTFOUND(String city){
 
         CityValidator
                 .getInstance()
-                .deleteCityByName(requestDto.getCity(),HttpStatus.NOT_FOUND);
+                .deleteCityByName(city,HttpStatus.NOT_FOUND);
     }
 
 }

@@ -126,6 +126,25 @@ public class PodiumEndpoint {
     /** GET | Find all week day */
     public static final String findAllWeekDay = "/weekday/find/all";
 
+    // RATING CATEGORY
+
+    /** GET | Find all rating categories */
+    public static final String findAllRatingCategories = "/rating/category/find/all";
+
+    /** POST | Add rating category | RatingCategoryRequest body required */
+    public static final String addRatingCategory = "/rating/category/add";
+
+    /** GET | Exist rating category by category | Category path variable required */
+    public static final String existRatingCategory = "/rating/category/exist/{category}";
+
+    /** DELETE | Delete rating category by category | Category path variable required */
+    public static final String deleteRatingCategory = "/rating/category/delete/{category}";
+
+    /** GET | Find rating category by category | Category path variable required */
+    public static final String findRatingCategory = "/rating/category/find/{category}";
+
+
+
 
 
 
