@@ -1,6 +1,6 @@
 package com.podium.configuration;
 
-import com.podium.service.JwtUserDetailsService;
+import com.podium.service.authentication.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

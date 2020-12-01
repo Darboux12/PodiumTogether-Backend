@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.model.dto.request.discipline.DisciplineRequestDto;
+import com.podium.model.dto.response.discipline.DisciplineResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.DisciplineValidator;
 import org.apache.commons.lang3.StringUtils;

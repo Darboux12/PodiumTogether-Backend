@@ -25,7 +25,7 @@ import java.util.List;
     }
     
     boolean isTextEmpty(String text) {
-        return text.isEmpty();
+        return text.isBlank();
     }
 
     boolean isValidDate(String date) {

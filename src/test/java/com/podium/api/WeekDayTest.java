@@ -1,6 +1,6 @@
 package com.podium.api;
 
-import com.podium.model.dto.response.WeekDayResponseDto;
+import com.podium.model.dto.response.time.WeekDayResponseDto;
 import com.podium.validator.WeekDayValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;

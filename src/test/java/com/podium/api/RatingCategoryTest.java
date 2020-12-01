@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.RatingCategoryRequestDto;
-import com.podium.model.dto.response.RatingCategoryResponseDto;
+import com.podium.model.dto.request.place.RatingCategoryRequestDto;
+import com.podium.model.dto.response.place.RatingCategoryResponseDto;
 import com.podium.validator.RatingCategoryValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -153,11 +153,11 @@ class RatingCategoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T13_Exist_Deleted_Category_By_Name_Should_Return_Status_BAD_REQUEST(String category){
+    void T13_Exist_Deleted_Category_By_Name_Should_Return_Status_NOTFOUND(String category){
 
         RatingCategoryValidator
                 .getInstance()
-                .existCategory(category,HttpStatus.BAD_REQUEST);
+                .existCategory(category,HttpStatus.NOT_FOUND);
 
     }
 

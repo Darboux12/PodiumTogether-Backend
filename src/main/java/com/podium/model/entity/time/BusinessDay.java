@@ -32,12 +32,8 @@ public class BusinessDay {
     private WeekDay day;
 
     @NotNull
-    @Column(name = "is_open")
-    private boolean isOpen;
-
-    @NotNull
-    @Column(name = "is_opening_time_limit")
-    private boolean isOpeningTimeLimit;
+    @Column(name = "open")
+    private boolean open;
 
     @Column(name = "open_from")
     private LocalTime openTimeFrom;
@@ -45,7 +41,13 @@ public class BusinessDay {
     @Column(name = "open_to")
     private LocalTime openTimeTo;
 
-    @OneToMany(mappedBy="businessDay")
+    @ManyToMany(mappedBy="businessDays")
     private Set<Place> places = new HashSet<>();
 
+    public BusinessDay(WeekDay day, boolean isOpen, LocalTime openTimeFrom, LocalTime openTimeTo) {
+        this.day = day;
+        this.open = isOpen;
+        this.openTimeFrom = openTimeFrom;
+        this.openTimeTo = openTimeTo;
+    }
 }

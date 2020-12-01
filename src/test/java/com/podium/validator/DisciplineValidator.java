@@ -2,11 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.request.SubjectRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.dto.response.SubjectResponseDto;
+import com.podium.model.dto.request.discipline.DisciplineRequestDto;
+import com.podium.model.dto.response.discipline.DisciplineResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;

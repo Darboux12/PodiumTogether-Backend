@@ -7,6 +7,7 @@ import com.podium.model.entity.resource.PodiumResource;
 import com.podium.model.entity.time.BusinessDay;
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "PLACE")
+@NoArgsConstructor
 public class Place {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,13 +46,12 @@ public class Place {
     @JoinColumn(name="localization_id", nullable=false)
     private Localization localization;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinColumn(name="business_day_id", nullable=false)
-    private BusinessDay businessDay;
+    @ManyToMany
+    @JoinTable(
+            name = "place_business_day",
+            joinColumns = @JoinColumn(name = "place_id"),
+            inverseJoinColumns = @JoinColumn(name = "business_day_id"))
+    private Set<BusinessDay> businessDays = new HashSet<>();
 
     @NotNull
     @Column(name = "cost")
@@ -70,5 +71,9 @@ public class Place {
 
     @OneToMany(mappedBy="place")
     private Set<Review> reviews = new HashSet<>();
+
+
+
+
 
 }

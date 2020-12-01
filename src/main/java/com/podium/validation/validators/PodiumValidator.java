@@ -1,11 +1,5 @@
 package com.podium.validation.validators;
 
-import com.podium.model.dto.other.OpeningDay;
-import com.podium.model.dto.other.PlaceLocalization;
-import com.podium.model.dto.other.Rating;
-import com.podium.model.dto.request.PlaceRequestDto;
-import com.podium.validation.annotation.PodiumCollectionLength;
-import com.podium.validation.annotation.PodiumWeekDay;
 import com.podium.validation.exception.WrongAnnotationUsageException;
 
 import java.lang.reflect.Field;

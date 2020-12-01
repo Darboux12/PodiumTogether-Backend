@@ -3,7 +3,7 @@ package com.podium.api;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.*;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.EventRequestDto;
+import com.podium.model.dto.request.event.EventRequestDto;
 import com.podium.specification.TestSpecification;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.EventValidator;

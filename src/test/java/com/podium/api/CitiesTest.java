@@ -2,16 +2,13 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.entity.localization.City;
+import com.podium.model.dto.request.localization.CityRequestDto;
+import com.podium.model.dto.response.localization.CityResponseDto;
 import com.podium.validator.CityValidator;
 import org.apache.commons.lang3.StringUtils;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 

@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.response.CountryResponseDto;
+import com.podium.model.dto.request.localization.CountryRequestDto;
+import com.podium.model.dto.response.localization.CountryResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;

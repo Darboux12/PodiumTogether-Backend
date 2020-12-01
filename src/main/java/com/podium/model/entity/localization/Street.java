@@ -25,4 +25,7 @@ public class Street {
     @OneToMany(mappedBy="street")
     private Set<Localization> localizations = new HashSet<>();
 
+    public Street(String street) {
+        this.street = street;
+    }
 }

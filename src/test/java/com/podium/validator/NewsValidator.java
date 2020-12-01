@@ -2,10 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.response.NewsResponseDto;
+import com.podium.model.dto.request.news.NewsRequestDto;
+import com.podium.model.dto.response.contact.ContactResponseDto;
+import com.podium.model.dto.response.news.NewsResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;

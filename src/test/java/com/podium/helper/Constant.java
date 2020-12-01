@@ -1,6 +1,6 @@
 package com.podium.helper;
 
-import com.podium.model.dto.request.*;
+import com.podium.model.dto.request.event.EventRequestDto;
 
 
 import java.text.ParseException;

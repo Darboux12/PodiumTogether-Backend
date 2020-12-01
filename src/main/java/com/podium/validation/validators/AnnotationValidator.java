@@ -279,13 +279,15 @@ public class AnnotationValidator {
 
     private boolean isOptionalValueInvalid(Object object, Field field) throws IllegalAccessException {
 
-        return !field.isAnnotationPresent(PodiumOptionalValue.class) ||
-                (!field.get(object).equals("") &&
-                        !field.get(object).equals(0) && field.get(object) != null);
+        if(field.getType().equals(String.class)){
+            String value = (String)field.get(object);
+            return !field.isAnnotationPresent(PodiumOptionalValue.class) ||
+                    !value.isBlank();
+        }
+
+        else return !field.isAnnotationPresent(PodiumOptionalValue.class) ||
+                    (!field.get(object).equals(0) && field.get(object) != null);
+
     }
-
-
-
-
 
 }

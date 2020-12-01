@@ -13,7 +13,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","events"})
 @Table(name = "LOCALIZATION")
 public class Localization {
 
@@ -38,7 +37,6 @@ public class Localization {
     @JoinColumn(name="street", nullable=false)
     private Street street;
 
-
     @NotNull
     @Column(name = "building_number")
     private int buildingNumber;
@@ -54,4 +52,11 @@ public class Localization {
     @OneToMany(mappedBy="localization")
     private Set<Event> events = new HashSet<>();
 
+    public Localization(City city, Street street, int buildingNumber, String postalCode, String remarks) {
+        this.city = city;
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.postalCode = postalCode;
+        this.remarks = remarks;
+    }
 }
