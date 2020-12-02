@@ -1,9 +1,9 @@
 package com.podium.model.dto.other;
 
 import com.podium.constant.PodiumLimits;
-import com.podium.validation.annotation.PodiumLength;
-import com.podium.validation.annotation.PodiumNumberInt;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
+import com.podium.model.dto.validation.annotation.PodiumLength;
+import com.podium.model.dto.validation.annotation.PodiumNumberInt;
+import com.podium.model.dto.validation.annotation.PodiumTextNotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

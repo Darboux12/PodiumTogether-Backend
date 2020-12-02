@@ -1,6 +1,6 @@
 package com.podium.model.dto.response.user;
 
-import com.podium.model.entity.event.Event;
+import com.podium.model.entity.Event;
 import com.podium.model.dto.other.PodiumFile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

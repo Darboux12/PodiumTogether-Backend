@@ -1,8 +1,7 @@
 package com.podium.model.dto.request.localization;
 
-import com.podium.validation.annotation.PodiumNotNull;
-import com.podium.validation.annotation.PodiumNumberInt;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
+import com.podium.model.dto.validation.annotation.PodiumNumberInt;
+import com.podium.model.dto.validation.annotation.PodiumTextNotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

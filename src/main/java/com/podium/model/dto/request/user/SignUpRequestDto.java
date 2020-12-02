@@ -1,9 +1,9 @@
 package com.podium.model.dto.request.user;
 
-import com.podium.validation.annotation.PodiumDatePast;
-import com.podium.validation.annotation.PodiumLength;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
-import com.podium.validation.annotation.PodiumValidEmail;
+import com.podium.model.dto.validation.annotation.PodiumDatePast;
+import com.podium.model.dto.validation.annotation.PodiumLength;
+import com.podium.model.dto.validation.annotation.PodiumTextNotEmpty;
+import com.podium.model.dto.validation.annotation.PodiumValidEmail;
 import com.podium.constant.PodiumLimits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

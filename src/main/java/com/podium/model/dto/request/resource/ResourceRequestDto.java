@@ -1,8 +1,7 @@
 package com.podium.model.dto.request.resource;
 
-import com.podium.validation.annotation.PodiumImageType;
-import com.podium.validation.annotation.PodiumNotNull;
-import com.podium.validation.annotation.PodiumTextNotEmpty;
+import com.podium.model.dto.validation.annotation.PodiumNotNull;
+import com.podium.model.dto.validation.annotation.PodiumTextNotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;

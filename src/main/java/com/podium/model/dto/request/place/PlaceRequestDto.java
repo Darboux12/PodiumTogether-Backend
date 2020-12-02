@@ -4,7 +4,7 @@ import com.podium.constant.PodiumLimits;
 import com.podium.model.dto.other.OpeningDay;
 import com.podium.model.dto.other.PlaceLocalization;
 import com.podium.model.dto.other.Rating;
-import com.podium.validation.annotation.*;
+import com.podium.model.dto.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
