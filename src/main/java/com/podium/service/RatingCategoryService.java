@@ -1,7 +1,7 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.place.RatingCategoryRequestDto;
-import com.podium.model.dto.response.place.RatingCategoryResponseDto;
+import com.podium.model.dto.request.RatingCategoryRequestDto;
+import com.podium.model.dto.response.RatingCategoryResponseDto;
 import com.podium.model.entity.RatingCategory;
 import com.podium.repository.RatingCategoryRepository;
 import org.springframework.stereotype.Service;

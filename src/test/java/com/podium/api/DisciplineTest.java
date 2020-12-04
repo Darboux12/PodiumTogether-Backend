@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.discipline.DisciplineRequestDto;
-import com.podium.model.dto.response.discipline.DisciplineResponseDto;
+import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.DisciplineValidator;
 import org.apache.commons.lang3.StringUtils;
@@ -121,11 +121,15 @@ import org.springframework.http.HttpStatus;
     }
 
     @Test
-    void T09_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_Status_BAD_REQUEST(){
+    void T09_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_FALSE(){
+
+        boolean isPresent =
 
         DisciplineValidator
                 .getInstance()
-                .existDisciplineByName("NOT EXISTING DISCIPLINE",HttpStatus.BAD_REQUEST);
+                .existDisciplineByName("NOT EXISTING DISCIPLINE",HttpStatus.OK);
+
+        Assertions.assertFalse(isPresent);
 
     }
 

@@ -1,9 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.contact.SubjectRequestDto;
-import com.podium.model.dto.response.contact.SubjectResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
+import com.podium.model.dto.request.SubjectRequestDto;
+import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.service.SubjectService;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ public class SubjectController {
 
     @PostMapping(PodiumEndpoint.addSubject)
     public ResponseEntity addSubject(@RequestBody SubjectRequestDto request){
-
 
         dtoValidator.validateRequestBody(request);
 

@@ -1,8 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.place.RatingCategoryRequestDto;
-import com.podium.model.dto.response.place.RatingCategoryResponseDto;
+import com.podium.model.dto.request.RatingCategoryRequestDto;
+import com.podium.model.dto.response.RatingCategoryResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import com.podium.service.RatingCategoryService;

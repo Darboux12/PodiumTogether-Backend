@@ -1,8 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.news.NewsRequestDto;
-import com.podium.model.dto.response.news.NewsResponseDto;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import com.podium.service.NewsService;

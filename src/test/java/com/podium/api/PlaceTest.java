@@ -2,7 +2,7 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.place.PlaceRequestDto;
+import com.podium.model.dto.request.PlaceRequestDto;
 import com.podium.model.dto.other.OpeningDay;
 import com.podium.model.dto.other.PlaceLocalization;
 import com.podium.model.dto.other.Rating;

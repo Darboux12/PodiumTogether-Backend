@@ -2,8 +2,8 @@ package com.podium.service;
 
 import com.podium.model.entity.News;
 import com.podium.model.dto.other.PodiumFile;
-import com.podium.model.dto.request.news.NewsRequestDto;
-import com.podium.model.dto.response.news.NewsResponseDto;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.repository.NewsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;

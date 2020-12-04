@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.news.NewsRequestDto;
-import com.podium.model.dto.response.news.NewsResponseDto;
+import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.NewsValidator;
 import org.apache.commons.lang3.StringUtils;

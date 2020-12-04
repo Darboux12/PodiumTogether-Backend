@@ -2,10 +2,10 @@ package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.authentication.JwtRequestDto;
-import com.podium.model.dto.response.authentication.ExpirationDateTokenResponse;
-import com.podium.model.dto.response.authentication.JwtResponseDto;
-import com.podium.model.dto.response.authentication.UsernameFromTokenResponseDto;
+import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.model.dto.response.ExpirationDateTokenResponse;
+import com.podium.model.dto.response.JwtResponseDto;
+import com.podium.model.dto.response.UsernameFromTokenResponseDto;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import com.podium.service.JwtUserDetailsService;
 import com.podium.service.UserService;

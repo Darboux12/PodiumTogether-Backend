@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.contact.ContactRequestDto;
-import com.podium.model.dto.response.contact.ContactResponseDto;
+import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.validator.ContactValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;

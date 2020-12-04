@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.place.RatingCategoryRequestDto;
-import com.podium.model.dto.response.place.RatingCategoryResponseDto;
+import com.podium.model.dto.request.RatingCategoryRequestDto;
+import com.podium.model.dto.response.RatingCategoryResponseDto;
 import com.podium.validator.RatingCategoryValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;

@@ -1,7 +1,7 @@
 package com.podium.service;
 
 import com.podium.model.dto.other.OpeningDay;
-import com.podium.model.dto.request.place.PlaceRequestDto;
+import com.podium.model.dto.request.PlaceRequestDto;
 import com.podium.model.entity.Discipline;
 import com.podium.model.entity.City;
 import com.podium.model.entity.Localization;
@@ -22,6 +22,8 @@ import java.util.Set;
 
 @Service
 public class PlaceService {
+
+    /*
 
     private PlaceRepository placeRepository;
     private DisciplineRepository disciplineRepository;
@@ -49,8 +51,6 @@ public class PlaceService {
 
     private Place convertRequestDtoToEntity(PlaceRequestDto requestDto){
 
-        /*
-
         Discipline discipline =
                 disciplineRepository.findByDiscipline(requestDto.getName());
 
@@ -62,9 +62,6 @@ public class PlaceService {
 
                 : new City(requestCity);
 
-
-
-
         String requestStreet = requestDto.getPlaceLocalization().getStreet();
 
         Street street = this.streetRepository.existsByStreet(requestStreet)
@@ -72,16 +69,6 @@ public class PlaceService {
                 ? this.streetRepository.findByStreet(requestStreet)
 
                 : new Street(requestStreet);
-
-
-
-
-
-
-
-         */
-
-
 
         Set<BusinessDay> businessDays = new HashSet<>();
 
@@ -178,6 +165,6 @@ public class PlaceService {
 
     }
 
-
+*/
 
 }

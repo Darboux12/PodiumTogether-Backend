@@ -1,7 +1,7 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.contact.ContactRequestDto;
-import com.podium.model.dto.response.contact.ContactResponseDto;
+import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.entity.Contact;
 import com.podium.model.entity.Subject;
 import com.podium.repository.ContactRepository;

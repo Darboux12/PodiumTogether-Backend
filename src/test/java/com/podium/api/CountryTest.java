@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.localization.CountryRequestDto;
-import com.podium.model.dto.response.localization.CountryResponseDto;
+import com.podium.model.dto.request.CountryRequestDto;
+import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.validator.CountryValidator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;

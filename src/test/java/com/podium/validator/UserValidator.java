@@ -2,11 +2,11 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
-import com.podium.model.dto.request.user.ProfileUpdateRequestDto;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.authentication.JwtRequestDto;
-import com.podium.model.dto.request.user.SignUpRequestDto;
-import com.podium.model.dto.response.user.UserResponseDto;
+import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.model.dto.request.SignUpRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 

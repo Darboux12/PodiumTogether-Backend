@@ -1,7 +1,7 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.resource.ResourceRequestDto;
+import com.podium.model.dto.request.ResourceRequestDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import com.podium.service.ResourceService;

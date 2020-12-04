@@ -1,7 +1,7 @@
 package com.podium.service;
 
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.resource.ResourceRequestDto;
+import com.podium.model.dto.request.ResourceRequestDto;
 import com.podium.model.entity.Event;
 import com.podium.model.entity.News;
 import com.podium.model.entity.PodiumResource;

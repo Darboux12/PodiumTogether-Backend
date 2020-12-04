@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.model.dto.response.time.WeekDayResponseDto;
+import com.podium.model.dto.response.WeekDayResponseDto;
 import com.podium.model.entity.WeekDay;
 import com.podium.repository.WeekDayRepository;
 import org.springframework.beans.factory.annotation.Autowired;

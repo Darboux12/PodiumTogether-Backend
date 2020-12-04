@@ -2,14 +2,25 @@ package com.podium.model.dto.validation.validator;
 
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.model.dto.validation.exception.WrongAnnotationUsageException;
-import lombok.SneakyThrows;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import javax.xml.transform.Source;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.*;
 
+@Aspect
 @Component
 public class PodiumDtoValidator {
 
@@ -19,6 +30,51 @@ public class PodiumDtoValidator {
         this.annotationValidator = annotationValidator;
     }
 
+    @Pointcut("@within(com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController)")
+    public void objectAnnotatedWithPodiumValidate() {}
+
+    @Pointcut("execution(public * *(..))")
+    public void publicMethods() {}
+
+    @Pointcut("execution(* *(@com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody (*)))")
+    public void methodsParameterWithPodiumValidBodyAnnotation() {}
+
+    @Pointcut("execution(* *(@com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable (*)))")
+    public void methodsParameterWithPodiumValidVariableAnnotation() {}
+
+    @Pointcut("objectAnnotatedWithPodiumValidate() && publicMethods()")
+    public void methodsToValidate() {}
+
+    @Pointcut("methodsToValidate() && methodsParameterWithPodiumValidBodyAnnotation()")
+    public void parametersBodyToValidate() {}
+
+    @Pointcut("methodsToValidate() && methodsParameterWithPodiumValidVariableAnnotation()")
+    public void parametersVariableToValidate() {}
+
+    @Before("parametersBodyToValidate()")
+    public void aspectRequestBodyValidation(JoinPoint joinPoint) throws Throwable {
+
+        if(joinPoint.getSignature() instanceof MethodSignature){
+
+            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+
+            Method method = methodSignature.getMethod();
+
+            Parameter[] parameters = method.getParameters();
+
+            if(parameters.length == 1)
+                this.validateRequestBody(joinPoint.getArgs()[0]);
+
+        }
+
+    }
+
+    @Before("parametersVariableToValidate()")
+    public void aspectRequestVariableValidation(JoinPoint joinPoint) throws Throwable {
+
+        // TODO Do something with variable
+
+    }
 
     public void validateRequestBody(Object object) throws PodiumEmptyTextException {
 

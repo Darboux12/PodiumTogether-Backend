@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.model.dto.response.localization.LocalizationResponseDto;
+import com.podium.model.dto.response.LocalizationResponseDto;
 import com.podium.model.entity.Localization;
 import com.podium.repository.CityRepository;
 import com.podium.repository.LocalizationRepository;
@@ -22,13 +22,13 @@ public class LocalizationService {
 
     public boolean existLocalization(String city, String street, int num, String postal){
 
-        return this
+     /*   return this
                 .localizationRepository
                 .existsByCityAndStreetAndBuildingNumberAndPostalCode(
                         this.cityRepository.findByCity(city),
                         this.streetRepository.findByStreet(street),
                         num,postal
-                );
+                ); */ return true;
 
     }
 

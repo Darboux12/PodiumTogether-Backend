@@ -3,8 +3,8 @@ package com.podium.validator;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.event.EventRequestDto;
-import com.podium.model.dto.response.event.EventResponseDto;
+import com.podium.model.dto.request.EventRequestDto;
+import com.podium.model.dto.response.EventResponseDto;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 

@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.gender.GenderRequestDto;
-import com.podium.model.dto.response.gender.GenderResponseDto;
+import com.podium.model.dto.request.GenderRequestDto;
+import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.validator.GenderValidator;
 import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;

@@ -2,7 +2,7 @@ package com.podium.api;
 
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.authentication.JwtRequestDto;
+import com.podium.model.dto.request.JwtRequestDto;
 import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;

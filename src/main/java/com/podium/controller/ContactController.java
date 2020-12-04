@@ -1,8 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.contact.ContactRequestDto;
-import com.podium.model.dto.response.contact.ContactResponseDto;
+import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.service.ContactService;
 import com.podium.service.SubjectService;

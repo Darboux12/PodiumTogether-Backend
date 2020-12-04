@@ -3,8 +3,8 @@ package com.podium.validator;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.localization.CityRequestDto;
-import com.podium.model.dto.response.localization.CityResponseDto;
+import com.podium.model.dto.request.CityRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.http.HttpStatus;
@@ -93,7 +93,9 @@ public class CityValidator {
 
     }
 
-    public void existCityByName(String cityName, HttpStatus status){
+    public boolean existCityByName(String cityName, HttpStatus status){
+
+        return
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
@@ -101,7 +103,8 @@ public class CityValidator {
                 .when()
                 .get(Path.server + PodiumEndpoint.existCityByName)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(boolean.class);
 
     }
 

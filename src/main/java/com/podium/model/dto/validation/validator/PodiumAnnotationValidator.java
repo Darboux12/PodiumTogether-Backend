@@ -1,7 +1,7 @@
 package com.podium.model.dto.validation.validator;
 
 import com.podium.constant.PodiumLimits;
-import com.podium.model.dto.validation.annotation.*;
+import com.podium.model.dto.validation.annotation.dto.*;
 import com.podium.model.dto.validation.exception.*;
 import org.springframework.stereotype.Component;
 

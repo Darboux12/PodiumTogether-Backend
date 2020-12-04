@@ -1,7 +1,7 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.place.PlaceRequestDto;
+import com.podium.model.dto.request.PlaceRequestDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.service.DisciplineService;
 import com.podium.service.LocalizationService;
@@ -20,6 +20,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class PlaceController {
+
+    /*
 
     private DisciplineService disciplineService;
     private PlaceService placeService;
@@ -81,5 +83,8 @@ public class PlaceController {
         return ResponseEntity.ok().build();
 
     }
+
+
+     */
 
 }

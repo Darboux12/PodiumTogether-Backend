@@ -1,12 +1,16 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.discipline.DisciplineRequestDto;
-import com.podium.model.dto.response.discipline.DisciplineResponseDto;
+import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.model.entity.City;
 import com.podium.model.entity.Discipline;
 import com.podium.repository.DisciplineRepository;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +24,15 @@ public class DisciplineService {
     }
 
     public boolean existByDisciplineName(String disciplineName){
-
-        disciplineName = WordUtils.capitalize(disciplineName);
-
         return this.disciplineRepository.existsByDiscipline(disciplineName);
     }
 
+    @Transactional
     public void addDiscipline(DisciplineRequestDto requestDto){
+
+        if(this.disciplineRepository.existsByDiscipline(requestDto.getDiscipline()))
+            throw new PodiumEntityAlreadyExistException("Discipline");
+
         this.disciplineRepository.save(this.convertRequestDtoToEntity(requestDto));
     }
 
@@ -46,11 +52,19 @@ public class DisciplineService {
 
     public DisciplineResponseDto findByDisciplineName(String disciplineName){
 
-        return this.convertEntityToResponseDto(
-                this.disciplineRepository.findByDiscipline(disciplineName));
+        Discipline discipline = this.disciplineRepository
+                .findByDiscipline(disciplineName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
+
+        return this.convertEntityToResponseDto(discipline);
     }
 
+    @Transactional
     public void deleteDisciplineByName(String discipline){
+
+        if(!this.disciplineRepository.existsByDiscipline(discipline))
+            throw new PodiumEntityNotFoundException("Discipline");
+
         this.disciplineRepository.deleteByDiscipline(discipline);
     }
 

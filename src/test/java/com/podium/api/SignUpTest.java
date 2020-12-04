@@ -1,8 +1,8 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.user.SignUpRequestDto;
-import com.podium.model.dto.response.user.UserResponseDto;
+import com.podium.model.dto.request.SignUpRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;

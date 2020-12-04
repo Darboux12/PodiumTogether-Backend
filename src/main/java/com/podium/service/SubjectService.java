@@ -1,7 +1,7 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.contact.SubjectRequestDto;
-import com.podium.model.dto.response.contact.SubjectResponseDto;
+import com.podium.model.dto.request.SubjectRequestDto;
+import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.model.entity.Subject;
 import com.podium.repository.SubjectRepository;
 import com.podium.controller.response.PodiumNotFoundWebException;

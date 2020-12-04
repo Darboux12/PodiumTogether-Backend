@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.helper.Path;
-import com.podium.model.dto.request.discipline.DisciplineRequestDto;
-import com.podium.model.dto.response.discipline.DisciplineResponseDto;
+import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 
 public class DisciplineValidator {
-
 
     private static DisciplineValidator instance;
 
@@ -86,7 +85,9 @@ public class DisciplineValidator {
 
     }
 
-    public void existDisciplineByName(String disciplineName, HttpStatus status){
+    public boolean existDisciplineByName(String disciplineName, HttpStatus status){
+
+        return
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
@@ -94,7 +95,8 @@ public class DisciplineValidator {
                 .when()
                 .get(Path.server + PodiumEndpoint.existDisciplineByName)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(boolean.class);
 
     }
 

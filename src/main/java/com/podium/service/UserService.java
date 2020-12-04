@@ -1,11 +1,11 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.user.ProfileUpdateRequestDto;
-import com.podium.model.dto.response.user.UserResponseDto;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.entity.Country;
 import com.podium.model.entity.PodiumResource;
 import com.podium.model.entity.Role;
-import com.podium.model.dto.request.user.SignUpRequestDto;
+import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.entity.User;
 import com.podium.model.dto.other.PodiumFile;
 import com.podium.repository.CountryRepository;

@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.localization.CityRequestDto;
-import com.podium.model.dto.response.localization.CityResponseDto;
+import com.podium.model.dto.request.CityRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import com.podium.validator.CityValidator;
 import org.apache.commons.lang3.StringUtils;
 
@@ -156,11 +156,15 @@ class CitiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T13_Exist_Deleted_City_By_Name_Should_Return_Status_BAD_NOT_FOUND(String city){
+    void T13_Exist_Deleted_City_By_Name_Should_Return_FALSE(String city){
+
+        boolean isPresent =
 
         CityValidator
                 .getInstance()
-                .existCityByName(city,HttpStatus.NOT_FOUND);
+                .existCityByName(city,HttpStatus.OK);
+
+        Assertions.assertFalse(isPresent);
 
     }
 

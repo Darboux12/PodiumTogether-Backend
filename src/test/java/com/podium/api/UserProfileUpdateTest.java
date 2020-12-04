@@ -1,9 +1,9 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.user.ProfileUpdateRequestDto;
-import com.podium.model.dto.request.user.SignUpRequestDto;
-import com.podium.model.dto.response.user.UserResponseDto;
+import com.podium.model.dto.request.ProfileUpdateRequestDto;
+import com.podium.model.dto.request.SignUpRequestDto;
+import com.podium.model.dto.response.UserResponseDto;
 import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,12 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.discipline.DisciplineRequestDto;
-import com.podium.model.dto.response.discipline.DisciplineResponseDto;
+import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
 import com.podium.service.DisciplineService;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import org.springframework.http.HttpStatus;
@@ -13,14 +16,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PodiumValidateController
 public class DisciplineController {
 
     private DisciplineService disciplineService;
-    private PodiumDtoValidator dtoValidator;
 
-    public DisciplineController(DisciplineService disciplineService, PodiumDtoValidator dtoValidator) {
+    public DisciplineController(DisciplineService disciplineService) {
         this.disciplineService = disciplineService;
-        this.dtoValidator = dtoValidator;
     }
 
     @GetMapping(PodiumEndpoint.findAllDiscipline)
@@ -29,50 +31,24 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findByDisciplineName)
-    public ResponseEntity findDisciplineByName(@PathVariable String discipline){
-
-        if(this.disciplineService.existByDisciplineName(discipline))
-            return ResponseEntity
-                    .ok()
-                    .body(this.disciplineService.findByDisciplineName(discipline));
-
-        else throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Discipline with given name cannot be found");
-
+    public ResponseEntity findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+        return ResponseEntity.ok().body(this.disciplineService.findByDisciplineName(discipline));
     }
 
     @PostMapping(PodiumEndpoint.addDiscipline)
-    public ResponseEntity addDiscipline(@RequestBody DisciplineRequestDto requestDto) throws PodiumEmptyTextException {
-
-        dtoValidator.validateRequestBody(requestDto);
-
-        if(this.disciplineService.existByDisciplineName(requestDto.getDiscipline()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Discipline already exists");
-
+    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineRequestDto requestDto) {
         this.disciplineService.addDiscipline(requestDto);
         return ResponseEntity.ok().body("Discipline successfully added");
 
     }
 
     @GetMapping(PodiumEndpoint.existDisciplineByName)
-    public ResponseEntity existDisciplineByName(@PathVariable String discipline){
-
-        if(this.disciplineService.existByDisciplineName(discipline))
-            return ResponseEntity.ok().build();
-
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "City with given name does not exist");
+    public ResponseEntity existDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+        return ResponseEntity.ok().body(this.disciplineService.existByDisciplineName(discipline));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteDisciplineByName)
-    public ResponseEntity deleteDisciplineByName(@PathVariable String discipline){
-
-        if(!this.disciplineService.existByDisciplineName(discipline))
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Discipline not found");
-
+    public ResponseEntity deleteDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
         this.disciplineService.deleteDisciplineByName(discipline);
         return ResponseEntity.ok().body("Discipline successfully deleted");
     }
