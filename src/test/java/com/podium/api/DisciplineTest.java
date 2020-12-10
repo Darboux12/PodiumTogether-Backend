@@ -1,104 +1,130 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
+import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.request.DisciplineRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.constant.PodiumLimits;
+import com.podium.validator.CityValidator;
 import com.podium.validator.DisciplineValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 
-@TestMethodOrder(MethodOrderer.Alphanumeric.class)
- class DisciplineTest {
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-   private static DisciplineRequestDto requestDto;
-   private static String valueHolder;
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+class DisciplineTest {
+
+    private static Stream<String> provideDisciplinesForTests(){
+
+        return Stream.of(
+                "TEST DISCIPLINE ONE",
+                "TEST DISCIPLINE TWO",
+                "TEST DISCIPLINE THREE"
+        );
+
+    }
+
+    private static Stream<String> provideToShortDisciplinesForTests(){
+
+        return Stream.of(
+                StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1),
+                StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 10),
+                StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 100)
+        );
+
+    }
+
+    private static Stream<String> provideToLongDisciplinesForTests(){
+
+        return Stream.of(
+                StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1),
+                StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 10),
+                StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 100)
+        );
+
+    }
+
+    private static Stream<String> provideEmptyValuesForTests(){
+        return Stream.of(""," ", "  ","  ","         ","             ");
+    }
 
     @BeforeAll
     static void beforeClass(){
         TestLogger.setUp();
-        requestDto = new DisciplineRequestDto("TestDiscipline");
     }
 
-    @Test
-    void T01_Add_Valid_Discipline_Should_Return_Status_OK(){
+    @ParameterizedTest
+    @MethodSource("provideDisciplinesForTests")
+    void T01_Add_Valid_Discipline_Should_Return_Status_OK(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .add(new DisciplineRequestDto(discipline),HttpStatus.OK);
 
     }
 
-    @Test
-    void T02_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline("");
+    @ParameterizedTest
+    @MethodSource("provideEmptyValuesForTests")
+    void T02_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
-
+                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
     }
 
-    @Test
-    void T03_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(){
-
-        String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline(toShort);
+    @ParameterizedTest
+    @MethodSource("provideToShortDisciplinesForTests")
+    void T03_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
+                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
 
     }
 
-    @Test
-    void T04_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(){
-
-        String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline(toLong);
+    @ParameterizedTest
+    @MethodSource("provideToLongDisciplinesForTests")
+    void T04_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
+                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
 
     }
 
     @Test
-    void T05_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Discipline(){
+    void T05_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Disciplines(){
 
-        boolean isPresent = DisciplineValidator
+        List<String> responseDisciplines = DisciplineValidator
                 .getInstance()
                 .findAll(HttpStatus.OK)
                 .stream()
                 .map(DisciplineResponseDto::getDiscipline)
-                .anyMatch(requestDto.getDiscipline()::equals);
+                .collect(Collectors.toList());
 
-        Assertions.assertTrue(isPresent);
+        Assertions.assertTrue
+                ( responseDisciplines .containsAll
+                        (provideDisciplinesForTests().collect(Collectors.toList())));
     }
 
-    @Test
-    void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(){
+    @ParameterizedTest
+    @MethodSource("provideDisciplinesForTests")
+    void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(String discipline){
 
         DisciplineResponseDto responseDto =
 
                 DisciplineValidator
                         .getInstance()
-                        .findByName(requestDto.getDiscipline(),HttpStatus.OK);
+                        .findByName(discipline,HttpStatus.OK);
 
-        Assertions.assertEquals(responseDto.getDiscipline(),responseDto.getDiscipline());
+        Assertions.assertEquals(discipline,responseDto.getDiscipline());
 
     }
 
@@ -111,12 +137,17 @@ import org.springframework.http.HttpStatus;
 
     }
 
-    @Test
-    void T08_Exist_Discipline_By_Name_ShouldReturn_Status_OK(){
+    @ParameterizedTest
+    @MethodSource("provideDisciplinesForTests")
+    void T08_Exist_Discipline_By_Name_ShouldReturn_TRUE(String discipline){
+
+        boolean isPresent =
 
         DisciplineValidator
                 .getInstance()
-                .existDisciplineByName(requestDto.getDiscipline(),HttpStatus.OK);
+                .existDisciplineByName(discipline,HttpStatus.OK);
+
+        Assertions.assertTrue(isPresent);
 
     }
 
@@ -133,22 +164,23 @@ import org.springframework.http.HttpStatus;
 
     }
 
-    @Test
-    void T10_deleteCreatedDiscipline_ShouldReturnStatus_OK(){
+    @ParameterizedTest
+    @MethodSource("provideDisciplinesForTests")
+    void T10_deleteCreatedDiscipline_ShouldReturnStatus_OK(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .deleteDisciplineByName(requestDto.getDiscipline(),HttpStatus.OK);
-
+                .deleteDisciplineByName(discipline,HttpStatus.OK);
 
     }
 
-    @Test
-    void T11_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(){
+    @ParameterizedTest
+    @MethodSource("provideDisciplinesForTests")
+    void T11_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .deleteDisciplineByName(requestDto.getDiscipline(),HttpStatus.NOT_FOUND);
+                .deleteDisciplineByName(discipline,HttpStatus.NOT_FOUND);
 
     }
 

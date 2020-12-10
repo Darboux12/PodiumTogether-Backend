@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.NewsRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.NewsResponseDto;
@@ -34,7 +34,7 @@ public class NewsValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addNews)
+                .when().post(PodiumPath.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -48,7 +48,7 @@ public class NewsValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllNews)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllNews)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -66,7 +66,7 @@ public class NewsValidator {
                         .contentType(ContentType.JSON)
                         .pathParam("title",title)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findNewsByTitle)
+                        .get(PodiumPath.server + PodiumEndpoint.findNewsByTitle)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) NewsResponseDto.class);
@@ -81,7 +81,7 @@ public class NewsValidator {
                         .contentType(ContentType.JSON)
                         .pathParam("subject",subject)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findAllContactBySubject)
+                        .get(PodiumPath.server + PodiumEndpoint.findAllContactBySubject)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) ContactResponseDto[].class);
@@ -96,7 +96,7 @@ public class NewsValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
-                .when().delete(Path.server + PodiumEndpoint.deleteNewsById)
+                .when().delete(PodiumPath.server + PodiumEndpoint.deleteNewsById)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());

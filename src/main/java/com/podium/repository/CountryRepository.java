@@ -4,10 +4,11 @@ import com.podium.model.entity.Country;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface CountryRepository extends CrudRepository<Country,Integer> {
 
-    Country findByName(String countryName);
+    Optional<Country> findByName(String countryName);
 
     boolean existsByName(String countryName);
 

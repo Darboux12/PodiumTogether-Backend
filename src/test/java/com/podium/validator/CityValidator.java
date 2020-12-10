@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.specification.TestSpecification;
 import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
@@ -35,7 +35,7 @@ public class CityValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addCity)
+                .when().post(PodiumPath.server + PodiumEndpoint.addCity)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -58,7 +58,7 @@ public class CityValidator {
         given()
           .spec(TestSpecification.buildRequestSpec())
           .contentType(ContentType.JSON)
-          .when().get(Path.server + PodiumEndpoint.findAllCity)
+          .when().get(PodiumPath.server + PodiumEndpoint.findAllCity)
           .then().assertThat()
           .statusCode(HttpStatus.OK.value())
           .spec(TestSpecification.buildResponseSpec())
@@ -76,7 +76,7 @@ public class CityValidator {
                   .contentType(ContentType.JSON)
                   .pathParam("name",cityName)
                   .when()
-                  .get(Path.server + PodiumEndpoint.findCityByName)
+                  .get(PodiumPath.server + PodiumEndpoint.findCityByName)
                   .then().assertThat().statusCode(status.value())
                   .spec(TestSpecification.buildResponseSpec())
                   .extract().as(CityResponseDto.class);
@@ -85,7 +85,7 @@ public class CityValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + PodiumEndpoint.findCityByName)
+                .get(PodiumPath.server + PodiumEndpoint.findCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -101,7 +101,7 @@ public class CityValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existCityByName)
+                .get(PodiumPath.server + PodiumEndpoint.existCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(boolean.class);
@@ -113,7 +113,7 @@ public class CityValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",cityName)
-                .delete(Path.server + PodiumEndpoint.deleteCityByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

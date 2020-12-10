@@ -5,6 +5,9 @@ import com.podium.model.dto.request.ProfileUpdateRequestDto;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.dto.response.UserResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
 import com.podium.service.CountryService;
 import com.podium.service.UserService;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
@@ -15,61 +18,28 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PodiumValidateController
 public class UserController {
 
     private UserService userService;
-    private CountryService countryService;
-    private PodiumDtoValidator dtoValidator;
 
-    public UserController(UserService userService, CountryService countryService, PodiumDtoValidator dtoValidator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.countryService = countryService;
-        this.dtoValidator = dtoValidator;
     }
 
     @PostMapping(PodiumEndpoint.addUser)
-    public ResponseEntity addUser(@RequestBody SignUpRequestDto request){
-
-        try {
-            dtoValidator.validateRequestBody(request);
-        } catch (PodiumEmptyTextException e) {
-            e.printStackTrace();
-        }
-
-        if(this.userService.existUserByUsername(request.getUsername()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "User with given username already exists");
-
-        if(this.userService.existUserByEmail(request.getEmail()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "User with given email already exists");
-
-        if(!this.countryService.existCountryByName(request.getCountry()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Given country does not exist");
-
+    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequestDto request){
         this.userService.addUser(request);
         return ResponseEntity.ok().body("User successfully signed up");
-
     }
 
     @GetMapping(PodiumEndpoint.findUserByUsername)
     public ResponseEntity<UserResponseDto> findUser(@PathVariable String username){
-
-        if(this.userService.existUserByUsername(username))
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(this.userService.findUserByUsername(username));
-
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User not found");
-
+            return ResponseEntity.status(HttpStatus.OK).body(this.userService.findUserByUsername(username));
     }
 
     @GetMapping(PodiumEndpoint.findAllUsers)
     public ResponseEntity<Iterable<UserResponseDto>> findAllUsers(){
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userService.findAllUsers());
@@ -77,65 +47,25 @@ public class UserController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteUser)
-    public ResponseEntity deleteUser(@PathVariable String username){
-
-        if(this.userService.existUserByUsername(username)){
+    public ResponseEntity deleteUser(@PathVariable @PodiumValidVariable String username){
             this.userService.deleteUserByUsername(username);
             return ResponseEntity.ok().body("User successfully deleted");
-        }
-
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "User not found");
-
     }
 
     @GetMapping(PodiumEndpoint.existUserByUsername)
-    public ResponseEntity existUserByUsername(@PathVariable String username){
-
-        if(this.userService.existUserByUsername(username))
-            return ResponseEntity.ok().build();
-
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "User not found");
-
+    public ResponseEntity existUserByUsername(@PathVariable @PodiumValidVariable String username){
+            return ResponseEntity.ok().body(this.userService.existUserByUsername(username));
     }
 
     @GetMapping(PodiumEndpoint.existUserByEmail)
-    public ResponseEntity existUserByEmail(@PathVariable String email){
-
-        if(this.userService.existUserByEmail(email))
-            return ResponseEntity.ok().build();
-
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Email not found");
-
+    public ResponseEntity existUserByEmail(@PathVariable @PodiumValidVariable String email){
+            return ResponseEntity.ok().body(this.userService.existUserByEmail(email));
     }
 
     @PostMapping(PodiumEndpoint.updateUserProfile)
     public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequestDto request){
-
-        try {
-            dtoValidator
-                    .validateRequestBody(request);
-        } catch (PodiumEmptyTextException e) {
-            e.printStackTrace();
-        }
-
-        if(!this.userService.isUpdateDataConsistent(request))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "User with given username or email already exist");
-
-        if(!this.countryService.existCountryByName(request.getCountry()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Given country does not exist");
-
         this.userService.updateUser(request);
-
         return ResponseEntity.ok().build();
-
     }
 
 }

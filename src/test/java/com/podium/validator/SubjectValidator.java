@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.response.SubjectResponseDto;
@@ -35,7 +35,7 @@ public class SubjectValidator {
                 .contentType(ContentType.JSON)
                 .body(requestDto)
                 .when()
-                .post(Path.server + PodiumEndpoint.addSubject)
+                .post(PodiumPath.server + PodiumEndpoint.addSubject)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -49,7 +49,7 @@ public class SubjectValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllContact)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllContact)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -67,7 +67,7 @@ public class SubjectValidator {
                         .spec(TestSpecification.buildRequestSpec())
                         .pathParam("name",subjectName)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findSubjectByName)
+                        .get(PodiumPath.server + PodiumEndpoint.findSubjectByName)
                         .then().assertThat()
                         .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -81,7 +81,7 @@ public class SubjectValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existCityByName)
+                .get(PodiumPath.server + PodiumEndpoint.existCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -92,7 +92,7 @@ public class SubjectValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",cityName)
-                .delete(Path.server + PodiumEndpoint.deleteCityByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

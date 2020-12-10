@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.DisciplineRequestDto;
 import com.podium.model.dto.response.DisciplineResponseDto;
 import com.podium.specification.TestSpecification;
@@ -34,7 +34,7 @@ public class DisciplineValidator {
                 .contentType(ContentType.JSON)
                 .body(requestDto)
                 .when()
-                .post(Path.server + PodiumEndpoint.addDiscipline)
+                .post(PodiumPath.server + PodiumEndpoint.addDiscipline)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -48,7 +48,7 @@ public class DisciplineValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllDiscipline)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllDiscipline)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -66,7 +66,7 @@ public class DisciplineValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("discipline",disciplineName)
                 .when()
-                .get(Path.server + PodiumEndpoint.findByDisciplineName)
+                .get(PodiumPath.server + PodiumEndpoint.findByDisciplineName)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec())
@@ -76,7 +76,7 @@ public class DisciplineValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("discipline",disciplineName)
                 .when()
-                .get(Path.server + PodiumEndpoint.findByDisciplineName)
+                .get(PodiumPath.server + PodiumEndpoint.findByDisciplineName)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -93,7 +93,7 @@ public class DisciplineValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("discipline",disciplineName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existDisciplineByName)
+                .get(PodiumPath.server + PodiumEndpoint.existDisciplineByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec())
                 .extract().as(boolean.class);
@@ -105,7 +105,7 @@ public class DisciplineValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("discipline",disciplineName)
-                .delete(Path.server + PodiumEndpoint.deleteDisciplineByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteDisciplineByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

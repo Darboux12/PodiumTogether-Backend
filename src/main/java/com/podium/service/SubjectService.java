@@ -4,7 +4,8 @@ import com.podium.model.dto.request.SubjectRequestDto;
 import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.model.entity.Subject;
 import com.podium.repository.SubjectRepository;
-import com.podium.controller.response.PodiumNotFoundWebException;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,54 +24,44 @@ public class SubjectService {
     @Transactional
     public void addSubject(SubjectRequestDto requestDto){
 
+        if(this.subjectRepository.existsBySubject(requestDto.getSubject()))
+            throw new PodiumEntityAlreadyExistException("Subject");
+
         this.subjectRepository.save(
-                this.convertSubjectRequestDtoToEntity(requestDto)
+                this.convertRequestDtoToEntity(requestDto)
         );
 
     }
 
     @Transactional
     public void deleteSubjectByName(String name){
+
+        if(!this.subjectRepository.existsBySubject(name))
+            throw new PodiumEntityNotFoundException("Subject");
+
         this.subjectRepository.deleteBySubject(name);
     }
 
-    public Iterable<SubjectResponseDto> findAllSubjects(){
-
-        List<SubjectResponseDto> responseDtos = new ArrayList<>();
-
-        for(Subject subject : this.subjectRepository.findAll())
-            responseDtos.add(this.convertSubjectEntityToResponseDto(subject));
-
-        return responseDtos;
+    public Iterable<Subject> findAllSubjects(){
+        return this.subjectRepository.findAll();
     }
 
-    public SubjectResponseDto findSubjectByName(String subjectName){
-        return this.convertSubjectEntityToResponseDto(
-                this.findSubjectEntity(subjectName)
-        );
+    public Subject findSubjectByName(String subjectName){
+
+        return this
+                .subjectRepository.findBySubject(subjectName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Subject"));
     }
 
     public boolean existSubjectByName(String subjectName){
         return this.subjectRepository.existsBySubject(subjectName);
     }
 
-    private Subject convertSubjectRequestDtoToEntity(SubjectRequestDto requestDto){
+    private Subject convertRequestDtoToEntity(SubjectRequestDto requestDto){
 
         Subject subject = new Subject();
         subject.setSubject(requestDto.getSubject());
         return subject;
-    }
-
-    private SubjectResponseDto convertSubjectEntityToResponseDto(Subject subject){
-
-        return new SubjectResponseDto(subject.getSubject());
-
-    }
-
-    private Subject findSubjectEntity(String subjectName){
-
-
-        return this.subjectRepository.findBySubject(subjectName).orElseThrow(() -> new PodiumNotFoundWebException("Hej"));
     }
 
 }

@@ -25,26 +25,15 @@ public class CityService {
         return this.cityRepository.existsByCity(cityName);
     }
 
-    public CityResponseDto findCityByName(String cityName){
+    public City findCityByName(String cityName){
 
-        City city = this.cityRepository.findByCity(cityName).orElseThrow(() ->
-
-                new PodiumEntityNotFoundException("City"));
-
-        return this.convertEntityToResponseDto(city);
+        return this.cityRepository
+                .findByCity(cityName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("City"));
     }
 
-    public Iterable<CityResponseDto> findAllCity(){
-
-        var responseDtos = new ArrayList<CityResponseDto>();
-
-        this.cityRepository
-                .findAll()
-                .forEach(x -> responseDtos
-                                .add(this.convertEntityToResponseDto(x))
-                );
-
-        return responseDtos;
+    public Iterable<City> findAllCity(){
+        return this.cityRepository.findAll();
     }
 
     @Transactional
@@ -67,10 +56,6 @@ public class CityService {
 
     private City convertRequestDtoToEntity(CityRequestDto requestDto){
         return new City(requestDto.getCity());
-    }
-
-    private CityResponseDto convertEntityToResponseDto(City city){
-        return new CityResponseDto(city.getCity());
     }
 
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PodiumFile {
+public class PodiumFileDto {
 
     private String name;
     private String type;

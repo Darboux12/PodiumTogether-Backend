@@ -133,11 +133,15 @@ class RatingCategoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"CATEGORY_NAME_ONE","CATEGORY_NAME_TWO"})
-    void T11_Exist_Category_By_Name_Should_Return_Status_OK(String category){
+    void T11_Exist_Category_By_Name_Should_Return_TRUE(String category){
+
+        boolean isPresent =
 
         RatingCategoryValidator
                 .getInstance()
                 .existCategory(category,HttpStatus.OK);
+
+        Assertions.assertTrue(isPresent);
 
     }
 
@@ -153,11 +157,15 @@ class RatingCategoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T13_Exist_Deleted_Category_By_Name_Should_Return_Status_NOTFOUND(String category){
+    void T13_Exist_Deleted_Category_By_Name_Should_Return_FALSE(String category){
+
+        boolean isPresent =
 
         RatingCategoryValidator
                 .getInstance()
-                .existCategory(category,HttpStatus.NOT_FOUND);
+                .existCategory(category,HttpStatus.OK);
+
+        Assertions.assertFalse(isPresent);
 
     }
 

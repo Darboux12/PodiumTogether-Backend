@@ -22,6 +22,4 @@ public class WeekDay {
     @OneToMany(mappedBy="day")
     private Set<BusinessDay> businessDays = new HashSet<>();
 
-
-
 }

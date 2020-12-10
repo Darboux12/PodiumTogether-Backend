@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.PlaceRequestDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
@@ -28,7 +28,7 @@ public class PlaceValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addPlace)
+                .when().post(PodiumPath.server + PodiumEndpoint.addPlace)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());

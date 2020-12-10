@@ -1,6 +1,6 @@
 package com.podium.model.dto.response;
 
-import com.podium.model.dto.other.PodiumFile;
+import com.podium.model.dto.other.PodiumFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +21,6 @@ public class NewsResponseDto {
     private String text;
     private String linkText;
     private Date date;
-    private List<PodiumFile> podiumFiles;
+    private List<PodiumFileDto> podiumFileDtos;
 
 }

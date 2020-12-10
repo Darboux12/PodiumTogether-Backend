@@ -1,7 +1,7 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.*;
+import com.podium.constant.PodiumPath;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.response.SubjectResponseDto;
 import com.podium.model.dto.request.SubjectRequestDto;
@@ -109,7 +109,7 @@ class SubjectTest {
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("name","TestSubject")
                 .when()
-                .delete(Path.server + PodiumEndpoint.deleteSubject)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteSubject)
                 .then().assertThat()
                 .statusCode(200)
                 .spec(TestSpecification.buildResponseSpec());

@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.RatingCategoryRequestDto;
 import com.podium.model.dto.response.RatingCategoryResponseDto;
 import com.podium.specification.TestSpecification;
@@ -34,7 +34,7 @@ public class RatingCategoryValidator {
                 .contentType(ContentType.JSON)
                 .body(requestDto)
                 .when()
-                .post(Path.server + PodiumEndpoint.addRatingCategory)
+                .post(PodiumPath.server + PodiumEndpoint.addRatingCategory)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -48,7 +48,7 @@ public class RatingCategoryValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllRatingCategories)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllRatingCategories)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -66,7 +66,7 @@ public class RatingCategoryValidator {
                     .spec(TestSpecification.buildRequestSpec())
                     .pathParam("category",category)
                     .when()
-                    .get(Path.server + PodiumEndpoint.findRatingCategory)
+                    .get(PodiumPath.server + PodiumEndpoint.findRatingCategory)
                     .then().assertThat()
                     .statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec())
@@ -76,7 +76,7 @@ public class RatingCategoryValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("category",category)
                 .when()
-                .get(Path.server + PodiumEndpoint.findRatingCategory)
+                .get(PodiumPath.server + PodiumEndpoint.findRatingCategory)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -85,15 +85,19 @@ public class RatingCategoryValidator {
 
     }
 
-    public void existCategory(String category, HttpStatus status){
+    public boolean existCategory(String category, HttpStatus status){
+
+        return
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("category",category)
                 .when()
-                .get(Path.server + PodiumEndpoint.existRatingCategory)
+                .get(PodiumPath.server + PodiumEndpoint.existRatingCategory)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(boolean.class);
+
 
     }
 
@@ -102,7 +106,7 @@ public class RatingCategoryValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("category",category)
-                .delete(Path.server + PodiumEndpoint.deleteRatingCategory)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteRatingCategory)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

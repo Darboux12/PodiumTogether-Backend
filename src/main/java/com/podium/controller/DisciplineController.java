@@ -7,12 +7,15 @@ import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
 import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
 import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
 import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
+import com.podium.model.entity.Discipline;
 import com.podium.service.DisciplineService;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -27,12 +30,18 @@ public class DisciplineController {
 
     @GetMapping(PodiumEndpoint.findAllDiscipline)
     public ResponseEntity<Iterable<DisciplineResponseDto>> findAllDiscipline(){
-        return ResponseEntity.ok().body(this.disciplineService.findAllDiscipline());
+
+        var disciplines = this.disciplineService.findAllDiscipline();
+
+        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(disciplines));
     }
 
     @GetMapping(PodiumEndpoint.findByDisciplineName)
-    public ResponseEntity findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
-        return ResponseEntity.ok().body(this.disciplineService.findByDisciplineName(discipline));
+    public ResponseEntity<DisciplineResponseDto> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+
+        var dis = this.disciplineService.findByDisciplineName(discipline);
+
+        return ResponseEntity.ok().body(this.convertEntityToResponseDto(dis));
     }
 
     @PostMapping(PodiumEndpoint.addDiscipline)
@@ -43,7 +52,7 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.existDisciplineByName)
-    public ResponseEntity existDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+    public ResponseEntity<Boolean> existDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
         return ResponseEntity.ok().body(this.disciplineService.existByDisciplineName(discipline));
     }
 
@@ -51,6 +60,19 @@ public class DisciplineController {
     public ResponseEntity deleteDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
         this.disciplineService.deleteDisciplineByName(discipline);
         return ResponseEntity.ok().body("Discipline successfully deleted");
+    }
+
+    private DisciplineResponseDto convertEntityToResponseDto(Discipline discipline){
+        return new DisciplineResponseDto(discipline.getDiscipline());
+    }
+
+    private Iterable<DisciplineResponseDto> convertEntityIterableToResponseDto(Iterable<Discipline> disciplines){
+
+        var disciplineResponses = new ArrayList<DisciplineResponseDto>();
+
+        disciplines.forEach(x -> disciplineResponses.add(this.convertEntityToResponseDto(x)));
+
+        return disciplineResponses;
     }
 
 }

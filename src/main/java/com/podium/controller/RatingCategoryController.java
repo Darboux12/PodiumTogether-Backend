@@ -3,77 +3,71 @@ package com.podium.controller;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.RatingCategoryRequestDto;
 import com.podium.model.dto.response.RatingCategoryResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
+import com.podium.model.entity.RatingCategory;
 import com.podium.service.RatingCategoryService;
-import com.podium.controller.response.PodiumAlreadyExistWebException;
-import com.podium.controller.response.PodiumNotExistWebException;
-import com.podium.controller.response.PodiumNotFoundWebException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@PodiumValidateController
 public class RatingCategoryController {
 
     private RatingCategoryService ratingCategoryService;
-    private PodiumDtoValidator dtoValidator;
 
-    public RatingCategoryController(RatingCategoryService ratingCategoryService, PodiumDtoValidator dtoValidator) {
+    public RatingCategoryController(RatingCategoryService ratingCategoryService) {
         this.ratingCategoryService = ratingCategoryService;
-        this.dtoValidator = dtoValidator;
     }
 
     @PostMapping(PodiumEndpoint.addRatingCategory)
-    public ResponseEntity addRatingCategory(@RequestBody RatingCategoryRequestDto requestDto){
-
-        try {
-            dtoValidator.validateRequestBody(requestDto);
-        } catch (PodiumEmptyTextException e) {
-            e.printStackTrace();
-        }
-
-        if(this.ratingCategoryService.existCategory(requestDto.getCategory()))
-            throw new PodiumAlreadyExistWebException("Rating Category");
-
+    public ResponseEntity addRatingCategory(@RequestBody @PodiumValidBody RatingCategoryRequestDto requestDto){
         this.ratingCategoryService.addCategory(requestDto);
-
-        return ResponseEntity.ok().body("Rating category successfully added");
-
+        return ResponseEntity.ok().body("RatingDto category successfully added");
     }
 
     @GetMapping(PodiumEndpoint.findAllRatingCategories)
-    public Iterable<RatingCategoryResponseDto> findAll(){
-        return this.ratingCategoryService.findAll();
+    public ResponseEntity<Iterable<RatingCategoryResponseDto>> findAll(){
+
+        var categories = this.ratingCategoryService.findAll();
+
+        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(categories));
     }
 
     @GetMapping(PodiumEndpoint.findRatingCategory)
-    public ResponseEntity<RatingCategoryResponseDto> findCategory(@PathVariable String category){
+    public ResponseEntity<RatingCategoryResponseDto> findCategory(@PathVariable @PodiumValidVariable String category){
 
-        if(this.ratingCategoryService.existCategory(category))
-            return ResponseEntity.ok().body(this.ratingCategoryService.findByCategory(category));
+           var categoryEntity = this.ratingCategoryService.findByCategory(category);
 
-        else throw new PodiumNotFoundWebException("Rating Category");
+           return ResponseEntity.ok().body(this.convertEntityToResponseDto(categoryEntity));
     }
 
     @GetMapping(PodiumEndpoint.existRatingCategory)
-    public ResponseEntity existRatingCategory(@PathVariable String category){
-
-        if(this.ratingCategoryService.existCategory(category))
-            return ResponseEntity.ok().build();
-
-        else
-            throw new PodiumNotExistWebException("Rating Category");
+    public ResponseEntity existRatingCategory(@PathVariable @PodiumValidVariable String category){
+            return ResponseEntity.ok().body(this.ratingCategoryService.existCategory(category));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteRatingCategory)
-    public ResponseEntity deleteCityByName(@PathVariable String category){
-
-        if(!this.ratingCategoryService.existCategory(category))
-            throw new PodiumNotFoundWebException("Rating Category");
-
+    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String category){
         this.ratingCategoryService.deleteRatingCategory(category);
+        return ResponseEntity.ok().body("RatingDto category successfully deleted");
+    }
 
-        return ResponseEntity.ok().body("Rating category successfully deleted");
+    private RatingCategoryResponseDto convertEntityToResponseDto(RatingCategory ratingCategory){
+        return new RatingCategoryResponseDto(ratingCategory.getCategory());
+    }
+
+    private Iterable<RatingCategoryResponseDto> convertEntityIterableToResponseDto(Iterable<RatingCategory> ratingCategories){
+
+        var categoryResponses = new ArrayList<RatingCategoryResponseDto>();
+
+        ratingCategories.forEach(x -> categoryResponses.add(this.convertEntityToResponseDto(x)));
+
+        return categoryResponses;
     }
 
 }

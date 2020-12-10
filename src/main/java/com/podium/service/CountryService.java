@@ -43,17 +43,16 @@ public class CountryService {
         this.countryRepository.deleteByName(name);
     }
 
-    public Iterable<CountryResponseDto> findAllCountry(){
+    public Iterable<Country> findAllCountry(){
+        return this.countryRepository.findAll();
 
-        List<CountryResponseDto> responseDtos = new ArrayList<>();
+    }
 
-        this.countryRepository
-                .findAll()
-                .forEach(x -> responseDtos
-                        .add(this.convertEntityToResponseDto(x))
-                );
+    public Country findCountryByName(String countryName){
 
-        return responseDtos;
+        return this.countryRepository
+                .findByName(countryName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
     }
 
@@ -68,17 +67,7 @@ public class CountryService {
         );
     }
 
-    private CountryResponseDto convertEntityToResponseDto(Country country){
 
-        return new CountryResponseDto(
-                country.getCountryId(),
-                country.getName(),
-                country.getPrintableName(),
-                country.getIso3(),
-                country.getNumCode()
-        );
-
-    }
 
 }
 

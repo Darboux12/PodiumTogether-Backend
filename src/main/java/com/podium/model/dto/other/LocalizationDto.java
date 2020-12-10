@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceLocalization {
+public class LocalizationDto {
 
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minCityLength, max = PodiumLimits.maxCityLength)

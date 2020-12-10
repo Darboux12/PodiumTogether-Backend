@@ -1,7 +1,6 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.*;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.EventRequestDto;
 import com.podium.specification.TestSpecification;
@@ -23,6 +22,8 @@ import static io.restassured.RestAssured.given;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class EventTest {
+
+   /*
 
     private static EventRequestDto requestDto;
     private static String valueHolder;

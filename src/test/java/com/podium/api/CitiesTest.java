@@ -6,14 +6,11 @@ import com.podium.model.dto.request.CityRequestDto;
 import com.podium.model.dto.response.CityResponseDto;
 import com.podium.validator.CityValidator;
 import org.apache.commons.lang3.StringUtils;
-
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import org.springframework.http.HttpStatus;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +33,7 @@ class CitiesTest {
 
     private static Stream<String> provideEmptyCityNamesForTests(){
 
-        return Stream.of("", " ", "  ");
+        return Stream.of("", " ", "  ", "       ");
 
     }
 

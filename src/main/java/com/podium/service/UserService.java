@@ -7,14 +7,17 @@ import com.podium.model.entity.PodiumResource;
 import com.podium.model.entity.Role;
 import com.podium.model.dto.request.SignUpRequestDto;
 import com.podium.model.entity.User;
-import com.podium.model.dto.other.PodiumFile;
+import com.podium.model.dto.other.PodiumFileDto;
 import com.podium.repository.CountryRepository;
 import com.podium.repository.RoleRepository;
 import com.podium.repository.UserRepository;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -35,14 +38,37 @@ public class UserService {
         this.countryRepository = countryRepository;
     }
 
-    public void addUser(SignUpRequestDto signUpRequestDto){
+    @Transactional
+    public void addUser(SignUpRequestDto requestDto){
 
-        this.userRepository.save(this.convertSignUpRequestDtoToEntity(signUpRequestDto));
+        if(this.userRepository.existsByUsername(requestDto.getUsername()))
+            throw new PodiumEntityAlreadyExistException("User with given username");
+
+        if(this.userRepository.existsByEmail(requestDto.getEmail()))
+            throw new PodiumEntityAlreadyExistException("User with given email");
+
+        if(!this.countryRepository.existsByName(requestDto.getCountry()))
+            throw new PodiumEntityNotFoundException("Country");
+
+        this.userRepository.save(this.convertSignUpRequestDtoToEntity(requestDto));
     }
 
     public UserResponseDto findUserByUsername(String username){
-       return this.convertEntityToResponseDto(
-               Objects.requireNonNull(this.userRepository.findByUsername(username).orElse(null)));
+
+        User user = this.userRepository.findByUsername(username).orElseThrow(() ->
+
+                new PodiumEntityNotFoundException("User with given username"));
+
+       return this.convertEntityToResponseDto(user);
+    }
+
+    public UserResponseDto findUserById(int id){
+
+        User user = this.userRepository.findById(id).orElseThrow(() ->
+
+                new PodiumEntityNotFoundException("User with given id"));
+
+        return this.convertEntityToResponseDto(user);
     }
 
     public Iterable<UserResponseDto> findAllUsers(){
@@ -62,7 +88,9 @@ public class UserService {
 
         List<UserResponseDto> responseDtos = new ArrayList<>();
 
-        Role role = this.roleRepository.findByRole(roleName);
+        Role role = this.roleRepository
+                .findByRole("subscriber")
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
 
         this.userRepository
                 .findAllByRolesContaining(role)
@@ -77,7 +105,10 @@ public class UserService {
 
         List<UserResponseDto> responseDtos = new ArrayList<>();
 
-        Country country = this.countryRepository.findByName(countryName);
+        Country country =
+                this.countryRepository
+                        .findByName(countryName)
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
         this.userRepository
                 .findAllByCountry(country)
@@ -96,13 +127,28 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
+    @Transactional
     public void updateUser(ProfileUpdateRequestDto requestDto){
 
-        this.userRepository.save(
-                this.convertProfileUpdateRequestDtoToEntity(requestDto));
+        if(!this.isUpdateDataConsistent(requestDto))
+            throw new PodiumEntityAlreadyExistException("User with given username or email");
+
+        if(!this.countryRepository.existsByName(requestDto.getCountry()))
+            throw new PodiumEntityNotFoundException("Country");
+
+        this.userRepository.save(this.convertProfileUpdateRequestDtoToEntity(requestDto));
     }
 
-    public boolean isUpdateDataConsistent(ProfileUpdateRequestDto requestDto){
+    @Transactional
+    public void deleteUserByUsername(String username){
+
+        if(!this.userRepository.existsByUsername(username))
+            throw new PodiumEntityNotFoundException("User with given username");
+
+        this.userRepository.deleteByUsername(username);
+    }
+
+    private boolean isUpdateDataConsistent(ProfileUpdateRequestDto requestDto){
 
         User userById = this.userRepository.findById(requestDto.getId()).orElse(null);
 
@@ -130,41 +176,37 @@ public class UserService {
 
     }
 
-    public void deleteUserByUsername(String username){
-        this.userRepository.deleteByUsername(username);
-    }
-
     private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequestDto requestDto){
 
-        User user = this.userRepository.findById(requestDto.getId()).orElse(null);
+        User user = this.userRepository
+                .findById(requestDto.getId())
+                .orElseThrow(() -> new PodiumEntityNotFoundException("User with given id"));
 
-        if (user != null) {
+        Country country =
+                this.countryRepository
+                        .findByName(requestDto.getCountry())
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
-            user.setUsername(requestDto.getUsername());
-            Country country = this.countryRepository.findByName(requestDto.getCountry());
-            user.setCountry(country);
-            user.setEmail(requestDto.getEmail());
-            user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-            user.setBirthday(requestDto.getBirthday());
-            user.setDescription(requestDto.getDescription());
+        user.setCountry(country);
+        user.setUsername(requestDto.getUsername());
+        user.setEmail(requestDto.getEmail());
+        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setBirthday(requestDto.getBirthday());
+        user.setDescription(requestDto.getDescription());
 
-            return user;
-
-        }
-
-        return null;
+        return user;
     }
 
     private User convertSignUpRequestDtoToEntity(SignUpRequestDto requestDto){
 
-        Country country = countryRepository.findByName(requestDto.getCountry());
-        Role role = this.roleRepository.findByRole("subscriber");
+        Country country =
+                this.countryRepository
+                        .findByName(requestDto.getCountry())
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
-        if(role == null){
-            role = new Role();
-            role.setRole("subscriber");
-            this.roleRepository.save(role);
-        }
+        Role role = this.roleRepository
+                .findByRole("subscriber")
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
 
         Set<Role> roles = new HashSet<>();
         roles.add(role);
@@ -183,7 +225,6 @@ public class UserService {
 
     private UserResponseDto convertEntityToResponseDto(User user){
 
-        try {
             return new UserResponseDto(
                     user.getId(),
                     user.getUsername(),
@@ -193,29 +234,28 @@ public class UserService {
                     user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet()),
                     user.getBirthday(),
                     this.loadProfileImage(user),
-                    null,
-                    null,
+                    user.getEventsJoined(),
+                    user.getEventsCreated(),
                     user.getDescription()
             );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
 
     }
 
-    private PodiumFile loadProfileImage(User user) throws IOException {
+    private PodiumFileDto loadProfileImage(User user){
 
         if(user.getProfileImage() != null) {
 
             PodiumResource resource = user.getProfileImage();
 
-            return new PodiumFile(
-                    resource.getName(),
-                    resource.getType(),
-                    FileCopyUtils.copyToByteArray(new File(resource.getPath()))
-            );
+            try {
+                return new PodiumFileDto(
+                        resource.getName(),
+                        resource.getType(),
+                        FileCopyUtils.copyToByteArray(new File(resource.getPath()))
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.response.WeekDayResponseDto;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
@@ -33,7 +33,7 @@ public class WeekDayValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllWeekDay)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllWeekDay)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())

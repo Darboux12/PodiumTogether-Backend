@@ -110,7 +110,7 @@ public class PodiumEndpoint {
     public static final String deleteUser = "/user/delete/{username}";
 
     /** GET | Find user by username | Username path variable required */
-    public static final String findUserByUsername = "/user/find/{username}";
+    public static final String findUserByUsername = "/user/find/username/{username}";
 
     /** GET | Find all users */
     public static final String findAllUsers = "/user/find/all";
@@ -214,6 +214,7 @@ public class PodiumEndpoint {
     public static final String addCountry = "/country/add";
     public static final String existCountryByName = "/country/exist/{name}";
     public static final String deleteCountryByName = "/country/delete/{name}";
+    public static final String findCountryByName= "/country/find/name/{name}";
 
 
 

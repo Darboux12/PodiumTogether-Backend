@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.GenderRequestDto;
 import com.podium.model.dto.response.GenderResponseDto;
 import com.podium.specification.TestSpecification;
@@ -33,7 +33,7 @@ public class GenderValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addGender)
+                .when().post(PodiumPath.server + PodiumEndpoint.addGender)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -47,7 +47,7 @@ public class GenderValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllGender)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllGender)
                         .then().assertThat()
                         .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -65,22 +65,25 @@ public class GenderValidator {
                         .contentType(ContentType.JSON)
                         .pathParam("name",genderName)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findGenderByName)
+                        .get(PodiumPath.server + PodiumEndpoint.findGenderByName)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as(GenderResponseDto.class);
 
     }
 
-    public void existGenderByName(String genderName, HttpStatus status){
+    public boolean existGenderByName(String genderName, HttpStatus status){
+
+        return
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("name",genderName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existGenderByName)
+                .get(PodiumPath.server + PodiumEndpoint.existGenderByName)
                 .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(boolean.class);
 
     }
 
@@ -89,7 +92,7 @@ public class GenderValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",genderName)
-                .delete(Path.server + PodiumEndpoint.deleteGenderByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteGenderByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
     }

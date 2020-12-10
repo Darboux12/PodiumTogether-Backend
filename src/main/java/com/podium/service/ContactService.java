@@ -5,72 +5,51 @@ import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.entity.Contact;
 import com.podium.model.entity.Subject;
 import com.podium.repository.ContactRepository;
-import com.podium.repository.SubjectRepository;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.transaction.Transactional;
 
 @Service
 public class ContactService {
 
     private ContactRepository contactRepository;
-    private SubjectRepository subjectRepository;
 
-    public ContactService(ContactRepository contactRepository, SubjectRepository subjectRepository) {
+    private SubjectService subjectService;
+
+    public ContactService(ContactRepository contactRepository, SubjectService subjectService) {
         this.contactRepository = contactRepository;
-        this.subjectRepository = subjectRepository;
+        this.subjectService = subjectService;
     }
 
+    @Transactional
     public void addContact(ContactRequestDto contactRequestDTO){
-
         this.contactRepository
                 .save(this.convertContactRequestDtoToEntity(contactRequestDTO));
-
     }
 
+    @Transactional
     public void deleteContact(int id){
+
+        if(!this.contactRepository.existsById(id))
+            throw new PodiumEntityNotFoundException("Contact");
+
         this.contactRepository.deleteById(id);
     }
 
-    public Iterable<ContactResponseDto> findAllContact(){
-
-        List<ContactResponseDto> responseDtos = new ArrayList<>();
-
-        this.contactRepository
-                .findAll()
-                .forEach(x -> responseDtos.add(
-                        this.convertContactEntityToResponseDto(x)
-                ));
-
-        return responseDtos;
+    public Iterable<Contact> findAllContact(){
+        return this.contactRepository.findAll();
     }
 
-    public Iterable<ContactResponseDto> findAllByEmail(String email){
-
-        List<ContactResponseDto> responseDtos = new ArrayList<>();
-
-        this.contactRepository
-                .findAllByUserEmail(email)
-                .forEach(x -> responseDtos.add(
-                        this.convertContactEntityToResponseDto(x)
-                ));
-
-        return responseDtos;
-
+    public Iterable<Contact> findAllByEmail(String email){
+        return this.contactRepository.findAllByUserEmail(email);
     }
 
-    public Iterable<ContactResponseDto> findAllBySubject(String subject){
+    public Iterable<Contact> findAllBySubject(String subject){
 
-        List<ContactResponseDto> responseDtos = new ArrayList<>();
+        var subjectEntity = this.subjectService.findSubjectByName(subject);
 
-        this.contactRepository
-                .findAllBySubject(this.findSubjectEntity(subject))
-                .forEach(x -> responseDtos.add(
-                        this.convertContactEntityToResponseDto(x)
-                ));
-
-        return responseDtos;
+        return this.contactRepository.findAllBySubject(subjectEntity);
 
     }
 
@@ -83,24 +62,9 @@ public class ContactService {
         return new Contact(
                 requestDto.getUserEmail(),
                 requestDto.getMessage(),
-                this.findSubjectEntity(requestDto.getSubject())
+                this.subjectService.findSubjectByName(requestDto.getSubject())
         );
 
-    }
-
-    private ContactResponseDto convertContactEntityToResponseDto(Contact contact){
-
-        return new ContactResponseDto(
-                contact.getContactId(),
-                contact.getUserEmail(),
-                contact.getMessage(),
-                contact.getSubject().getSubject()
-        );
-
-    }
-
-    private Subject findSubjectEntity(String subject){
-        return this.subjectRepository.findBySubject(subject).orElse(null);
     }
 
 }

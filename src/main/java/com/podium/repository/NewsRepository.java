@@ -5,17 +5,16 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends CrudRepository<News,Integer> {
 
-    News findByDate(Date date);
+    Optional<News> findByDate(Date date);
 
-    News findByTitle(String newsTitle);
+    Optional<News> findByTitle(String newsTitle);
 
     boolean existsByTitle(String newsTitle);
-
-    boolean existsByDate(Date date);
 
     Iterable<News> findAllByOrderByDateDesc();
 

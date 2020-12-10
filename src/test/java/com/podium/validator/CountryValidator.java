@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.CountryRequestDto;
 import com.podium.model.dto.response.CountryResponseDto;
 import com.podium.specification.TestSpecification;
@@ -33,7 +33,7 @@ public class CountryValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addCountry)
+                .when().post(PodiumPath.server + PodiumEndpoint.addCountry)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -47,7 +47,7 @@ public class CountryValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllCountry)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllCountry)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -63,7 +63,7 @@ public class CountryValidator {
                 .contentType(ContentType.JSON)
                 .pathParam("name",cityName)
                 .when()
-                .get(Path.server + PodiumEndpoint.existCityByName)
+                .get(PodiumPath.server + PodiumEndpoint.existCityByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
@@ -74,7 +74,7 @@ public class CountryValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",countryName)
-                .delete(Path.server + PodiumEndpoint.deleteCountryByName)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteCountryByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());;
 

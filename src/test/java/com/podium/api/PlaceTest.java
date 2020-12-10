@@ -3,9 +3,9 @@ package com.podium.api;
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
 import com.podium.model.dto.request.PlaceRequestDto;
-import com.podium.model.dto.other.OpeningDay;
-import com.podium.model.dto.other.PlaceLocalization;
-import com.podium.model.dto.other.Rating;
+import com.podium.model.dto.other.BusinessDayDto;
+import com.podium.model.dto.other.LocalizationDto;
+import com.podium.model.dto.other.RatingDto;
 import com.podium.validator.PlaceValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
         TestLogger.setUp();
 
-        PlaceLocalization placeLocalization = new PlaceLocalization(
+        LocalizationDto localizationDto = new LocalizationDto(
                 "PlaceTestCityName",
                 "PlaceTestStreetName",
                 123,
@@ -44,44 +44,44 @@ import java.util.stream.Stream;
                 "Place test localization remarks"
         );
 
-        List<OpeningDay> openingDays = new LinkedList<>();
+        List<BusinessDayDto> businessDayDtos = new LinkedList<>();
 
         LocalTime timeFrom = LocalTime.parse("10:33:22");
         LocalTime timeTo = LocalTime.parse("17:00");
 
-        openingDays.add(new OpeningDay("Monday",true,
+        businessDayDtos.add(new BusinessDayDto("Monday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Tuesday",true,
+        businessDayDtos.add(new BusinessDayDto("Tuesday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Wednesday",true,
+        businessDayDtos.add(new BusinessDayDto("Wednesday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Thursday",true,
+        businessDayDtos.add(new BusinessDayDto("Thursday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Friday",true,
+        businessDayDtos.add(new BusinessDayDto("Friday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Saturday",true,
+        businessDayDtos.add(new BusinessDayDto("Saturday",true,
                 timeFrom,timeTo));
-        openingDays.add(new OpeningDay("Sunday",true,
+        businessDayDtos.add(new BusinessDayDto("Sunday",true,
                 timeFrom,timeTo));
 
-        List<Rating> ratings = List.of(
-                new Rating("Service",1),
-                new Rating("Service",2),
-                new Rating("Equipment",3),
-                new Rating("Equipment",4),
-                new Rating("Price",5)
+        List<RatingDto> ratingDtos = List.of(
+                new RatingDto("Service",1),
+                new RatingDto("Service",2),
+                new RatingDto("Equipment",3),
+                new RatingDto("Equipment",4),
+                new RatingDto("Price",5)
         );
 
         requestDto = new PlaceRequestDto(
                 "Test Place Name",
                 "Football",
-                placeLocalization,
-                openingDays,
+                localizationDto,
+                businessDayDtos,
                 50,
                 PodiumLimits.minUsageTimeHours + 1,
                 10,
                 20,
-                ratings,
+                ratingDtos,
                 "This is test place review"
         );
 
@@ -202,14 +202,14 @@ import java.util.stream.Stream;
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minCityLength - 1);
-        textValueHolder = requestDto.getPlaceLocalization().getCity();
-        requestDto.getPlaceLocalization().setCity(toShort);
+        textValueHolder = requestDto.getLocalizationDto().getCity();
+        requestDto.getLocalizationDto().setCity(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setCity(textValueHolder);
+        requestDto.getLocalizationDto().setCity(textValueHolder);
 
     }
 
@@ -218,14 +218,14 @@ import java.util.stream.Stream;
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxCityLength + 1);
-        textValueHolder = requestDto.getPlaceLocalization().getCity();
-        requestDto.getPlaceLocalization().setCity(toLong);
+        textValueHolder = requestDto.getLocalizationDto().getCity();
+        requestDto.getLocalizationDto().setCity(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setCity(textValueHolder);
+        requestDto.getLocalizationDto().setCity(textValueHolder);
 
     }
 
@@ -234,14 +234,14 @@ import java.util.stream.Stream;
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minStreetLength - 1);
-        textValueHolder = requestDto.getPlaceLocalization().getStreet();
-        requestDto.getPlaceLocalization().setStreet(toShort);
+        textValueHolder = requestDto.getLocalizationDto().getStreet();
+        requestDto.getLocalizationDto().setStreet(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setStreet(textValueHolder);
+        requestDto.getLocalizationDto().setStreet(textValueHolder);
 
     }
 
@@ -250,14 +250,14 @@ import java.util.stream.Stream;
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxStreetLength + 1);
-        textValueHolder = requestDto.getPlaceLocalization().getStreet();
-        requestDto.getPlaceLocalization().setStreet(toLong);
+        textValueHolder = requestDto.getLocalizationDto().getStreet();
+        requestDto.getLocalizationDto().setStreet(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setStreet(textValueHolder);
+        requestDto.getLocalizationDto().setStreet(textValueHolder);
 
     }
 
@@ -265,14 +265,14 @@ import java.util.stream.Stream;
     void T10_Add_Place_Too_Short_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toShort = PodiumLimits.minBuildingNumberLength - 1;
-        intValueHolder = requestDto.getPlaceLocalization().getBuildingNumber();
-        requestDto.getPlaceLocalization().setBuildingNumber(toShort);
+        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
+        requestDto.getLocalizationDto().setBuildingNumber(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
 
     }
 
@@ -280,42 +280,42 @@ import java.util.stream.Stream;
     void T11_Add_Place_Too_Long_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toLong = PodiumLimits.maxBuildingNumberLength + 1;
-        intValueHolder = requestDto.getPlaceLocalization().getBuildingNumber();
-        requestDto.getPlaceLocalization().setBuildingNumber(toLong);
+        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
+        requestDto.getLocalizationDto().setBuildingNumber(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
 
     }
 
     @Test
     void T12_Add_Place_Empty_Localization_Street_Return_Status_OK_As_Its_Optional(){
 
-        textValueHolder = requestDto.getPlaceLocalization().getStreet();
-        requestDto.getPlaceLocalization().setStreet("");
+        textValueHolder = requestDto.getLocalizationDto().getStreet();
+        requestDto.getLocalizationDto().setStreet("");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.OK);
 
-        requestDto.getPlaceLocalization().setStreet(textValueHolder);
+        requestDto.getLocalizationDto().setStreet(textValueHolder);
 
     }
 
     @Test
     void T13_Add_Place_Empty_Localization_BuildingNumber_Return_Status_OK_As_Its_Optional(){
 
-        intValueHolder = requestDto.getPlaceLocalization().getBuildingNumber();
-        requestDto.getPlaceLocalization().setBuildingNumber(0);
+        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
+        requestDto.getLocalizationDto().setBuildingNumber(0);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.OK);
 
-        requestDto.getPlaceLocalization().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
 
     }
 
@@ -323,14 +323,14 @@ import java.util.stream.Stream;
     @MethodSource("provideEmptyValuesForTests")
     void T14_Add_Place_Empty_Localization_PostalCode_Return_Status_OK_As_Its_Optional(String emptyPostal){
 
-        textValueHolder = requestDto.getPlaceLocalization().getPostalCode();
-        requestDto.getPlaceLocalization().setPostalCode(emptyPostal);
+        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
+        requestDto.getLocalizationDto().setPostalCode(emptyPostal);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.OK);
 
-        requestDto.getPlaceLocalization().setPostalCode(textValueHolder);
+        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
 
     }
 
@@ -338,14 +338,14 @@ import java.util.stream.Stream;
     @MethodSource("provideEmptyValuesForTests")
     void T15_Add_Place_Empty_Localization_Remarks_Return_Status_OK_As_Its_Optional(String emptyRemarks){
 
-        textValueHolder = requestDto.getPlaceLocalization().getLocalizationRemarks();
-        requestDto.getPlaceLocalization().setLocalizationRemarks(emptyRemarks);
+        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
+        requestDto.getLocalizationDto().setLocalizationRemarks(emptyRemarks);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.OK);
 
-        requestDto.getPlaceLocalization().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -354,14 +354,14 @@ import java.util.stream.Stream;
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
-        textValueHolder = requestDto.getPlaceLocalization().getPostalCode();
-        requestDto.getPlaceLocalization().setPostalCode(toShort);
+        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
+        requestDto.getLocalizationDto().setPostalCode(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setPostalCode(textValueHolder);
+        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
 
     }
 
@@ -370,14 +370,14 @@ import java.util.stream.Stream;
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
-        textValueHolder = requestDto.getPlaceLocalization().getPostalCode();
-        requestDto.getPlaceLocalization().setPostalCode(toLong);
+        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
+        requestDto.getLocalizationDto().setPostalCode(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setPostalCode(textValueHolder);
+        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
 
     }
 
@@ -399,14 +399,14 @@ import java.util.stream.Stream;
     @MethodSource("provideEmptyValuesForTests")
     void T19_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
 
-        textValueHolder = requestDto.getPlaceLocalization().getCity();
-        requestDto.getPlaceLocalization().setCity(emptyCity);
+        textValueHolder = requestDto.getLocalizationDto().getCity();
+        requestDto.getLocalizationDto().setCity(emptyCity);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setCity(textValueHolder);
+        requestDto.getLocalizationDto().setCity(textValueHolder);
     }
 
     @Test
@@ -414,14 +414,14 @@ import java.util.stream.Stream;
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minLocalizationRemarksLength - 1);
-        textValueHolder = requestDto.getPlaceLocalization().getLocalizationRemarks();
-        requestDto.getPlaceLocalization().setLocalizationRemarks(toShort);
+        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
+        requestDto.getLocalizationDto().setLocalizationRemarks(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -430,14 +430,14 @@ import java.util.stream.Stream;
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxLocalizationRemarksLength + 1);
-        textValueHolder = requestDto.getPlaceLocalization().getLocalizationRemarks();
-        requestDto.getPlaceLocalization().setLocalizationRemarks(toLong);
+        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
+        requestDto.getLocalizationDto().setLocalizationRemarks(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getPlaceLocalization().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -445,41 +445,41 @@ import java.util.stream.Stream;
     @MethodSource("provideEmptyValuesAndDaysIndexesForTests")
     void T22_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
 
-        textValueHolder = requestDto.getOpeningDays().get(index).getDay();
-        requestDto.getOpeningDays().get(index).setDay(emptyDay);
+        textValueHolder = requestDto.getBusinessDayDtos().get(index).getDay();
+        requestDto.getBusinessDayDtos().get(index).setDay(emptyDay);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getOpeningDays().get(index).setDay(textValueHolder);
+        requestDto.getBusinessDayDtos().get(index).setDay(textValueHolder);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
     void T23_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
 
-        textValueHolder = requestDto.getOpeningDays().get( index).getDay();
-        requestDto.getOpeningDays().get( index).setDay("WrongWeekDay");
+        textValueHolder = requestDto.getBusinessDayDtos().get( index).getDay();
+        requestDto.getBusinessDayDtos().get( index).setDay("WrongWeekDay");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getOpeningDays().get(index).setDay(textValueHolder);
+        requestDto.getBusinessDayDtos().get(index).setDay(textValueHolder);
     }
 
     @Test
     void T24_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
 
-        OpeningDay openingDay = requestDto.getOpeningDays().get(0);
-        requestDto.getOpeningDays().remove(0);
+        BusinessDayDto businessDayDto = requestDto.getBusinessDayDtos().get(0);
+        requestDto.getBusinessDayDtos().remove(0);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getOpeningDays().add(openingDay);
+        requestDto.getBusinessDayDtos().add(businessDayDto);
     }
 
     @Test
@@ -598,28 +598,28 @@ import java.util.stream.Stream;
     @MethodSource("provideEmptyValuesForTests")
     void T32_Add_Place_Empty_Rating_Category_Return_Status_CONFLICT(String emptyCategory){
 
-        textValueHolder = requestDto.getRatings().get(0).getCategory();
-        requestDto.getRatings().get(0).setCategory(emptyCategory);
+        textValueHolder = requestDto.getRatingDtos().get(0).getCategory();
+        requestDto.getRatingDtos().get(0).setCategory(emptyCategory);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getRatings().get(0).setCategory(textValueHolder);
+        requestDto.getRatingDtos().get(0).setCategory(textValueHolder);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4})
     void T33_Add_Place_Too_Small_Rating_Return_Status_CONFLICT(int index){
 
-        intValueHolder = requestDto.getRatings().get(index).getRating();
-        requestDto.getRatings().get(index).setRating(PodiumLimits.minPlaceRating - 1);
+        intValueHolder = requestDto.getRatingDtos().get(index).getRating();
+        requestDto.getRatingDtos().get(index).setRating(PodiumLimits.minPlaceRating - 1);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getRatings().get(index).setRating(intValueHolder);
+        requestDto.getRatingDtos().get(index).setRating(intValueHolder);
 
     }
 
@@ -627,14 +627,14 @@ import java.util.stream.Stream;
     @ValueSource(ints = {0,1,2,3,4})
     void T34_Add_Place_Too_Large_Rating_Return_Status_CONFLICT(int index){
 
-        intValueHolder = requestDto.getRatings().get(index).getRating();
-        requestDto.getRatings().get(index).setRating(PodiumLimits.maxPlaceRating + 1);
+        intValueHolder = requestDto.getRatingDtos().get(index).getRating();
+        requestDto.getRatingDtos().get(index).setRating(PodiumLimits.maxPlaceRating + 1);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getRatings().get(index).setRating(intValueHolder);
+        requestDto.getRatingDtos().get(index).setRating(intValueHolder);
 
     }
 
@@ -691,28 +691,28 @@ import java.util.stream.Stream;
     @ValueSource(ints = {0,1,2,3,4,5,6})
     void T37_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
 
-       LocalTime timeFrom  = requestDto.getOpeningDays().get(index).getOpeningTimeFrom();
-        requestDto.getOpeningDays().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
+       LocalTime timeFrom  = requestDto.getBusinessDayDtos().get(index).getOpeningTimeFrom();
+        requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getOpeningDays().get(index).setOpeningTimeFrom(timeFrom);
+        requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(timeFrom);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4})
     void T38_Add_Place_Non_Existing_Rating_Category_Return_Status_NOTFOUND(int index){
 
-        textValueHolder = requestDto.getRatings().get(index).getCategory();
-        requestDto.getRatings().get(index).setCategory("WRONG_CATEGORY");
+        textValueHolder = requestDto.getRatingDtos().get(index).getCategory();
+        requestDto.getRatingDtos().get(index).setCategory("WRONG_CATEGORY");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.NOT_FOUND);
 
-        requestDto.getRatings().get(index).setCategory(textValueHolder);
+        requestDto.getRatingDtos().get(index).setCategory(textValueHolder);
     }
 
 }

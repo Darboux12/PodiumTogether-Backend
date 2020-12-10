@@ -10,6 +10,7 @@ import com.podium.repository.EventRepository;
 import com.podium.repository.NewsRepository;
 import com.podium.repository.ResourceRepository;
 import com.podium.repository.UserRepository;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,6 @@ public class ResourceService {
     private ResourceRepository resourceRepository;
     private EventRepository eventRepository;
 
-    @Autowired
     public ResourceService(UserRepository userRepository, NewsRepository newsRepository, ResourceRepository resourceRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
         this.newsRepository = newsRepository;
@@ -77,7 +77,9 @@ public class ResourceService {
 
             PodiumResource resource = this.createPodiumResourceImage(image);
 
-            News news = this.newsRepository.findByTitle(requestDto.getId());
+            News news = this.newsRepository
+                    .findByTitle(requestDto.getId())
+                    .orElseThrow(() -> new PodiumEntityNotFoundException("News with given title"));
 
             news.getNewsResources().add(resource);
 

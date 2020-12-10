@@ -26,27 +26,15 @@ public class GenderService {
         return this.genderRepository.existsByGender(genderName);
     }
 
-    public GenderResponseDto findByGenderName(String genderName){
+    public Gender findByGenderName(String genderName){
 
-        Gender gender = this.genderRepository
+        return this.genderRepository
                 .findByGender(genderName)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Gender"));
-
-        return this.convertEntityToResponseDto(gender);
-
     }
 
-    public Iterable<GenderResponseDto> findAllGenders(){
-
-        List<GenderResponseDto> responseDtos = new ArrayList<>();
-
-        this.genderRepository
-                .findAll()
-                .forEach(x -> responseDtos
-                        .add(this.convertEntityToResponseDto(x))
-                );
-
-        return responseDtos;
+    public Iterable<Gender> findAllGenders(){
+        return this.genderRepository.findAll();
     }
 
     @Transactional
@@ -69,10 +57,6 @@ public class GenderService {
 
     private Gender convertRequestDtoToEntity(GenderRequestDto requestDto){
         return new Gender(requestDto.getGender());
-    }
-
-    private GenderResponseDto convertEntityToResponseDto(Gender gender){
-        return new GenderResponseDto(gender.getGender());
     }
 
 }

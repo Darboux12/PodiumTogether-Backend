@@ -89,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/test")
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/user/find/{username}")
+                .and().authorizeRequests().antMatchers("/user/find/username/{username}")
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers("/contact/add")
@@ -285,25 +285,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .permitAll()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                .and().authorizeRequests().antMatchers("/country/find/name/{name}")
+                .permitAll()
 
 
                 // all other requests need to be authenticated
@@ -314,6 +297,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean

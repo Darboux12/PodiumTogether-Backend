@@ -20,6 +20,7 @@ public class ContactRequestDto {
     @PodiumLength(max = PodiumLimits.maxEmailLength)
     private String userEmail;
     @PodiumTextNotEmpty
+    @PodiumLength(min = PodiumLimits.minSubjectLength, max = PodiumLimits.maxStreetLength)
     private String subject;
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minContactMessageLength, max = PodiumLimits.maxContactMessageLength)

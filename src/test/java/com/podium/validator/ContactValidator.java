@@ -1,7 +1,7 @@
 package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.helper.Path;
+import com.podium.constant.PodiumPath;
 import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.specification.TestSpecification;
@@ -33,7 +33,7 @@ public class ContactValidator {
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .body(requestDto)
-                .when().post(Path.server + PodiumEndpoint.addContact)
+                .when().post(PodiumPath.server + PodiumEndpoint.addContact)
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
@@ -47,7 +47,7 @@ public class ContactValidator {
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
-                        .when().get(Path.server + PodiumEndpoint.findAllContact)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findAllContact)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
@@ -65,7 +65,7 @@ public class ContactValidator {
                         .contentType(ContentType.JSON)
                         .pathParam("email",email)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findAllContactByEmail)
+                        .get(PodiumPath.server + PodiumEndpoint.findAllContactByEmail)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) ContactResponseDto[].class);
@@ -82,7 +82,7 @@ public class ContactValidator {
                         .contentType(ContentType.JSON)
                         .pathParam("subject",subject)
                         .when()
-                        .get(Path.server + PodiumEndpoint.findAllContactBySubject)
+                        .get(PodiumPath.server + PodiumEndpoint.findAllContactBySubject)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) ContactResponseDto[].class);
@@ -96,7 +96,7 @@ public class ContactValidator {
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("id",id)
-                .delete(Path.server + PodiumEndpoint.deleteContact)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteContact)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

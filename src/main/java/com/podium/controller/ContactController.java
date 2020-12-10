@@ -2,8 +2,14 @@ package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.model.dto.request.ContactRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import com.podium.model.dto.response.ContactResponseDto;
 import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
+import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
+import com.podium.model.entity.City;
+import com.podium.model.entity.Contact;
 import com.podium.service.ContactService;
 import com.podium.service.SubjectService;
 import com.podium.model.dto.validation.validator.PodiumDtoValidator;
@@ -12,76 +18,76 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PodiumValidateController
 public class ContactController {
 
     private ContactService contactService;
-    private SubjectService subjectService;
-    private PodiumDtoValidator dtoValidator;
 
-    public ContactController(ContactService contactService, SubjectService subjectService, PodiumDtoValidator dtoValidator) {
+    public ContactController(ContactService contactService) {
         this.contactService = contactService;
-        this.subjectService = subjectService;
-        this.dtoValidator = dtoValidator;
     }
 
     @PostMapping(PodiumEndpoint.addContact)
-    public ResponseEntity addContact(@RequestBody ContactRequestDto request){
-
-        try {
-            dtoValidator.validateRequestBody(request);
-        } catch (PodiumEmptyTextException e) {
-            e.printStackTrace();
-        }
-
-        if(!this.subjectService.existSubjectByName(request.getSubject()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Given subject does not exist");
-
+    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactRequestDto request){
         this.contactService.addContact(request);
-
         return ResponseEntity.ok().body("Contact request successfully sent");
-
     }
 
     @DeleteMapping(PodiumEndpoint.deleteContact)
-    public ResponseEntity deleteContact(@PathVariable int id){
+    public ResponseEntity deleteContact(@PathVariable @PodiumValidVariable int id){
 
-        if(this.contactService.existContactById(id)){
-            this.contactService.deleteContact(id);
-            return ResponseEntity.ok().body("Contact deleted");
-        }
+        this.contactService.deleteContact(id);
 
-        else throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Contact with given id does not exist");
-
+        return ResponseEntity.ok().body("Contact successfully deleted");
     }
 
     @GetMapping(PodiumEndpoint.findAllContactByEmail)
     public ResponseEntity<Iterable<ContactResponseDto>>
-    findAllContactByEmail(@PathVariable String email){
+    findAllContactByEmail(@PathVariable @PodiumValidVariable String email){
 
-        return ResponseEntity
-                .ok()
-                .body(this.contactService.findAllByEmail(email));
+        var contacts = this.contactService.findAllByEmail(email);
+
+        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
     @GetMapping(PodiumEndpoint.findAllContactBySubject)
-    public ResponseEntity<Iterable<ContactResponseDto>>
-    findAllContactBySubject(@PathVariable String subject){
+    public ResponseEntity<Iterable<ContactResponseDto>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject){
 
-        return ResponseEntity
-                .ok()
-                .body(this.contactService.findAllBySubject(subject));
+        var contacts = this.contactService.findAllBySubject(subject);
+
+        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
     @GetMapping(PodiumEndpoint.findAllContact)
-    public ResponseEntity<Iterable<ContactResponseDto>>
-    findAllContact(){
-        return ResponseEntity
-                .ok()
-                .body(this.contactService.findAllContact());
+    public ResponseEntity<Iterable<ContactResponseDto>> findAllContact(){
+
+        var contacts = this.contactService.findAllContact();
+
+        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
+    }
+
+    private ContactResponseDto convertEntityToResponseDto(Contact contact){
+
+        return new ContactResponseDto(
+                contact.getId(),
+                contact.getUserEmail(),
+                contact.getMessage(),
+                contact.getSubject().getSubject()
+        );
+
+    }
+
+    private Iterable<ContactResponseDto> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
+
+        var contactResponses = new ArrayList<ContactResponseDto>();
+
+        contacts.forEach(x -> contactResponses.add(this.convertEntityToResponseDto(x)));
+
+        return contactResponses;
     }
 
 }

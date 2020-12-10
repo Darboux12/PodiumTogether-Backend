@@ -18,7 +18,7 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "contact_id")
-    private int contactId;
+    private int id;
 
     @NotNull
     @Column(name = "user_email", unique = true)

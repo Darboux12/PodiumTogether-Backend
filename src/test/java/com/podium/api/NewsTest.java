@@ -1,13 +1,22 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
+import com.podium.model.dto.request.ContactRequestDto;
 import com.podium.model.dto.request.NewsRequestDto;
+import com.podium.model.dto.response.CityResponseDto;
 import com.podium.model.dto.response.NewsResponseDto;
 import com.podium.constant.PodiumLimits;
+import com.podium.validator.CityValidator;
 import com.podium.validator.NewsValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -16,96 +25,128 @@ import org.springframework.http.HttpStatus;
     private static NewsRequestDto newsRequest;
     private static String valueHolder;
 
+    private static Stream<String> provideEmptyValuesForTests(){
+        return Stream.of("", " ", "  ", "       ");
+    }
+
+    private static Stream<NewsRequestDto> provideNewsForTests(){
+
+        return Stream.of(
+
+                newsRequest = new NewsRequestDto(
+                        "TestTitleOne",
+                        "TestShortTextOne",
+                        "TestLinkTextOne",
+                        "TestFullTextOne"
+                ),
+
+                newsRequest = new NewsRequestDto(
+                        "TestTitleTwo",
+                        "TestShortTextTwo",
+                        "TestLinkTextTwo",
+                        "TestFullTextTwo"
+                ),
+
+                newsRequest = new NewsRequestDto(
+                        "TestTitleThreeThree",
+                        "TestShortTextThree",
+                        "TestLinkTextThree",
+                        "TestFullTextThree"
+                )
+
+
+
+        );
+
+    }
+
     @BeforeAll
     static void beforeClass(){
 
-            TestLogger.setUp();
+        TestLogger.setUp();
 
-            newsRequest = new NewsRequestDto(
-                    "TestTitle",
-                    "TestShortText",
-                    "TestLinkText",
-                    "TestFullText"
-            );
+        newsRequest = new NewsRequestDto
+                ("TestTitle",
+                        "TestShortText",
+                        "TestLinkText","TextText");
+
+
     }
 
-    @Test
-    void T01_Add_News_WithOut_Title_ShouldReturnStatus_CONFLICT(){
-
+    @ParameterizedTest
+    @MethodSource("provideEmptyValuesForTests")
+    void T01_Add_News_Empty_Title_ShouldReturnStatus_CONFLICT(String emptyTitle){
         valueHolder = newsRequest.getTitle();
-        newsRequest.setTitle("");
-
+        newsRequest.setTitle(emptyTitle);
         NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
-
         newsRequest.setTitle(valueHolder);
-
     }
 
-    @Test
-    void T02_Add_News_WithOut_FullText_ShouldReturnStatus_CONFLICT(){
-
+    @ParameterizedTest
+    @MethodSource("provideEmptyValuesForTests")
+    void T02_Add_News_Empty_FullText_ShouldReturnStatus_CONFLICT(String emptyFullText){
         valueHolder = newsRequest.getText();
-        newsRequest.setText("");
-
+        newsRequest.setText(emptyFullText);
         NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
-
         newsRequest.setText(valueHolder);
-
     }
 
-    @Test
-    void T03_Add_News_WithOut_ShortText_ShouldReturnStatus_CONFLICT(){
-
+    @ParameterizedTest
+    @MethodSource("provideEmptyValuesForTests")
+    void T03_Add_News_Empty_ShortText_ShouldReturnStatus_CONFLICT(String emptyShortText){
         valueHolder = newsRequest.getShortText();
-        newsRequest.setShortText("");
-
+        newsRequest.setShortText(emptyShortText);
         NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
-
         newsRequest.setShortText(valueHolder);
-
     }
 
-    @Test
-    void T04_Add_News_WithOut_LinkText_ShouldReturnStatus_CONFLICT(){
-
+    @ParameterizedTest
+    @MethodSource("provideEmptyValuesForTests")
+    void T04_Add_News_Empty_LinkText_ShouldReturnStatus_CONFLICT(String emptyLinkText){
         valueHolder = newsRequest.getLinkText();
-        newsRequest.setLinkText("");
-
+        newsRequest.setLinkText(emptyLinkText);
         NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
-
         newsRequest.setLinkText(valueHolder);
+    }
 
+    @ParameterizedTest
+    @MethodSource("provideNewsForTests")
+    void T05_Add_Valid_News_ShouldReturnStatus_OK(NewsRequestDto requestDto){
+        NewsValidator.getInstance().add(requestDto,HttpStatus.OK);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideNewsForTests")
+    void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(NewsRequestDto requestDto){
+        NewsValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
     }
 
     @Test
-    void T05_Add_Valid_News_ShouldReturnStatus_OK(){
-        NewsValidator.getInstance().add(newsRequest,HttpStatus.OK);
-    }
+    void T07_Find_AllNews_ShouldReturnStatus_OK_Iterable_Containing_Added_DTOs(){
 
-    @Test
-    void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(){
-        NewsValidator.getInstance().add(newsRequest,HttpStatus.CONFLICT);
-    }
-
-    @Test
-    void T07_Find_AllNews_ShouldReturnStatus_OK_Iterable_Containing_Added_DTO(){
-
-        NewsResponseDto responseDto = NewsValidator
+        List<String> responseNewsTitles = NewsValidator
                 .getInstance()
-                .findByTitle(newsRequest.getTitle(),HttpStatus.OK);
+                .findAll()
+                .stream()
+                .map(NewsResponseDto::getTitle)
+                .collect(Collectors.toList());
 
-        Assertions.assertEquals(newsRequest.getTitle(),responseDto.getTitle());
+        Assertions.assertTrue(responseNewsTitles.containsAll
+                        (provideNewsForTests()
+                                .map(NewsRequestDto::getTitle)
+                                .collect(Collectors.toList())));
 
     }
-    
-    @Test
-    void T08_Find_AndDeleteCreatedValidNews_ShouldReturnStatus_OK(){
+
+    @ParameterizedTest
+    @MethodSource("provideNewsForTests")
+    void T08_Find_AndDeleteCreatedValidNews_ShouldReturnStatus_OK(NewsRequestDto requestDto){
 
         NewsResponseDto newsResponseDto =
 
                 NewsValidator
                         .getInstance()
-                        .findByTitle(newsRequest.getTitle(),HttpStatus.OK);
+                        .findByTitle(requestDto.getTitle(),HttpStatus.OK);
         
         NewsValidator
                 .getInstance()

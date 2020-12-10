@@ -36,27 +36,15 @@ public class DisciplineService {
         this.disciplineRepository.save(this.convertRequestDtoToEntity(requestDto));
     }
 
-    public Iterable<DisciplineResponseDto> findAllDiscipline(){
-
-        List<DisciplineResponseDto> responseDtos = new ArrayList<>();
-
-        this.disciplineRepository
-                .findAll()
-                .forEach(x -> responseDtos
-                        .add(this.convertEntityToResponseDto(x))
-                );
-
-        return responseDtos;
-
+    public Iterable<Discipline> findAllDiscipline(){
+        return this.disciplineRepository.findAll();
     }
 
-    public DisciplineResponseDto findByDisciplineName(String disciplineName){
+    public Discipline findByDisciplineName(String disciplineName){
 
-        Discipline discipline = this.disciplineRepository
+        return this.disciplineRepository
                 .findByDiscipline(disciplineName)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
-
-        return this.convertEntityToResponseDto(discipline);
     }
 
     @Transactional
@@ -72,8 +60,6 @@ public class DisciplineService {
         return new Discipline(requestDto.getDiscipline());
     }
 
-    private DisciplineResponseDto convertEntityToResponseDto(Discipline discipline){
-        return new DisciplineResponseDto(discipline.getDiscipline());
-    }
+
 
 }

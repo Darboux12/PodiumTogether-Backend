@@ -24,11 +24,5 @@ public interface UserRepository extends CrudRepository<User,Integer> {
 
     Iterable<User> findAllByCountry(Country country);
 
-    @Transactional
     void deleteByUsername(String username);
-
-
-
-
-
 }
