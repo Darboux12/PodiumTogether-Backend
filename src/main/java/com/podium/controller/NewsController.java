@@ -4,6 +4,7 @@ import com.podium.constant.PodiumEndpoint;
 import com.podium.controller.dto.other.PodiumFileDto;
 import com.podium.controller.dto.request.CityAddRequest;
 import com.podium.controller.dto.request.NewsAddRequest;
+import com.podium.controller.dto.request.Test;
 import com.podium.controller.dto.response.NewsResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
@@ -12,11 +13,15 @@ import com.podium.dal.entity.News;
 import com.podium.service.NewsService;
 import com.podium.service.dto.CityAddServiceDto;
 import com.podium.service.dto.NewsAddServiceDto;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.datasource.embedded.ConnectionProperties;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +37,13 @@ public class NewsController {
     }
 
     @PostMapping(PodiumEndpoint.addNews)
-    public ResponseEntity addNews(@RequestBody @PodiumValidBody NewsAddRequest request){
-       this.newsService.addNews(this.convertAddRequestToServiceDto(request));
-       return ResponseEntity.ok().body("News successfully added");
+    public ResponseEntity addNews(@RequestPart("images") List<MultipartFile> images,
+                                  @RequestPart("news") NewsAddRequest addRequest
+                               ) throws IOException {
+
+        this.newsService.addNews(this.convertAddRequestToServiceDto(addRequest,images));
+
+        return ResponseEntity.ok().body("News successfully added");
     }
 
     @GetMapping(PodiumEndpoint.findAllNews)
@@ -80,7 +89,7 @@ public class NewsController {
 
     }
 
-    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddRequest request){
+    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddRequest request, Iterable<MultipartFile> images){
         return new NewsAddServiceDto(
                 request.getTitle(),
                 request.getShortText(),
