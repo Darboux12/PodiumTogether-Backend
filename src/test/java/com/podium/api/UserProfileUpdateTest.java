@@ -1,9 +1,9 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.ProfileUpdateRequestDto;
-import com.podium.model.dto.request.SignUpRequestDto;
-import com.podium.model.dto.response.UserResponseDto;
+import com.podium.controller.dto.request.ProfileUpdateRequest;
+import com.podium.controller.dto.request.SignUpRequest;
+import com.podium.controller.dto.response.UserResponse;
 import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,13 @@ import java.util.Date;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class UserProfileUpdateTest {
 
-    private static SignUpRequestDto signUpRequestDtoOne;
-    private static ProfileUpdateRequestDto updateRequestDto;
+    private static SignUpRequest signUpRequestOne;
+    private static ProfileUpdateRequest updateRequestDto;
 
     @BeforeAll
     static void beforeClass() throws ParseException {
         TestLogger.setUp();
-        signUpRequestDtoOne = new SignUpRequestDto(
+        signUpRequestOne = new SignUpRequest(
                 "TEST USERNAME_ONE",
                 "TEST_MAIL_ONE@gmail.com",
                 "TEST PASSWORD ONE",
@@ -29,12 +29,12 @@ import java.util.Date;
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 
-        updateRequestDto = new ProfileUpdateRequestDto();
-        updateRequestDto.setUsername(signUpRequestDtoOne.getUsername());
-        updateRequestDto.setEmail(signUpRequestDtoOne.getEmail());
-        updateRequestDto.setPassword(signUpRequestDtoOne.getPassword());
-        updateRequestDto.setCountry(signUpRequestDtoOne.getCountry());
-        updateRequestDto.setBirthday(signUpRequestDtoOne.getBirthday());
+        updateRequestDto = new ProfileUpdateRequest();
+        updateRequestDto.setUsername(signUpRequestOne.getUsername());
+        updateRequestDto.setEmail(signUpRequestOne.getEmail());
+        updateRequestDto.setPassword(signUpRequestOne.getPassword());
+        updateRequestDto.setCountry(signUpRequestOne.getCountry());
+        updateRequestDto.setBirthday(signUpRequestOne.getBirthday());
         updateRequestDto.setDescription("");
     }
 
@@ -43,18 +43,18 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestDtoOne, HttpStatus.OK);
+                .signUp(signUpRequestOne, HttpStatus.OK);
 
     }
 
     @Test
     void T02_Find_Signed_Up_User_Id_Fill_Update_Request(){
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()
-                        .findUserByUsername(signUpRequestDtoOne.getUsername(),HttpStatus.OK);
+                        .findUserByUsername(signUpRequestOne.getUsername(),HttpStatus.OK);
 
         updateRequestDto.setId(responseDto.getId());
 
@@ -71,7 +71,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -90,7 +90,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -109,7 +109,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -126,7 +126,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -149,7 +149,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponseDto responseDto =
+        UserResponse responseDto =
 
                 UserValidator
                         .getInstance()

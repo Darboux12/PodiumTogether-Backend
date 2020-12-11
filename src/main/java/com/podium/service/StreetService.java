@@ -1,7 +1,7 @@
 package com.podium.service;
 
-import com.podium.model.entity.Street;
-import com.podium.repository.StreetRepository;
+import com.podium.dal.entity.Street;
+import com.podium.dal.repository.StreetRepository;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,15 @@ public class StreetService {
 
     public StreetService(StreetRepository streetRepository) {
         this.streetRepository = streetRepository;
+    }
+
+    @Transactional
+    public void deleteStreetByName(String name){
+
+        if(!this.streetRepository.existsByStreet(name))
+            throw new PodiumEntityNotFoundException("Street");
+
+        this.streetRepository.deleteByStreet(name);
     }
 
     public boolean existStreetByName(String streetName){
@@ -32,22 +41,12 @@ public class StreetService {
         return this.streetRepository.findAll();
     }
 
-    @Transactional
-    public void addStreet(Street street){
+    Street convertToEntityByStreetName(String streetName){
 
-        if(this.streetRepository.existsByStreet(street.getStreet()))
-            throw new PodiumEntityAlreadyExistException("Street");
+        return this.streetRepository
+                .findByStreet(streetName)
+                .orElse(new Street(streetName));
 
-        this.streetRepository.save(street);
-    }
-
-    @Transactional
-    public void deleteStreetByName(String name){
-
-        if(!this.streetRepository.existsByStreet(name))
-            throw new PodiumEntityNotFoundException("Street");
-
-        this.streetRepository.deleteByStreet(name);
     }
 
 }

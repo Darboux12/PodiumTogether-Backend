@@ -1,22 +1,7 @@
 package com.podium.api;
 
-import com.podium.constant.PodiumEndpoint;
-import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.EventRequestDto;
-import com.podium.specification.TestSpecification;
-import com.podium.constant.PodiumLimits;
-import com.podium.validator.EventValidator;
-import io.restassured.http.ContentType;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.http.HttpStatus;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static io.restassured.RestAssured.given;
 
@@ -25,7 +10,7 @@ import static io.restassured.RestAssured.given;
 
    /*
 
-    private static EventRequestDto requestDto;
+    private static EventAddRequestDto requestDto;
     private static String valueHolder;
 
     @BeforeAll

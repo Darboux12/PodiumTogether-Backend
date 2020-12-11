@@ -1,17 +1,16 @@
 package com.podium.service;
 
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.ResourceRequestDto;
-import com.podium.model.entity.Event;
-import com.podium.model.entity.News;
-import com.podium.model.entity.PodiumResource;
-import com.podium.model.entity.User;
-import com.podium.repository.EventRepository;
-import com.podium.repository.NewsRepository;
-import com.podium.repository.ResourceRepository;
-import com.podium.repository.UserRepository;
+import com.podium.controller.dto.request.ResourceAddRequest;
+import com.podium.dal.entity.Event;
+import com.podium.dal.entity.News;
+import com.podium.dal.entity.PodiumResource;
+import com.podium.dal.entity.User;
+import com.podium.dal.repository.EventRepository;
+import com.podium.dal.repository.NewsRepository;
+import com.podium.dal.repository.ResourceRepository;
+import com.podium.dal.repository.UserRepository;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +32,7 @@ public class ResourceService {
         this.eventRepository = eventRepository;
     }
 
-    public void uploadUserProfileImages(ResourceRequestDto requestDto) throws IOException {
+    public void uploadUserProfileImages(ResourceAddRequest requestDto) throws IOException {
 
         MultipartFile image = requestDto.getFiles().stream().findAny().orElse(null);
 
@@ -71,7 +70,7 @@ public class ResourceService {
 
     }
 
-    public void uploadNewsImages(ResourceRequestDto requestDto) throws IOException {
+    public void uploadNewsImages(ResourceAddRequest requestDto) throws IOException {
 
         for (MultipartFile image : requestDto.getFiles()) {
 
@@ -89,7 +88,7 @@ public class ResourceService {
         }
     }
 
-    public void uploadEventImages(ResourceRequestDto requestDto) throws IOException {
+    public void uploadEventImages(ResourceAddRequest requestDto) throws IOException {
 
         for (MultipartFile image : requestDto.getFiles()) {
 
@@ -105,7 +104,7 @@ public class ResourceService {
         }
     }
 
-    public void uploadEventFiles(ResourceRequestDto requestDto) throws IOException {
+    public void uploadEventFiles(ResourceAddRequest requestDto) throws IOException {
 
         for (MultipartFile file : requestDto.getFiles()) {
 
@@ -164,4 +163,6 @@ public class ResourceService {
             System.out.println("Failed to delete the file");
 
     }
+
+
 }

@@ -1,15 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.response.CountryResponseDto;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Country;
+import com.podium.controller.dto.request.CountryAddRequest;
+import com.podium.controller.dto.response.CountryResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.Country;
 import com.podium.service.CountryService;
+import com.podium.service.dto.CountryAddServiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +26,7 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.findAllCountry)
-    public ResponseEntity<Iterable<CountryResponseDto>> findAllCountry(){
+    public ResponseEntity<Iterable<CountryResponse>> findAllCountry(){
 
         var countries = this.countryService.findAllCountry();
 
@@ -35,7 +34,7 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.findCountryByName)
-    public ResponseEntity<CountryResponseDto> findCountryByName(@PathVariable @PodiumValidVariable String name ){
+    public ResponseEntity<CountryResponse> findCountryByName(@PathVariable @PodiumValidVariable String name ){
 
         var country = this.countryService.findCountryByName(name);
 
@@ -43,7 +42,7 @@ public class CountryController {
     }
 
     @PostMapping(PodiumEndpoint.addCountry)
-    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryRequestDto requestDto){
+    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryAddRequest requestDto){
         this.countryService.addCountry(requestDto);
         return ResponseEntity.ok().body("Country successfully added");
     }
@@ -59,9 +58,19 @@ public class CountryController {
         return ResponseEntity.ok().body("Country successfully deleted");
     }
 
-    private CountryResponseDto convertEntityToResponseDto(Country country){
+    private CountryAddServiceDto convertAddRequestToServiceDto(CountryAddRequest request ){
 
-        return new CountryResponseDto(
+        return new CountryAddServiceDto(request.getCountryId(),
+                request.getName(),
+                request.getPrintableName(),
+                request.getIso3(),
+                request.getNumCode()
+        );
+    }
+
+    private CountryResponse convertEntityToResponseDto(Country country){
+
+        return new CountryResponse(
                 country.getCountryId(),
                 country.getName(),
                 country.getPrintableName(),
@@ -71,9 +80,9 @@ public class CountryController {
 
     }
 
-    private Iterable<CountryResponseDto> convertEntityIterableToResponseDto(Iterable<Country> countries){
+    private Iterable<CountryResponse> convertEntityIterableToResponseDto(Iterable<Country> countries){
 
-        var countryResponses = new ArrayList<CountryResponseDto>();
+        var countryResponses = new ArrayList<CountryResponse>();
 
         countries.forEach(x -> countryResponses.add(this.convertEntityToResponseDto(x)));
 

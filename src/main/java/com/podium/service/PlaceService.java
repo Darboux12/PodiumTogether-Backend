@@ -1,46 +1,37 @@
 package com.podium.service;
 
-import com.podium.model.dto.other.BusinessDayDto;
-import com.podium.model.dto.request.PlaceRequestDto;
-import com.podium.model.entity.*;
-import com.podium.repository.DisciplineRepository;
-import com.podium.repository.PlaceRepository;
-import com.podium.repository.BusinessDayRepository;
-import com.podium.repository.WeekDayRepository;
+import com.podium.dal.entity.Place;
+import com.podium.dal.repository.PlaceRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class PlaceService {
+
+    /*
 
     private PlaceRepository placeRepository;
 
     private DisciplineService disciplineService;
     private LocalizationService localizationService;
 
-    private BusinessDayRepository businessDayRepository;
-    private WeekDayRepository weekDayRepository;
-
-    public PlaceService(PlaceRepository placeRepository, DisciplineRepository disciplineRepository, DisciplineService disciplineService,BusinessDayRepository businessDayRepository, WeekDayRepository weekDayRepository) {
+    public PlaceService(PlaceRepository placeRepository, DisciplineService disciplineService, LocalizationService localizationService) {
         this.placeRepository = placeRepository;
         this.disciplineService = disciplineService;
-        this.businessDayRepository = businessDayRepository;
-        this.weekDayRepository = weekDayRepository;
+        this.localizationService = localizationService;
     }
+
 
     public boolean existByName(String name){
         return this.placeRepository.existsByName(name);
     }
 
-    private Place convertRequestDtoToEntity(PlaceRequestDto requestDto){
+    private Place convertRequestDtoToEntity(PlaceAddRequestDto requestDto){
 
         String name = requestDto.getName();
 
-        Discipline discipline = this.disciplineService.findByDisciplineName(requestDto.getDiscipline());
+        Discipline discipline = this.disciplineService.convertToEntityByDiscipline(requestDto.getDiscipline());
 
-        Localization localization = this.localizationService.findLocalization(requestDto.getLocalizationDto());
+        Localization localization = this.localizationService.
 
 
 
@@ -108,5 +99,5 @@ public class PlaceService {
 
 
     }
-
+ */
 }

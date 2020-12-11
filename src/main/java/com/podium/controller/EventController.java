@@ -22,7 +22,7 @@ public class EventController {
     }
 
     @PostMapping(PodiumEndpoint.addEvent)
-    public ResponseEntity addEvent(@RequestBody EventRequestDto requestDto){
+    public ResponseEntity addEvent(@RequestBody EventAddRequestDto requestDto){
 
         PodiumDtoValidator.getInstance().validateRequestBody(requestDto);
 

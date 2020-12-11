@@ -1,17 +1,13 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.RatingCategoryRequestDto;
-import com.podium.model.dto.response.RatingCategoryResponseDto;
-import com.podium.model.entity.City;
-import com.podium.model.entity.RatingCategory;
-import com.podium.repository.RatingCategoryRepository;
+import com.podium.dal.entity.RatingCategory;
+import com.podium.dal.repository.RatingCategoryRepository;
+import com.podium.service.dto.RatingCategoryAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class RatingCategoryService {
@@ -23,32 +19,16 @@ public class RatingCategoryService {
     }
 
     @Transactional
-    public void addCategory(RatingCategoryRequestDto requestDto){
+    public void addCategory(RatingCategoryAddServiceDto ratingCategoryAddServiceDto){
 
-        if(this.ratingCategoryRepository.existsByCategory(requestDto.getCategory()))
+        if(this.ratingCategoryRepository.existsByCategory(ratingCategoryAddServiceDto.getCategory()))
             throw new PodiumEntityAlreadyExistException("RatingDto Category");
 
-        this.ratingCategoryRepository.save(this.convertRequestDtoToEntity(requestDto));
-    }
-
-    public boolean existCategory(String category){
-        return this.ratingCategoryRepository.existsByCategory(category);
-    }
-
-    public Iterable<RatingCategory> findAll(){
-        return this.ratingCategoryRepository.findAll();
-    }
-
-    public RatingCategory findByCategory(String category){
-
-        return this.ratingCategoryRepository
-                .findByCategory(category).orElseThrow(() ->
-                new PodiumEntityNotFoundException("City"));
-
+        this.ratingCategoryRepository.save(this.convertServiceAddDtoToEntity(ratingCategoryAddServiceDto));
     }
 
     @Transactional
-    public void deleteRatingCategory(String category){
+    public void deleteRatingCategoryByCategory(String category){
 
         if(!this.ratingCategoryRepository.existsByCategory(category))
             throw new PodiumEntityNotFoundException("RatingDto Category");
@@ -56,8 +36,24 @@ public class RatingCategoryService {
         this.ratingCategoryRepository.deleteByCategory(category);
     }
 
-    private RatingCategory convertRequestDtoToEntity(RatingCategoryRequestDto requestDto){
-        return new RatingCategory(requestDto.getCategory());
+    public boolean existCategoryByCategory(String category){
+        return this.ratingCategoryRepository.existsByCategory(category);
+    }
+
+    public Iterable<RatingCategory> findAllCategory(){
+        return this.ratingCategoryRepository.findAll();
+    }
+
+    public RatingCategory findCategoryByCategory(String category){
+
+        return this.ratingCategoryRepository
+                .findByCategory(category).orElseThrow(() ->
+                new PodiumEntityNotFoundException("City"));
+
+    }
+
+    private RatingCategory convertServiceAddDtoToEntity(RatingCategoryAddServiceDto ratingCategoryAddServiceDto){
+        return new RatingCategory(ratingCategoryAddServiceDto.getCategory());
     }
 
 }

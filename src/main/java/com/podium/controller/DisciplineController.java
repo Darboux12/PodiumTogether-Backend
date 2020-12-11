@@ -1,19 +1,16 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.Discipline;
+import com.podium.controller.dto.request.DisciplineAddRequest;
+import com.podium.controller.dto.response.DisciplineResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.Discipline;
 import com.podium.service.DisciplineService;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
-import org.springframework.http.HttpStatus;
+import com.podium.service.dto.DisciplineAddServiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -29,7 +26,7 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findAllDiscipline)
-    public ResponseEntity<Iterable<DisciplineResponseDto>> findAllDiscipline(){
+    public ResponseEntity<Iterable<DisciplineResponse>> findAllDiscipline(){
 
         var disciplines = this.disciplineService.findAllDiscipline();
 
@@ -37,23 +34,23 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findByDisciplineName)
-    public ResponseEntity<DisciplineResponseDto> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+    public ResponseEntity<DisciplineResponse> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
 
-        var dis = this.disciplineService.findByDisciplineName(discipline);
+        var dis = this.disciplineService.findDisciplineByName(discipline);
 
         return ResponseEntity.ok().body(this.convertEntityToResponseDto(dis));
     }
 
     @PostMapping(PodiumEndpoint.addDiscipline)
-    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineRequestDto requestDto) {
-        this.disciplineService.addDiscipline(requestDto);
+    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineAddRequest requestDto) {
+        this.disciplineService.addDiscipline(this.convertAddRequestToServiceModel(requestDto));
         return ResponseEntity.ok().body("Discipline successfully added");
 
     }
 
     @GetMapping(PodiumEndpoint.existDisciplineByName)
     public ResponseEntity<Boolean> existDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
-        return ResponseEntity.ok().body(this.disciplineService.existByDisciplineName(discipline));
+        return ResponseEntity.ok().body(this.disciplineService.existDisciplineByName(discipline));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteDisciplineByName)
@@ -62,17 +59,21 @@ public class DisciplineController {
         return ResponseEntity.ok().body("Discipline successfully deleted");
     }
 
-    private DisciplineResponseDto convertEntityToResponseDto(Discipline discipline){
-        return new DisciplineResponseDto(discipline.getDiscipline());
+    private DisciplineResponse convertEntityToResponseDto(Discipline discipline){
+        return new DisciplineResponse(discipline.getDiscipline());
     }
 
-    private Iterable<DisciplineResponseDto> convertEntityIterableToResponseDto(Iterable<Discipline> disciplines){
+    private Iterable<DisciplineResponse> convertEntityIterableToResponseDto(Iterable<Discipline> disciplines){
 
-        var disciplineResponses = new ArrayList<DisciplineResponseDto>();
+        var disciplineResponses = new ArrayList<DisciplineResponse>();
 
         disciplines.forEach(x -> disciplineResponses.add(this.convertEntityToResponseDto(x)));
 
         return disciplineResponses;
+    }
+
+    private DisciplineAddServiceDto convertAddRequestToServiceModel(DisciplineAddRequest requestDto){
+        return new DisciplineAddServiceDto(requestDto.getDiscipline());
     }
 
 }

@@ -1,11 +1,10 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.entity.Contact;
-import com.podium.model.entity.Subject;
-import com.podium.repository.ContactRepository;
+import com.podium.dal.entity.Contact;
+import com.podium.dal.entity.Subject;
+import com.podium.dal.repository.ContactRepository;
 import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.dto.ContactAddServiceDto;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,9 +22,9 @@ public class ContactService {
     }
 
     @Transactional
-    public void addContact(ContactRequestDto contactRequestDTO){
+    public void addContact(ContactAddServiceDto addServiceDto){
         this.contactRepository
-                .save(this.convertContactRequestDtoToEntity(contactRequestDTO));
+                .save(this.convertServiceAddDtoToEntity(addServiceDto));
     }
 
     @Transactional
@@ -41,11 +40,11 @@ public class ContactService {
         return this.contactRepository.findAll();
     }
 
-    public Iterable<Contact> findAllByEmail(String email){
+    public Iterable<Contact> findAllContactByEmail(String email){
         return this.contactRepository.findAllByUserEmail(email);
     }
 
-    public Iterable<Contact> findAllBySubject(String subject){
+    public Iterable<Contact> findAllContactBySubject(String subject){
 
         var subjectEntity = this.subjectService.findSubjectByName(subject);
 
@@ -57,14 +56,15 @@ public class ContactService {
         return this.contactRepository.existsById(id);
     }
 
-    private Contact convertContactRequestDtoToEntity(ContactRequestDto requestDto){
+    private Contact convertServiceAddDtoToEntity(ContactAddServiceDto addDto){
+
+        Subject subject = this.subjectService.findSubjectByName(addDto.getSubject());
 
         return new Contact(
-                requestDto.getUserEmail(),
-                requestDto.getMessage(),
-                this.subjectService.findSubjectByName(requestDto.getSubject())
+                addDto.getUserEmail(),
+                addDto.getMessage(),
+                subject
         );
-
     }
 
 }

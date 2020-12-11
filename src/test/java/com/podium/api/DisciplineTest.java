@@ -1,12 +1,9 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.controller.dto.request.DisciplineAddRequest;
+import com.podium.controller.dto.response.DisciplineResponse;
 import com.podium.constant.PodiumLimits;
-import com.podium.validator.CityValidator;
 import com.podium.validator.DisciplineValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -66,7 +63,7 @@ class DisciplineTest {
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineRequestDto(discipline),HttpStatus.OK);
+                .add(new DisciplineAddRequest(discipline),HttpStatus.OK);
 
     }
 
@@ -76,7 +73,7 @@ class DisciplineTest {
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddRequest(discipline),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -85,7 +82,7 @@ class DisciplineTest {
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddRequest(discipline),HttpStatus.CONFLICT);
 
     }
 
@@ -95,7 +92,7 @@ class DisciplineTest {
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineRequestDto(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddRequest(discipline),HttpStatus.CONFLICT);
 
     }
 
@@ -106,7 +103,7 @@ class DisciplineTest {
                 .getInstance()
                 .findAll(HttpStatus.OK)
                 .stream()
-                .map(DisciplineResponseDto::getDiscipline)
+                .map(DisciplineResponse::getDiscipline)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue
@@ -118,7 +115,7 @@ class DisciplineTest {
     @MethodSource("provideDisciplinesForTests")
     void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(String discipline){
 
-        DisciplineResponseDto responseDto =
+        DisciplineResponse responseDto =
 
                 DisciplineValidator
                         .getInstance()

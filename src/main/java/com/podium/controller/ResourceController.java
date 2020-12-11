@@ -1,9 +1,9 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.ResourceRequestDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
+import com.podium.controller.dto.request.ResourceAddRequest;
+import com.podium.controller.validation.exception.PodiumEmptyTextException;
+import com.podium.controller.validation.validator.PodiumDtoValidator;
 import com.podium.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -76,18 +76,14 @@ public class ResourceController {
 
     }
 
-    private ResourceRequestDto createUploadRequestDto(String id, List<MultipartFile> images ){
+    private ResourceAddRequest createUploadRequestDto(String id, List<MultipartFile> images ){
 
 
-        ResourceRequestDto requestDto = new ResourceRequestDto();
+        ResourceAddRequest requestDto = new ResourceAddRequest();
         requestDto.setId(id);
         requestDto.setFiles(images);
 
-        try {
-            dtoValidator.validateRequestBody(requestDto);
-        } catch (PodiumEmptyTextException e) {
-            e.printStackTrace();
-        }
+
 
         return requestDto;
     }

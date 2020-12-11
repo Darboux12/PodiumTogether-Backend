@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.repository.UserRepository;
+import com.podium.dal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
 
-    @Autowired
     public JwtUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -23,7 +22,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        com.podium.model.entity.User user = this.userRepository.findByUsername(username).orElse(null);
+        com.podium.dal.entity.User user = this.userRepository.findByUsername(username).orElse(null);
 
         if (user != null)
         {
@@ -33,4 +32,5 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
     }
+
 }

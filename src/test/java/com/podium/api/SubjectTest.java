@@ -3,8 +3,8 @@ package com.podium.api;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.response.SubjectResponseDto;
-import com.podium.model.dto.request.SubjectRequestDto;
+import com.podium.controller.dto.response.SubjectResponse;
+import com.podium.controller.dto.request.SubjectAddRequest;
 import com.podium.specification.TestSpecification;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.SubjectValidator;
@@ -20,13 +20,13 @@ import static io.restassured.RestAssured.given;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class SubjectTest {
 
-    private static SubjectRequestDto subjectRequestDto;
+    private static SubjectAddRequest subjectAddRequest;
 
     @BeforeAll
     static void beforeClass(){
 
         TestLogger.setUp();
-        subjectRequestDto = new SubjectRequestDto("TestSubject");
+        subjectAddRequest = new SubjectAddRequest("TestSubject");
     }
 
     @Test
@@ -34,7 +34,7 @@ class SubjectTest {
 
         SubjectValidator
                 .getInstance()
-                .add(subjectRequestDto,HttpStatus.OK);
+                .add(subjectAddRequest,HttpStatus.OK);
 
     }
 
@@ -43,20 +43,20 @@ class SubjectTest {
 
         SubjectValidator
                 .getInstance()
-                .add(subjectRequestDto,HttpStatus.CONFLICT);
+                .add(subjectAddRequest,HttpStatus.CONFLICT);
     }
 
     @Test
     void T03_addSubjectEmptySubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        String valueHolder = subjectRequestDto.getSubject();
-        subjectRequestDto.setSubject("");
+        String valueHolder = subjectAddRequest.getSubject();
+        subjectAddRequest.setSubject("");
 
         SubjectValidator
                 .getInstance()
-                .add(subjectRequestDto,HttpStatus.CONFLICT);
+                .add(subjectAddRequest,HttpStatus.CONFLICT);
 
-        subjectRequestDto.setSubject(valueHolder);
+        subjectAddRequest.setSubject(valueHolder);
     }
 
     @Test
@@ -64,14 +64,14 @@ class SubjectTest {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minSubjectLength - 1);
 
-        String valueHolder = subjectRequestDto.getSubject();
-        subjectRequestDto.setSubject(toShort);
+        String valueHolder = subjectAddRequest.getSubject();
+        subjectAddRequest.setSubject(toShort);
 
         SubjectValidator
                 .getInstance()
-                .add(subjectRequestDto,HttpStatus.CONFLICT);
+                .add(subjectAddRequest,HttpStatus.CONFLICT);
 
-        subjectRequestDto.setSubject(valueHolder);
+        subjectAddRequest.setSubject(valueHolder);
     }
 
     @Test
@@ -79,26 +79,26 @@ class SubjectTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxSubjectLength + 1);
 
-        String valueHolder = subjectRequestDto.getSubject();
-        subjectRequestDto.setSubject(toLong);
+        String valueHolder = subjectAddRequest.getSubject();
+        subjectAddRequest.setSubject(toLong);
 
         SubjectValidator
                 .getInstance()
-                .add(subjectRequestDto,HttpStatus.CONFLICT);
+                .add(subjectAddRequest,HttpStatus.CONFLICT);
 
-        subjectRequestDto.setSubject(valueHolder);
+        subjectAddRequest.setSubject(valueHolder);
     }
 
     @Test
     void T06_findExistingSubject_ShouldReturnStatus_OK_Response_DTO() throws ParseException {
 
-        SubjectResponseDto addedSubject =
+        SubjectResponse addedSubject =
 
                 SubjectValidator
                         .getInstance()
-                        .findByName(subjectRequestDto.getSubject(),HttpStatus.OK);
+                        .findByName(subjectAddRequest.getSubject(),HttpStatus.OK);
 
-        Assertions.assertEquals(subjectRequestDto.getSubject(),addedSubject.getSubject());
+        Assertions.assertEquals(subjectAddRequest.getSubject(),addedSubject.getSubject());
 
     }
 

@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.CountryRequestDto;
-import com.podium.model.dto.response.CountryResponseDto;
+import com.podium.controller.dto.request.CountryAddRequest;
+import com.podium.controller.dto.response.CountryResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class CountryValidator {
         return instance;
     }
 
-    public void add(CountryRequestDto requestDto, HttpStatus status){
+    public void add(CountryAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -40,9 +40,9 @@ public class CountryValidator {
 
     }
 
-    public List<CountryResponseDto> findAll(){
+    public List<CountryResponse> findAll(){
 
-        CountryResponseDto[] dtos =
+        CountryResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -51,7 +51,7 @@ public class CountryValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)CountryResponseDto[].class);
+                        .extract().as((Type) CountryResponse[].class);
 
         return Arrays.asList(dtos);
 

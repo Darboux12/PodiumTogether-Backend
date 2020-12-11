@@ -1,7 +1,7 @@
 package com.podium.controller.advice;
 
-import com.podium.controller.response.PodiumResponse;
-import com.podium.model.dto.validation.exception.*;
+import com.podium.controller.status.PodiumResponse;
+import com.podium.controller.validation.exception.*;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -216,6 +216,5 @@ public class PodiumControllerAdvice {
                 description
         );
     }
-
 
 }

@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.GenderRequestDto;
-import com.podium.model.dto.response.GenderResponseDto;
+import com.podium.controller.dto.request.GenderAddRequest;
+import com.podium.controller.dto.response.GenderResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class GenderValidator {
         return instance;
     }
 
-    public void add(GenderRequestDto requestDto, HttpStatus status){
+    public void add(GenderAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -40,9 +40,9 @@ public class GenderValidator {
 
     }
 
-    public List<GenderResponseDto> findAll(HttpStatus status){
+    public List<GenderResponse> findAll(HttpStatus status){
 
-        GenderResponseDto[] dtos =
+        GenderResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -51,13 +51,13 @@ public class GenderValidator {
                         .then().assertThat()
                         .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) GenderResponseDto[].class);
+                        .extract().as((Type) GenderResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public GenderResponseDto findByName(String genderName, HttpStatus status){
+    public GenderResponse findByName(String genderName, HttpStatus status){
 
         return
 
@@ -68,7 +68,7 @@ public class GenderValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findGenderByName)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(GenderResponseDto.class);
+                        .extract().as(GenderResponse.class);
 
     }
 

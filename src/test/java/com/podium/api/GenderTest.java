@@ -2,11 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.request.GenderRequestDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.dto.response.GenderResponseDto;
-import com.podium.validator.DisciplineValidator;
+import com.podium.controller.dto.request.GenderAddRequest;
+import com.podium.controller.dto.response.GenderResponse;
 import com.podium.validator.GenderValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -66,7 +63,7 @@ class GenderTest {
 
         GenderValidator
                 .getInstance()
-                .add(new GenderRequestDto(gender),HttpStatus.OK);
+                .add(new GenderAddRequest(gender),HttpStatus.OK);
 
     }
 
@@ -76,7 +73,7 @@ class GenderTest {
 
         GenderValidator
                 .getInstance()
-                .add(new GenderRequestDto(gender),HttpStatus.CONFLICT);
+                .add(new GenderAddRequest(gender),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -85,7 +82,7 @@ class GenderTest {
 
         GenderValidator
                 .getInstance()
-                .add(new GenderRequestDto(gender),HttpStatus.CONFLICT);
+                .add(new GenderAddRequest(gender),HttpStatus.CONFLICT);
 
     }
 
@@ -96,7 +93,7 @@ class GenderTest {
                 .getInstance()
                 .findAll(HttpStatus.OK)
                 .stream()
-                .map(GenderResponseDto::getGender)
+                .map(GenderResponse::getGender)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue
@@ -109,7 +106,7 @@ class GenderTest {
     @MethodSource("provideGendersForTests")
     void T05_Find_Created_Gender_ShouldReturnStatus_OK_Containing_Added_Gender(String gender){
 
-        GenderResponseDto responseDto =
+        GenderResponse responseDto =
 
                 GenderValidator
                         .getInstance()
@@ -159,7 +156,7 @@ class GenderTest {
 
         GenderValidator
                 .getInstance()
-                .add(new GenderRequestDto(gender),HttpStatus.CONFLICT);
+                .add(new GenderAddRequest(gender),HttpStatus.CONFLICT);
 
     }
 
@@ -169,7 +166,7 @@ class GenderTest {
 
         GenderValidator
                 .getInstance()
-                .add(new GenderRequestDto(gender),HttpStatus.CONFLICT);
+                .add(new GenderAddRequest(gender),HttpStatus.CONFLICT);
 
     }
 

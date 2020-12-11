@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
+import com.podium.controller.dto.request.ContactAddRequest;
+import com.podium.controller.dto.response.ContactResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class ContactValidator {
         return instance;
     }
 
-    public void add(ContactRequestDto requestDto, HttpStatus status){
+    public void add(ContactAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -40,9 +40,9 @@ public class ContactValidator {
 
     }
 
-    public List<ContactResponseDto> findAll(){
+    public List<ContactResponse> findAll(){
 
-        ContactResponseDto[] dtos =
+        ContactResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -51,15 +51,15 @@ public class ContactValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)ContactResponseDto[].class);
+                        .extract().as((Type) ContactResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public List<ContactResponseDto> findByEmail(String email, HttpStatus status){
+    public List<ContactResponse> findByEmail(String email, HttpStatus status){
 
-        ContactResponseDto[] dtos =
+        ContactResponse[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
@@ -68,15 +68,15 @@ public class ContactValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findAllContactByEmail)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) ContactResponseDto[].class);
+                        .extract().as((Type) ContactResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public List<ContactResponseDto> findBySubject(String subject, HttpStatus status){
+    public List<ContactResponse> findBySubject(String subject, HttpStatus status){
 
-        ContactResponseDto[] dtos =
+        ContactResponse[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
@@ -85,7 +85,7 @@ public class ContactValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findAllContactBySubject)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) ContactResponseDto[].class);
+                        .extract().as((Type) ContactResponse[].class);
 
         return Arrays.asList(dtos);
 

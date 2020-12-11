@@ -1,18 +1,13 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
-import com.podium.model.entity.City;
-import com.podium.model.entity.Discipline;
-import com.podium.repository.DisciplineRepository;
+import com.podium.dal.entity.Discipline;
+import com.podium.dal.repository.DisciplineRepository;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import org.apache.commons.text.WordUtils;
+import com.podium.service.dto.DisciplineAddServiceDto;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class DisciplineService {
@@ -23,28 +18,13 @@ public class DisciplineService {
         this.disciplineRepository = disciplineRepository;
     }
 
-    public boolean existByDisciplineName(String disciplineName){
-        return this.disciplineRepository.existsByDiscipline(disciplineName);
-    }
-
     @Transactional
-    public void addDiscipline(DisciplineRequestDto requestDto){
+    public void addDiscipline(DisciplineAddServiceDto addServiceDto){
 
-        if(this.disciplineRepository.existsByDiscipline(requestDto.getDiscipline()))
+        if(this.disciplineRepository.existsByDiscipline(addServiceDto.getDiscipline()))
             throw new PodiumEntityAlreadyExistException("Discipline");
 
-        this.disciplineRepository.save(this.convertRequestDtoToEntity(requestDto));
-    }
-
-    public Iterable<Discipline> findAllDiscipline(){
-        return this.disciplineRepository.findAll();
-    }
-
-    public Discipline findByDisciplineName(String disciplineName){
-
-        return this.disciplineRepository
-                .findByDiscipline(disciplineName)
-                .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
+        this.disciplineRepository.save(this.convertServiceAddDtoToEntity(addServiceDto));
     }
 
     @Transactional
@@ -56,10 +36,23 @@ public class DisciplineService {
         this.disciplineRepository.deleteByDiscipline(discipline);
     }
 
-    private Discipline convertRequestDtoToEntity(DisciplineRequestDto requestDto){
-        return new Discipline(requestDto.getDiscipline());
+    public boolean existDisciplineByName(String disciplineName){
+        return this.disciplineRepository.existsByDiscipline(disciplineName);
     }
 
+    public Iterable<Discipline> findAllDiscipline(){
+        return this.disciplineRepository.findAll();
+    }
 
+    public Discipline findDisciplineByName(String disciplineName){
+
+        return this.disciplineRepository
+                .findByDiscipline(disciplineName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
+    }
+
+    private Discipline convertServiceAddDtoToEntity(DisciplineAddServiceDto addServiceDto){
+        return new Discipline(addServiceDto.getDiscipline());
+    }
 
 }

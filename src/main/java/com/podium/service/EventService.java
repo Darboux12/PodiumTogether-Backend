@@ -35,7 +35,7 @@ public class EventService {
     }
 
 
-    public void addEvent(EventRequestDto requestDto){
+    public void addEvent(EventAddRequestDto requestDto){
         this.eventRepository.save(this.convertRequestDtoToEntity(requestDto));
     }
 
@@ -48,7 +48,7 @@ public class EventService {
 
     }
 
-    private Event convertRequestDtoToEntity(EventRequestDto requestDto){
+    private Event convertRequestDtoToEntity(EventAddRequestDto requestDto){
 
         Event event = new Event();
         event.setTitle(requestDto.getTitle());

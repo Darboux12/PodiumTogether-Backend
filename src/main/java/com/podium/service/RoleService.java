@@ -1,6 +1,6 @@
 package com.podium.service;
 
-import com.podium.repository.RoleRepository;
+import com.podium.dal.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,8 +12,8 @@ public class RoleService {
         this.roleRepository = repository;
     }
 
-    public boolean existRole(String role){
-        return this.roleRepository.existsByRole(role);
+    public boolean existRoleByName(String roleName){
+        return this.roleRepository.existsByRole(roleName);
     }
 
 }

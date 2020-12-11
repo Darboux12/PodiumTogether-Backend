@@ -1,22 +1,16 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.City;
-import com.podium.model.entity.Contact;
+import com.podium.controller.dto.request.ContactAddRequest;
+import com.podium.controller.dto.response.ContactResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.Contact;
 import com.podium.service.ContactService;
-import com.podium.service.SubjectService;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
-import org.springframework.http.HttpStatus;
+import com.podium.service.dto.ContactAddServiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -32,8 +26,10 @@ public class ContactController {
     }
 
     @PostMapping(PodiumEndpoint.addContact)
-    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactRequestDto request){
-        this.contactService.addContact(request);
+    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddRequest request){
+
+        this.contactService.addContact(convertAddRequestToServiceDto(request));
+
         return ResponseEntity.ok().body("Contact request successfully sent");
     }
 
@@ -46,33 +42,42 @@ public class ContactController {
     }
 
     @GetMapping(PodiumEndpoint.findAllContactByEmail)
-    public ResponseEntity<Iterable<ContactResponseDto>>
+    public ResponseEntity<Iterable<ContactResponse>>
     findAllContactByEmail(@PathVariable @PodiumValidVariable String email){
 
-        var contacts = this.contactService.findAllByEmail(email);
+        var contacts = this.contactService.findAllContactByEmail(email);
 
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
     @GetMapping(PodiumEndpoint.findAllContactBySubject)
-    public ResponseEntity<Iterable<ContactResponseDto>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject){
+    public ResponseEntity<Iterable<ContactResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject){
 
-        var contacts = this.contactService.findAllBySubject(subject);
+        var contacts = this.contactService.findAllContactBySubject(subject);
 
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
     @GetMapping(PodiumEndpoint.findAllContact)
-    public ResponseEntity<Iterable<ContactResponseDto>> findAllContact(){
+    public ResponseEntity<Iterable<ContactResponse>> findAllContact(){
 
         var contacts = this.contactService.findAllContact();
 
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
-    private ContactResponseDto convertEntityToResponseDto(Contact contact){
+    private ContactAddServiceDto convertAddRequestToServiceDto(ContactAddRequest request ){
 
-        return new ContactResponseDto(
+        return new ContactAddServiceDto(
+                request.getUserEmail(),
+                request.getMessage(),
+                request.getSubject()
+        );
+    }
+
+    private ContactResponse convertEntityToResponseDto(Contact contact){
+
+        return new ContactResponse(
                 contact.getId(),
                 contact.getUserEmail(),
                 contact.getMessage(),
@@ -81,9 +86,9 @@ public class ContactController {
 
     }
 
-    private Iterable<ContactResponseDto> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
+    private Iterable<ContactResponse> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
 
-        var contactResponses = new ArrayList<ContactResponseDto>();
+        var contactResponses = new ArrayList<ContactResponse>();
 
         contacts.forEach(x -> contactResponses.add(this.convertEntityToResponseDto(x)));
 

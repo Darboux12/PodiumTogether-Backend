@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.DisciplineRequestDto;
-import com.podium.model.dto.response.DisciplineResponseDto;
+import com.podium.controller.dto.request.DisciplineAddRequest;
+import com.podium.controller.dto.response.DisciplineResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class DisciplineValidator {
         return instance;
     }
 
-    public void add(DisciplineRequestDto requestDto, HttpStatus status){
+    public void add(DisciplineAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -41,9 +41,9 @@ public class DisciplineValidator {
 
     }
 
-    public List<DisciplineResponseDto> findAll(HttpStatus status){
+    public List<DisciplineResponse> findAll(HttpStatus status){
 
-        DisciplineResponseDto[] dtos =
+        DisciplineResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -52,13 +52,13 @@ public class DisciplineValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) DisciplineResponseDto[].class);
+                        .extract().as((Type) DisciplineResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public DisciplineResponseDto findByName(String disciplineName, HttpStatus status){
+    public DisciplineResponse findByName(String disciplineName, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -70,7 +70,7 @@ public class DisciplineValidator {
                 .then().assertThat()
                 .statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec())
-                .extract().as(DisciplineResponseDto.class);
+                .extract().as(DisciplineResponse.class);
 
         else given()
                 .spec(TestSpecification.buildRequestSpec())

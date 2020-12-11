@@ -1,6 +1,6 @@
 package com.podium.api;
 
-import com.podium.model.dto.response.WeekDayResponseDto;
+import com.podium.controller.dto.response.WeekDayResponse;
 import com.podium.validator.WeekDayValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
@@ -23,7 +23,7 @@ class WeekDayTest {
         List<String> responseDtos =
                 WeekDayValidator
                         .getInstance()
-                        .findAll().stream().map(WeekDayResponseDto::getDay)
+                        .findAll().stream().map(WeekDayResponse::getDay)
                         .collect(Collectors.toList());
 
         Assertions.assertTrue(weekDays.containsAll(responseDtos));

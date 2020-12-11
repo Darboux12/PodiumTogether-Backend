@@ -2,13 +2,13 @@ package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.JwtRequestDto;
-import com.podium.model.dto.response.ExpirationDateTokenResponse;
-import com.podium.model.dto.response.JwtResponseDto;
-import com.podium.model.dto.response.UsernameFromTokenResponseDto;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
+import com.podium.controller.dto.request.JwtRequest;
+import com.podium.controller.dto.response.ExpirationDateTokenResponse;
+import com.podium.controller.dto.response.JwtResponse;
+import com.podium.controller.dto.response.UsernameFromTokenResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -36,29 +36,29 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(PodiumEndpoint.authenticate)
-    public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody @PodiumValidBody JwtRequestDto jwtRequestDto){
+    public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody @PodiumValidBody JwtRequest jwtRequest){
 
         final UserDetails userDetails =
-                userDetailsService.loadUserByUsername(jwtRequestDto.getUsername());
+                userDetailsService.loadUserByUsername(jwtRequest.getUsername());
 
         final boolean accessPermission = this.passwordEncoder.matches(
-                jwtRequestDto.getPassword(),
+                jwtRequest.getPassword(),
                 userDetails.getPassword());
 
         if(accessPermission)
-            return ResponseEntity.ok(new JwtResponseDto(jwtTokenUtil.generateToken(userDetails)));
+            return ResponseEntity.ok(new JwtResponse(jwtTokenUtil.generateToken(userDetails)));
 
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Authentication failed");
     }
 
     @PostMapping(PodiumEndpoint.authenticateNoToken)
-    public ResponseEntity<JwtResponseDto> authenticateWithoutToken(@RequestBody @PodiumValidBody JwtRequestDto jwtRequestDto){
+    public ResponseEntity<JwtResponse> authenticateWithoutToken(@RequestBody @PodiumValidBody JwtRequest jwtRequest){
 
         final UserDetails userDetails =
-                userDetailsService.loadUserByUsername(jwtRequestDto.getUsername());
+                userDetailsService.loadUserByUsername(jwtRequest.getUsername());
 
         final boolean accessPermission = this.passwordEncoder.matches(
-                jwtRequestDto.getPassword(),
+                jwtRequest.getPassword(),
                 userDetails.getPassword());
 
         if(accessPermission)
@@ -68,11 +68,11 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(PodiumEndpoint.findUsernameFromToken)
-    public ResponseEntity<UsernameFromTokenResponseDto> findUsernameFromToken(@RequestParam("token") @PodiumValidVariable String token){
+    public ResponseEntity<UsernameFromTokenResponse> findUsernameFromToken(@RequestParam("token") @PodiumValidVariable String token){
 
         try{
                 String username = this.jwtTokenUtil.getUsernameFromToken(token);
-                UsernameFromTokenResponseDto response = new UsernameFromTokenResponseDto();
+                UsernameFromTokenResponse response = new UsernameFromTokenResponse();
                 response.setUsername(username);
                 return ResponseEntity.ok().body(response);
         }

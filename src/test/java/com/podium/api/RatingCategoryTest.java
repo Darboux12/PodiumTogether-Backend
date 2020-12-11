@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.RatingCategoryRequestDto;
-import com.podium.model.dto.response.RatingCategoryResponseDto;
+import com.podium.controller.dto.request.RatingCategoryAddRequest;
+import com.podium.controller.dto.response.RatingCategoryResponse;
 import com.podium.validator.RatingCategoryValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -61,7 +61,7 @@ class RatingCategoryTest {
 
         RatingCategoryValidator
                 .getInstance()
-                .add(new RatingCategoryRequestDto(category), HttpStatus.OK);
+                .add(new RatingCategoryAddRequest(category), HttpStatus.OK);
     }
 
     @ParameterizedTest
@@ -69,7 +69,7 @@ class RatingCategoryTest {
     void T02_Add_Same_Category_Again_Should_Return_Status_CONFLICT(String category){
         RatingCategoryValidator
                 .getInstance()
-                .add(new RatingCategoryRequestDto(category),HttpStatus.CONFLICT);
+                .add(new RatingCategoryAddRequest(category),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -78,7 +78,7 @@ class RatingCategoryTest {
 
         RatingCategoryValidator
                 .getInstance()
-                .add(new RatingCategoryRequestDto(category),HttpStatus.CONFLICT);
+                .add(new RatingCategoryAddRequest(category),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -87,7 +87,7 @@ class RatingCategoryTest {
 
         RatingCategoryValidator
                 .getInstance()
-                .add(new RatingCategoryRequestDto(category),HttpStatus.CONFLICT);
+                .add(new RatingCategoryAddRequest(category),HttpStatus.CONFLICT);
     }
 
     @Test
@@ -97,7 +97,7 @@ class RatingCategoryTest {
                 .getInstance()
                 .findAll(HttpStatus.OK)
                 .stream()
-                .map(RatingCategoryResponseDto::getCategory)
+                .map(RatingCategoryResponse::getCategory)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue

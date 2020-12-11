@@ -1,16 +1,13 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.entity.City;
-import com.podium.repository.CityRepository;
+import com.podium.dal.entity.City;
+import com.podium.dal.repository.CityRepository;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.dto.CityAddServiceDto;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CityService {
@@ -21,7 +18,25 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
-    public boolean existByCityName(String cityName){
+    @Transactional
+    public void addCity(CityAddServiceDto cityAddServiceDto){
+
+        if(this.cityRepository.existsByCity(cityAddServiceDto.getCity()))
+            throw new PodiumEntityAlreadyExistException("City");
+
+        this.cityRepository.save(this.convertServiceDtoToEntity(cityAddServiceDto));
+    }
+
+    @Transactional
+    public void deleteCityByName(String cityName){
+
+        if(!this.cityRepository.existsByCity(cityName))
+            throw new PodiumEntityNotFoundException("City");
+
+        this.cityRepository.deleteByCity(cityName);
+    }
+
+    public boolean existCityByName(String cityName){
         return this.cityRepository.existsByCity(cityName);
     }
 
@@ -36,26 +51,8 @@ public class CityService {
         return this.cityRepository.findAll();
     }
 
-    @Transactional
-    public void addCity(CityRequestDto requestDto){
-
-        if(this.cityRepository.existsByCity(requestDto.getCity()))
-            throw new PodiumEntityAlreadyExistException("City");
-
-        this.cityRepository.save(this.convertRequestDtoToEntity(requestDto));
-    }
-
-    @Transactional
-    public void deleteCityByName(String name){
-
-        if(!this.cityRepository.existsByCity(name))
-            throw new PodiumEntityNotFoundException("City");
-
-        this.cityRepository.deleteByCity(name);
-    }
-
-    private City convertRequestDtoToEntity(CityRequestDto requestDto){
-        return new City(requestDto.getCity());
+    private City convertServiceDtoToEntity(CityAddServiceDto cityAddServiceDto){
+        return new City(cityAddServiceDto.getCity());
     }
 
 }

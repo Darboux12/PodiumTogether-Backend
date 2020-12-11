@@ -2,10 +2,10 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.PlaceRequestDto;
-import com.podium.model.dto.other.BusinessDayDto;
-import com.podium.model.dto.other.LocalizationDto;
-import com.podium.model.dto.other.RatingDto;
+import com.podium.controller.dto.request.PlaceAddRequest;
+import com.podium.controller.dto.other.BusinessDayDto;
+import com.podium.controller.dto.other.LocalizationDto;
+import com.podium.controller.dto.other.RatingDto;
 import com.podium.validator.PlaceValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class PlaceTest {
 
-    private static PlaceRequestDto requestDto;
+    private static PlaceAddRequest requestDto;
     private static String textValueHolder;
     private static int intValueHolder;
     private static double doubleValueHolder;
@@ -72,7 +72,7 @@ import java.util.stream.Stream;
                 new RatingDto("Price",5)
         );
 
-        requestDto = new PlaceRequestDto(
+        requestDto = new PlaceAddRequest(
                 "Test Place Name",
                 "Football",
                 localizationDto,

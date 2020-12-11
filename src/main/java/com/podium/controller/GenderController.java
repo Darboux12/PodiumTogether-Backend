@@ -1,17 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.GenderRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.response.GenderResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.City;
-import com.podium.model.entity.Gender;
+import com.podium.controller.dto.request.GenderAddRequest;
+import com.podium.controller.dto.response.GenderResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.Gender;
 import com.podium.service.GenderService;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
+import com.podium.service.dto.GenderAddServiceDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +28,7 @@ public class GenderController {
     }
 
     @GetMapping(PodiumEndpoint.findAllGender)
-    public ResponseEntity<Iterable<GenderResponseDto>> findAllGender(){
+    public ResponseEntity<Iterable<GenderResponse>> findAllGender(){
 
         var genders = this.genderService.findAllGenders();
 
@@ -39,7 +36,7 @@ public class GenderController {
     }
 
     @GetMapping(PodiumEndpoint.findGenderByName)
-    public ResponseEntity<GenderResponseDto> findGenderByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity<GenderResponse> findGenderByName(@PathVariable @PodiumValidVariable String name){
 
         var gender = this.genderService.findByGenderName(name);
 
@@ -49,26 +46,22 @@ public class GenderController {
     }
 
     @PostMapping(PodiumEndpoint.addGender)
-    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderRequestDto requestDto){
+    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderAddRequest requestDto){
 
-        if(this.genderService.existByGenderName(requestDto.getGender()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Gender already exists");
+        this.genderService.addGender(this.convertAddRequestToServiceDto(requestDto));
 
-        this.genderService.addGender(requestDto);
         return ResponseEntity.ok().body("Gender successfully added");
-
     }
 
     @GetMapping(PodiumEndpoint.existGenderByName)
     public ResponseEntity existGenderByName(@PathVariable @PodiumValidVariable String name){
-            return ResponseEntity.ok().body(this.genderService.existByGenderName(name));
+            return ResponseEntity.ok().body(this.genderService.existGenderByName(name));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteGenderByName)
     public ResponseEntity deleteGenderByName(@PathVariable @PodiumValidVariable String name){
 
-        if(!this.genderService.existByGenderName(name))
+        if(!this.genderService.existGenderByName(name))
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "Gender not found");
 
@@ -76,13 +69,17 @@ public class GenderController {
         return ResponseEntity.ok().body("Gender successfully deleted");
     }
 
-    private GenderResponseDto convertEntityToResponseDto(Gender gender){
-        return new GenderResponseDto(gender.getGender());
+    private GenderAddServiceDto convertAddRequestToServiceDto(GenderAddRequest request){
+        return new GenderAddServiceDto(request.getGender());
     }
 
-    private Iterable<GenderResponseDto> convertEntityIterableToResponseDto(Iterable<Gender> genders){
+    private GenderResponse convertEntityToResponseDto(Gender gender){
+        return new GenderResponse(gender.getGender());
+    }
 
-        var genderResponses = new ArrayList<GenderResponseDto>();
+    private Iterable<GenderResponse> convertEntityIterableToResponseDto(Iterable<Gender> genders){
+
+        var genderResponses = new ArrayList<GenderResponse>();
 
         genders.forEach(x -> genderResponses.add(this.convertEntityToResponseDto(x)));
 

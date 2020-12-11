@@ -1,16 +1,16 @@
 package com.podium.service;
 
-import com.podium.model.dto.request.ProfileUpdateRequestDto;
-import com.podium.model.dto.response.UserResponseDto;
-import com.podium.model.entity.Country;
-import com.podium.model.entity.PodiumResource;
-import com.podium.model.entity.Role;
-import com.podium.model.dto.request.SignUpRequestDto;
-import com.podium.model.entity.User;
-import com.podium.model.dto.other.PodiumFileDto;
-import com.podium.repository.CountryRepository;
-import com.podium.repository.RoleRepository;
-import com.podium.repository.UserRepository;
+import com.podium.controller.dto.request.ProfileUpdateRequest;
+import com.podium.controller.dto.response.UserResponse;
+import com.podium.dal.entity.Country;
+import com.podium.dal.entity.PodiumResource;
+import com.podium.dal.entity.Role;
+import com.podium.dal.entity.User;
+import com.podium.controller.dto.other.PodiumFileDto;
+import com.podium.dal.repository.CountryRepository;
+import com.podium.dal.repository.RoleRepository;
+import com.podium.dal.repository.UserRepository;
+import com.podium.service.dto.SignUpServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +39,7 @@ public class UserService {
     }
 
     @Transactional
-    public void addUser(SignUpRequestDto requestDto){
+    public void addUser(SignUpServiceDto requestDto){
 
         if(this.userRepository.existsByUsername(requestDto.getUsername()))
             throw new PodiumEntityAlreadyExistException("User with given username");
@@ -50,10 +50,31 @@ public class UserService {
         if(!this.countryRepository.existsByName(requestDto.getCountry()))
             throw new PodiumEntityNotFoundException("Country");
 
-        this.userRepository.save(this.convertSignUpRequestDtoToEntity(requestDto));
+        this.userRepository.save(this.convertSignUpDtoToEntity(requestDto));
     }
 
-    public UserResponseDto findUserByUsername(String username){
+    @Transactional
+    public void updateUser(ProfileUpdateRequest requestDto){
+
+        if(!this.isUpdateDataConsistent(requestDto))
+            throw new PodiumEntityAlreadyExistException("User with given username or email");
+
+        if(!this.countryRepository.existsByName(requestDto.getCountry()))
+            throw new PodiumEntityNotFoundException("Country");
+
+        this.userRepository.save(this.convertProfileUpdateRequestDtoToEntity(requestDto));
+    }
+
+    @Transactional
+    public void deleteUserByUsername(String username){
+
+        if(!this.userRepository.existsByUsername(username))
+            throw new PodiumEntityNotFoundException("User with given username");
+
+        this.userRepository.deleteByUsername(username);
+    }
+
+    public UserResponse findUserByUsername(String username){
 
         User user = this.userRepository.findByUsername(username).orElseThrow(() ->
 
@@ -62,7 +83,7 @@ public class UserService {
        return this.convertEntityToResponseDto(user);
     }
 
-    public UserResponseDto findUserById(int id){
+    public UserResponse findUserById(int id){
 
         User user = this.userRepository.findById(id).orElseThrow(() ->
 
@@ -71,9 +92,9 @@ public class UserService {
         return this.convertEntityToResponseDto(user);
     }
 
-    public Iterable<UserResponseDto> findAllUsers(){
+    public Iterable<UserResponse> findAllUsers(){
 
-        List<UserResponseDto> responseDtos = new ArrayList<>();
+        List<UserResponse> responseDtos = new ArrayList<>();
 
         this.userRepository
                 .findAll()
@@ -84,9 +105,9 @@ public class UserService {
         return responseDtos;
     }
 
-    public Iterable<UserResponseDto> findAllByRole(String roleName){
+    public Iterable<UserResponse> findAllByRole(String roleName){
 
-        List<UserResponseDto> responseDtos = new ArrayList<>();
+        List<UserResponse> responseDtos = new ArrayList<>();
 
         Role role = this.roleRepository
                 .findByRole("subscriber")
@@ -101,9 +122,9 @@ public class UserService {
         return responseDtos;
     }
 
-    public Iterable<UserResponseDto> findAllByCountry(String countryName){
+    public Iterable<UserResponse> findAllByCountry(String countryName){
 
-        List<UserResponseDto> responseDtos = new ArrayList<>();
+        List<UserResponse> responseDtos = new ArrayList<>();
 
         Country country =
                 this.countryRepository
@@ -127,28 +148,7 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    @Transactional
-    public void updateUser(ProfileUpdateRequestDto requestDto){
-
-        if(!this.isUpdateDataConsistent(requestDto))
-            throw new PodiumEntityAlreadyExistException("User with given username or email");
-
-        if(!this.countryRepository.existsByName(requestDto.getCountry()))
-            throw new PodiumEntityNotFoundException("Country");
-
-        this.userRepository.save(this.convertProfileUpdateRequestDtoToEntity(requestDto));
-    }
-
-    @Transactional
-    public void deleteUserByUsername(String username){
-
-        if(!this.userRepository.existsByUsername(username))
-            throw new PodiumEntityNotFoundException("User with given username");
-
-        this.userRepository.deleteByUsername(username);
-    }
-
-    private boolean isUpdateDataConsistent(ProfileUpdateRequestDto requestDto){
+    private boolean isUpdateDataConsistent(ProfileUpdateRequest requestDto){
 
         User userById = this.userRepository.findById(requestDto.getId()).orElse(null);
 
@@ -176,7 +176,7 @@ public class UserService {
 
     }
 
-    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequestDto requestDto){
+    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequest requestDto){
 
         User user = this.userRepository
                 .findById(requestDto.getId())
@@ -197,11 +197,11 @@ public class UserService {
         return user;
     }
 
-    private User convertSignUpRequestDtoToEntity(SignUpRequestDto requestDto){
+    private User convertSignUpDtoToEntity(SignUpServiceDto signUpServiceDto){
 
         Country country =
                 this.countryRepository
-                        .findByName(requestDto.getCountry())
+                        .findByName(signUpServiceDto.getCountry())
                         .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
         Role role = this.roleRepository
@@ -212,20 +212,20 @@ public class UserService {
         roles.add(role);
 
         return new User(
-                requestDto.getUsername(),
-                requestDto.getEmail(),
-                passwordEncoder.encode(requestDto.getPassword()),
+                signUpServiceDto.getUsername(),
+                signUpServiceDto.getEmail(),
+                passwordEncoder.encode(signUpServiceDto.getPassword()),
                 country,
                 roles,
-                requestDto.getBirthday(),
+                signUpServiceDto.getBirthday(),
                 null,
                 ""
         );
     }
 
-    private UserResponseDto convertEntityToResponseDto(User user){
+    private UserResponse convertEntityToResponseDto(User user){
 
-            return new UserResponseDto(
+            return new UserResponse(
                     user.getId(),
                     user.getUsername(),
                     user.getEmail(),
@@ -261,4 +261,5 @@ public class UserService {
         return null;
 
     }
+
 }

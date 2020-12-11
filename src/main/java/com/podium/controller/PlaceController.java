@@ -1,9 +1,9 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.PlaceRequestDto;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
+import com.podium.controller.dto.request.PlaceAddRequest;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.service.PlaceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +23,7 @@ public class PlaceController {
     }
 
     @PostMapping(PodiumEndpoint.addPlace)
-    public ResponseEntity addPlace(@RequestBody @PodiumValidBody PlaceRequestDto requestDto) {
+    public ResponseEntity addPlace(@RequestBody @PodiumValidBody PlaceAddRequest requestDto) {
 
         return ResponseEntity.ok().build();
 

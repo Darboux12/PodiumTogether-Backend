@@ -2,9 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
+import com.podium.controller.dto.request.CityAddRequest;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
+import com.podium.controller.dto.response.CityResponse;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.params.provider.Arguments;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class CityValidator {
         return instance;
     }
 
-    public void add(CityRequestDto requestDto, HttpStatus status){
+    public void add(CityAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -51,9 +51,9 @@ public class CityValidator {
 
     }
 
-    public List<CityResponseDto> findAll(){
+    public List<CityResponse> findAll(){
 
-        CityResponseDto[] dtos =
+        CityResponse[] dtos =
 
         given()
           .spec(TestSpecification.buildRequestSpec())
@@ -62,13 +62,13 @@ public class CityValidator {
           .then().assertThat()
           .statusCode(HttpStatus.OK.value())
           .spec(TestSpecification.buildResponseSpec())
-          .extract().as((Type)CityResponseDto[].class);
+          .extract().as((Type) CityResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public CityResponseDto findByName(String cityName, HttpStatus status){
+    public CityResponse findByName(String cityName, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -79,7 +79,7 @@ public class CityValidator {
                   .get(PodiumPath.server + PodiumEndpoint.findCityByName)
                   .then().assertThat().statusCode(status.value())
                   .spec(TestSpecification.buildResponseSpec())
-                  .extract().as(CityResponseDto.class);
+                  .extract().as(CityResponse.class);
 
         else given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)

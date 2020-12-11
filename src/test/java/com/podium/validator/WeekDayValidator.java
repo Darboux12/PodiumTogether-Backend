@@ -2,7 +2,7 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.response.WeekDayResponseDto;
+import com.podium.controller.dto.response.WeekDayResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -26,9 +26,9 @@ public class WeekDayValidator {
         return instance;
     }
 
-    public List<WeekDayResponseDto> findAll(){
+    public List<WeekDayResponse> findAll(){
 
-        WeekDayResponseDto[] dtos =
+        WeekDayResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -37,7 +37,7 @@ public class WeekDayValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) WeekDayResponseDto[].class);
+                        .extract().as((Type) WeekDayResponse[].class);
 
         return Arrays.asList(dtos);
 

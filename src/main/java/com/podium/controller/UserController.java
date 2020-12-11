@@ -1,20 +1,17 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.ProfileUpdateRequestDto;
-import com.podium.model.dto.request.SignUpRequestDto;
-import com.podium.model.dto.response.UserResponseDto;
-import com.podium.model.dto.validation.exception.PodiumEmptyTextException;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.service.CountryService;
+import com.podium.controller.dto.request.ProfileUpdateRequest;
+import com.podium.controller.dto.request.SignUpRequest;
+import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.service.UserService;
-import com.podium.model.dto.validation.validator.PodiumDtoValidator;
+import com.podium.service.dto.SignUpServiceDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -28,18 +25,18 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.addUser)
-    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequestDto request){
-        this.userService.addUser(request);
+    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequest request){
+        this.userService.addUser(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("User successfully signed up");
     }
 
     @GetMapping(PodiumEndpoint.findUserByUsername)
-    public ResponseEntity<UserResponseDto> findUser(@PathVariable String username){
+    public ResponseEntity<UserResponse> findUser(@PathVariable String username){
             return ResponseEntity.status(HttpStatus.OK).body(this.userService.findUserByUsername(username));
     }
 
     @GetMapping(PodiumEndpoint.findAllUsers)
-    public ResponseEntity<Iterable<UserResponseDto>> findAllUsers(){
+    public ResponseEntity<Iterable<UserResponse>> findAllUsers(){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.userService.findAllUsers());
@@ -63,9 +60,20 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.updateUserProfile)
-    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequestDto request){
+    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequest request){
         this.userService.updateUser(request);
         return ResponseEntity.ok().build();
     }
+
+    private SignUpServiceDto convertAddRequestToServiceDto(SignUpRequest request){
+        return new SignUpServiceDto(
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getCountry(),
+                request.getBirthday()
+        );
+    }
+
 
 }

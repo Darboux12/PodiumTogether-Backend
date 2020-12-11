@@ -2,9 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.SubjectRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
-import com.podium.model.dto.response.SubjectResponseDto;
+import com.podium.controller.dto.request.SubjectAddRequest;
+import com.podium.controller.dto.response.ContactResponse;
+import com.podium.controller.dto.response.SubjectResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class SubjectValidator {
         return instance;
     }
 
-    public void add(SubjectRequestDto requestDto, HttpStatus status){
+    public void add(SubjectAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -42,9 +42,9 @@ public class SubjectValidator {
 
     }
 
-    public List<SubjectResponseDto> findAll(){
+    public List<SubjectResponse> findAll(){
 
-        SubjectResponseDto[] dtos =
+        SubjectResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -53,13 +53,13 @@ public class SubjectValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)ContactResponseDto[].class);
+                        .extract().as((Type) ContactResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public SubjectResponseDto findByName(String subjectName, HttpStatus status){
+    public SubjectResponse findByName(String subjectName, HttpStatus status){
 
         return
 
@@ -71,7 +71,7 @@ public class SubjectValidator {
                         .then().assertThat()
                         .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(SubjectResponseDto.class);
+                        .extract().as(SubjectResponse.class);
 
     }
 

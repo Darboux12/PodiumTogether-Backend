@@ -1,13 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.request.CityRequestDto;
-import com.podium.model.dto.response.CityResponseDto;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.City;
+import com.podium.controller.dto.request.CityAddRequest;
+import com.podium.controller.dto.response.CityResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.City;
 import com.podium.service.CityService;
+import com.podium.service.dto.CityAddServiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class CityController{
     }
 
     @GetMapping(PodiumEndpoint.findAllCity)
-    public ResponseEntity<Iterable<CityResponseDto>> findAllCity(){
+    public ResponseEntity<Iterable<CityResponse>> findAllCity(){
 
         var cities = this.cityService.findAllCity();
 
@@ -33,7 +34,7 @@ public class CityController{
     }
 
     @GetMapping(PodiumEndpoint.findCityByName)
-    public ResponseEntity<CityResponseDto> findCityByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity<CityResponse> findCityByName(@PathVariable @PodiumValidVariable String name){
 
         var city = this.cityService.findCityByName(name);
 
@@ -41,9 +42,9 @@ public class CityController{
     }
 
     @PostMapping(PodiumEndpoint.addCity)
-    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityRequestDto requestDto){
+    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddRequest requestDto){
 
-        this.cityService.addCity(requestDto);
+        this.cityService.addCity(this.convertAddRequestToServiceDto(requestDto));
 
         return ResponseEntity.ok().body("City successfully added");
     }
@@ -51,7 +52,7 @@ public class CityController{
     @GetMapping(PodiumEndpoint.existCityByName)
     public ResponseEntity<Boolean> existCityByName(@PathVariable @PodiumValidVariable String name){
 
-        return ResponseEntity.ok().body(this.cityService.existByCityName(name));
+        return ResponseEntity.ok().body(this.cityService.existCityByName(name));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCityByName)
@@ -62,13 +63,17 @@ public class CityController{
         return ResponseEntity.ok().body("City successfully deleted");
     }
 
-    private CityResponseDto convertEntityToResponseDto(City city){
-        return new CityResponseDto(city.getCity());
+    private CityAddServiceDto convertAddRequestToServiceDto(CityAddRequest request){
+        return new CityAddServiceDto(request.getCity());
     }
 
-    private Iterable<CityResponseDto> convertEntityIterableToResponseDto(Iterable<City> cities){
+    private CityResponse convertEntityToResponseDto(City city){
+        return new CityResponse(city.getCity());
+    }
 
-        var cityResponses = new ArrayList<CityResponseDto>();
+    private Iterable<CityResponse> convertEntityIterableToResponseDto(Iterable<City> cities){
+
+        var cityResponses = new ArrayList<CityResponse>();
 
         cities.forEach(x -> cityResponses.add(this.convertEntityToResponseDto(x)));
 

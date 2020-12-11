@@ -2,9 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
+import com.podium.controller.dto.request.EventAddRequest;
 import com.podium.specification.TestSpecification;
-import com.podium.model.dto.request.EventRequestDto;
-import com.podium.model.dto.response.EventResponseDto;
+import com.podium.controller.dto.response.EventResponse;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
@@ -27,7 +27,7 @@ public class EventValidator {
         return instance;
     }
 
-    public void add(EventRequestDto requestDto, HttpStatus status){
+    public void add(EventAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -40,9 +40,9 @@ public class EventValidator {
 
     }
 
-    public List<EventResponseDto> findAll(){
+    public List<EventResponse> findAll(){
 
-        EventResponseDto[] dtos =
+        EventResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -51,13 +51,13 @@ public class EventValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)EventResponseDto[].class);
+                        .extract().as((Type) EventResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public EventResponseDto findByTitle(String eventTitle, HttpStatus status){
+    public EventResponse findByTitle(String eventTitle, HttpStatus status){
 
         return
 
@@ -68,7 +68,7 @@ public class EventValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findCityByName)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(EventResponseDto.class);
+                        .extract().as(EventResponse.class);
 
     }
 

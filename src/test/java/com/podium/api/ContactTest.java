@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.ContactRequestDto;
-import com.podium.model.dto.response.ContactResponseDto;
+import com.podium.controller.dto.request.ContactAddRequest;
+import com.podium.controller.dto.response.ContactResponse;
 import com.podium.validator.ContactValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -25,23 +25,23 @@ class ContactTest {
         TestLogger.setUp();
     }
 
-    private static Stream<ContactRequestDto> provideContactsForTests(){
+    private static Stream<ContactAddRequest> provideContactsForTests(){
 
         return Stream.of(
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_ONE@gmail.pl",
                         "Technical",
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_TWO@gmail.pl",
                         "Feedback",
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_THREE@gmail.pl",
                         "Review",
                         "Test contact message"
@@ -51,35 +51,35 @@ class ContactTest {
 
     }
 
-    private static Stream<ContactRequestDto> provideEmptyContactsNamesForTests(){
+    private static Stream<ContactAddRequest> provideEmptyContactsNamesForTests(){
 
         return Stream.of(
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "     ",
                         "Technical",
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_TWO@gmail.pl",
                         "   ",
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_THREE@gmail.pl",
                         "Technical",
                         ""
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "   ",
                         "",
                         "   "
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "       ",
                         "           ",
                         "             "
@@ -89,35 +89,35 @@ class ContactTest {
 
     }
 
-    private static Stream<ContactRequestDto> provideTooLongAndTooShortContactsValuesForTests(){
+    private static Stream<ContactAddRequest> provideTooLongAndTooShortContactsValuesForTests(){
 
         return Stream.of(
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1),
                         "Technical",
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_ONE@gmail.pl",
                         StringUtils.repeat("*", PodiumLimits.maxSubjectLength + 1),
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_ONE@gmail.pl",
                         StringUtils.repeat("*", PodiumLimits.minSubjectLength - 1),
                         "Test contact message"
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_ONE@gmail.pl",
                         "Technical",
                         StringUtils.repeat("*", PodiumLimits.maxContactMessageLength + 1)
                 ),
 
-                new ContactRequestDto(
+                new ContactAddRequest(
                         "TEST_ONE@gmail.pl",
                         "Technical",
                         StringUtils.repeat("*", PodiumLimits.minContactMessageLength - 1)
@@ -129,7 +129,7 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T01_Add_Valid_Contacts_Return_Status_OK(ContactRequestDto requestDto){
+    void T01_Add_Valid_Contacts_Return_Status_OK(ContactAddRequest requestDto){
 
         ContactValidator
                 .getInstance()
@@ -138,13 +138,13 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T02_Find_Contacts_By_Email_Return_Status_OK_Iterable_Containing_Added_DTO(ContactRequestDto requestDto){
+    void T02_Find_Contacts_By_Email_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddRequest requestDto){
 
         boolean isPresent = ContactValidator
                 .getInstance()
                 .findByEmail(requestDto.getUserEmail(),HttpStatus.OK)
                 .stream()
-                .map(ContactResponseDto::getEmail)
+                .map(ContactResponse::getEmail)
                 .anyMatch(requestDto.getUserEmail()::equals);
 
         Assertions.assertTrue(isPresent);
@@ -153,7 +153,7 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T03_Find_Contacts_By_Subject_Return_Status_OK_Iterable_Containing_Added_DTO(ContactRequestDto requestDto){
+    void T03_Find_Contacts_By_Subject_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddRequest requestDto){
 
         boolean isPresent =
 
@@ -161,7 +161,7 @@ class ContactTest {
                 .getInstance()
                 .findBySubject(requestDto.getSubject(),HttpStatus.OK)
                 .stream()
-                .map(ContactResponseDto::getEmail)
+                .map(ContactResponse::getEmail)
                 .anyMatch(requestDto.getUserEmail()::equals);
 
         Assertions.assertTrue(isPresent);
@@ -172,13 +172,13 @@ class ContactTest {
     void T04_Find_All_Contact_Return_Status_OK_Iterable_Containing_Added_DTO(){
 
         List<String> expectedEmails = provideContactsForTests()
-                .map(ContactRequestDto::getUserEmail).collect(Collectors.toList());
+                .map(ContactAddRequest::getUserEmail).collect(Collectors.toList());
 
         List<String> actualEmails = ContactValidator
                 .getInstance()
                 .findAll()
                 .stream()
-                .map(ContactResponseDto::getEmail)
+                .map(ContactResponse::getEmail)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue(actualEmails.containsAll(expectedEmails));
@@ -186,9 +186,9 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T05_Delete_Contacts_Should_Return_Status_OK(ContactRequestDto requestDto){
+    void T05_Delete_Contacts_Should_Return_Status_OK(ContactAddRequest requestDto){
 
-        ContactResponseDto contact = ContactValidator.getInstance()
+        ContactResponse contact = ContactValidator.getInstance()
                 .findByEmail
                         (requestDto.getUserEmail(),HttpStatus.OK)
                 .stream()
@@ -216,7 +216,7 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideEmptyContactsNamesForTests")
-    void T07_Add_Contact_Empty_Field_Should_Return_Status_CONFLICT(ContactRequestDto requestDto){
+    void T07_Add_Contact_Empty_Field_Should_Return_Status_CONFLICT(ContactAddRequest requestDto){
 
         ContactValidator
                 .getInstance()
@@ -226,7 +226,7 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideTooLongAndTooShortContactsValuesForTests")
-    void T08_Add_Contact_Too_Long_Too_Short_Values_Should_Return_Status_CONFLICT(ContactRequestDto requestDto){
+    void T08_Add_Contact_Too_Long_Too_Short_Values_Should_Return_Status_CONFLICT(ContactAddRequest requestDto){
 
         ContactValidator
                 .getInstance()

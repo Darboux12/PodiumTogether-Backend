@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.RatingCategoryRequestDto;
-import com.podium.model.dto.response.RatingCategoryResponseDto;
+import com.podium.controller.dto.request.RatingCategoryAddRequest;
+import com.podium.controller.dto.response.RatingCategoryResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class RatingCategoryValidator {
         return instance;
     }
 
-    public void add(RatingCategoryRequestDto requestDto, HttpStatus status){
+    public void add(RatingCategoryAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -41,9 +41,9 @@ public class RatingCategoryValidator {
 
     }
 
-    public List<RatingCategoryResponseDto> findAll(HttpStatus status){
+    public List<RatingCategoryResponse> findAll(HttpStatus status){
 
-        RatingCategoryResponseDto[] dtos =
+        RatingCategoryResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -52,13 +52,13 @@ public class RatingCategoryValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) RatingCategoryResponseDto[].class);
+                        .extract().as((Type) RatingCategoryResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public RatingCategoryResponseDto findByCategory(String category, HttpStatus status){
+    public RatingCategoryResponse findByCategory(String category, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -70,7 +70,7 @@ public class RatingCategoryValidator {
                     .then().assertThat()
                     .statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec())
-                    .extract().as(RatingCategoryResponseDto.class);
+                    .extract().as(RatingCategoryResponse.class);
 
         else given()
                 .spec(TestSpecification.buildRequestSpec())

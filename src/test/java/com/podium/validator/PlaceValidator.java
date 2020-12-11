@@ -2,7 +2,7 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.model.dto.request.PlaceRequestDto;
+import com.podium.controller.dto.request.PlaceAddRequest;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class PlaceValidator {
         return instance;
     }
 
-    public void add(PlaceRequestDto requestDto, HttpStatus status){
+    public void add(PlaceAddRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())

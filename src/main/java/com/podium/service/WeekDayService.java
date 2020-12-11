@@ -1,42 +1,37 @@
 package com.podium.service;
 
-import com.podium.model.dto.response.WeekDayResponseDto;
-import com.podium.model.entity.WeekDay;
-import com.podium.repository.WeekDayRepository;
+import com.podium.controller.dto.response.WeekDayResponse;
+import com.podium.dal.entity.WeekDay;
+import com.podium.dal.repository.WeekDayRepository;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class WeekDayService {
 
     private WeekDayRepository weekDayRepository;
 
-    @Autowired
     public WeekDayService(WeekDayRepository weekDayRepository) {
         this.weekDayRepository = weekDayRepository;
     }
 
-    public Iterable<WeekDayResponseDto> findAllWeekDay(){
+    public Iterable<WeekDay> findAllWeekDay(){
+        return this.weekDayRepository.findAll();
+    }
 
-        List<WeekDayResponseDto> responses = new ArrayList<>();
+    public WeekDay findWeekDay(String dayName){
 
-        this.weekDayRepository.findAll()
-                .forEach(x -> responses
-                        .add(this.convertEntityToResponseDto(x)));
-
-        return responses;
+        return this.weekDayRepository
+                .findByDay(dayName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Week Day"));
 
     }
 
-    private WeekDayResponseDto convertEntityToResponseDto(WeekDay weekDay){
+    private WeekDayResponse convertEntityToResponseDto(WeekDay weekDay){
 
-        return new WeekDayResponseDto(weekDay.getDay());
+        return new WeekDayResponse(weekDay.getDay());
 
     }
-
-
 
 }

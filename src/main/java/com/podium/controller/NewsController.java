@@ -1,14 +1,17 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.model.dto.other.PodiumFileDto;
-import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.model.dto.response.NewsResponseDto;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidBody;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidVariable;
-import com.podium.model.dto.validation.validator.annotation.validator.PodiumValidateController;
-import com.podium.model.entity.News;
+import com.podium.controller.dto.other.PodiumFileDto;
+import com.podium.controller.dto.request.CityAddRequest;
+import com.podium.controller.dto.request.NewsAddRequest;
+import com.podium.controller.dto.response.NewsResponse;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.dal.entity.News;
 import com.podium.service.NewsService;
+import com.podium.service.dto.CityAddServiceDto;
+import com.podium.service.dto.NewsAddServiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,20 +32,20 @@ public class NewsController {
     }
 
     @PostMapping(PodiumEndpoint.addNews)
-    public ResponseEntity addNews(@RequestBody @PodiumValidBody NewsRequestDto request){
-       this.newsService.addNews(request);
+    public ResponseEntity addNews(@RequestBody @PodiumValidBody NewsAddRequest request){
+       this.newsService.addNews(this.convertAddRequestToServiceDto(request));
        return ResponseEntity.ok().body("News successfully added");
     }
 
     @GetMapping(PodiumEndpoint.findAllNews)
-    public ResponseEntity<Iterable<NewsResponseDto>> findAllNews(){
+    public ResponseEntity<Iterable<NewsResponse>> findAllNews(){
 
         var news = this.newsService.findAllNews();
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(news));
     }
 
     @GetMapping(PodiumEndpoint.findNewsById)
-    public ResponseEntity<NewsResponseDto>
+    public ResponseEntity<NewsResponse>
     findNewsById(@PathVariable @PodiumValidVariable int id){
 
         var news = this.newsService.findNewsById(id);
@@ -50,7 +53,7 @@ public class NewsController {
     }
 
     @GetMapping(PodiumEndpoint.findNewsByTitle)
-    public ResponseEntity<NewsResponseDto>
+    public ResponseEntity<NewsResponse>
     findNewsByTitle(@PathVariable @PodiumValidVariable String title){
 
         var news = this.newsService.findNewsByTitle(title);
@@ -63,9 +66,9 @@ public class NewsController {
         return ResponseEntity.ok().body("News successfully deleted");
     }
 
-    private NewsResponseDto convertEntityToResponseDto(News news){
+    private NewsResponse convertEntityToResponseDto(News news){
 
-        return new NewsResponseDto(
+        return new NewsResponse(
                 news.getNewsId(),
                 news.getTitle(),
                 news.getShortText(),
@@ -77,9 +80,18 @@ public class NewsController {
 
     }
 
-    private Iterable<NewsResponseDto> convertEntityIterableToResponseDto(Iterable<News> contacts){
+    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddRequest request){
+        return new NewsAddServiceDto(
+                request.getTitle(),
+                request.getShortText(),
+                request.getLinkText(),
+                request.getText()
+        );
+    }
 
-        var newsResponses = new ArrayList<NewsResponseDto>();
+    private Iterable<NewsResponse> convertEntityIterableToResponseDto(Iterable<News> contacts){
+
+        var newsResponses = new ArrayList<NewsResponse>();
 
         contacts.forEach(x -> newsResponses.add(this.convertEntityToResponseDto(x)));
 

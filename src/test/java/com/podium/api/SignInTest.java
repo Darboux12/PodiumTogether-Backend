@@ -1,21 +1,17 @@
 package com.podium.api;
 
 
-import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.model.dto.request.JwtRequestDto;
+import com.podium.controller.dto.request.JwtRequest;
 import com.podium.validator.UserValidator;
-import io.jsonwebtoken.Jwt;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
-import java.text.ParseException;
+
 import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -56,10 +52,10 @@ import java.util.stream.Stream;
         );
     }
 
-    private static Stream<JwtRequestDto> provideValidSIgnInRequests(){
+    private static Stream<JwtRequest> provideValidSIgnInRequests(){
 
         return Stream.of(
-                new JwtRequestDto("johndoe","johndoe123")
+                new JwtRequest("johndoe","johndoe123")
 
         );
 
@@ -74,7 +70,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideValidSIgnInRequests")
-    void T01_Sign_In_User_Should__Return__Status_OK(JwtRequestDto request){
+    void T01_Sign_In_User_Should__Return__Status_OK(JwtRequest request){
         UserValidator.getInstance().signIn(request,HttpStatus.OK);
     }
 
@@ -83,7 +79,7 @@ import java.util.stream.Stream;
     void T02_Sign_In_Empty_Username_Should_Return_Status_CONFLICT(String emptyUsername){
 
         UserValidator.getInstance()
-                .signIn(new JwtRequestDto(emptyUsername,validPassword),HttpStatus.CONFLICT);
+                .signIn(new JwtRequest(emptyUsername,validPassword),HttpStatus.CONFLICT);
 
     }
 
@@ -92,7 +88,7 @@ import java.util.stream.Stream;
     void T03_SignIn_Empty_Password_Should_Return_Status_CONFLICT(String emptyPassword) {
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequestDto(validUsername,emptyPassword),HttpStatus.CONFLICT);
+                .signIn(new JwtRequest(validUsername,emptyPassword),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -101,7 +97,7 @@ import java.util.stream.Stream;
 
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequestDto(validUsername,wrongPassword),HttpStatus.BAD_REQUEST);
+                .signIn(new JwtRequest(validUsername,wrongPassword),HttpStatus.BAD_REQUEST);
 
     }
 
@@ -110,7 +106,7 @@ import java.util.stream.Stream;
     void T05_SignIn_Wrong_Username_Should_Return_Status_UNAUTHORIZED(String wrongUsername){
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequestDto(wrongUsername,validPassword),HttpStatus.UNAUTHORIZED);
+                .signIn(new JwtRequest(wrongUsername,validPassword),HttpStatus.UNAUTHORIZED);
     }
 
     @ParameterizedTest
@@ -119,7 +115,7 @@ import java.util.stream.Stream;
 
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequestDto(wrongUsername,wrongPassword),HttpStatus.UNAUTHORIZED);
+                .signIn(new JwtRequest(wrongUsername,wrongPassword),HttpStatus.UNAUTHORIZED);
     }
 
 }

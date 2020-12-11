@@ -1,8 +1,8 @@
 package com.podium.service;
 
-import com.podium.model.entity.News;
-import com.podium.model.dto.request.NewsRequestDto;
-import com.podium.repository.NewsRepository;
+import com.podium.dal.entity.News;
+import com.podium.dal.repository.NewsRepository;
+import com.podium.service.dto.NewsAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,19 @@ public class NewsService {
     }
 
     @Transactional
-    public void addNews(NewsRequestDto request) {
+    public void addNews(NewsAddServiceDto newsAddServiceDto) {
 
-        if(this.newsRepository.existsByTitle(request.getTitle()))
+        if(this.newsRepository.existsByTitle(newsAddServiceDto.getTitle()))
             throw new PodiumEntityAlreadyExistException("News with given title");
 
-        this.newsRepository.save(this.convertRequestDtoToEntity(request));
+        this.newsRepository.save(this.convertServiceAddDtoToEntity(newsAddServiceDto));
+    }
+
+    @Transactional
+    public void deleteNewsById(int id){
+        if(!this.newsRepository.existsById(id))
+            throw new PodiumEntityNotFoundException("News with given id");
+        this.newsRepository.deleteById(id);
     }
 
     public Iterable<News> findAllNews(){
@@ -53,24 +60,16 @@ public class NewsService {
         return this.newsRepository.existsByTitle(newsTitle);
     }
 
-    @Transactional
-    public void deleteNewsById(int id){
-        if(!this.newsRepository.existsById(id))
-            throw new PodiumEntityNotFoundException("News with given id");
-        this.newsRepository.deleteById(id);
-    }
-
-    private News convertRequestDtoToEntity(NewsRequestDto requestDto){
+    private News convertServiceAddDtoToEntity(NewsAddServiceDto newsAddServiceDto){
 
         return new News(
-                requestDto.getTitle(),
-                requestDto.getShortText(),
-                requestDto.getText(),
-                requestDto.getLinkText(),
+                newsAddServiceDto.getTitle(),
+                newsAddServiceDto.getShortText(),
+                newsAddServiceDto.getText(),
+                newsAddServiceDto.getLinkText(),
                 new Date()
         );
 
     }
-
 
 }

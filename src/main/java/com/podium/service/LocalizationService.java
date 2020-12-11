@@ -1,16 +1,15 @@
 package com.podium.service;
 
-import com.podium.model.dto.other.LocalizationDto;
-import com.podium.model.dto.response.LocalizationResponseDto;
-import com.podium.model.entity.City;
-import com.podium.model.entity.Localization;
-import com.podium.model.entity.Street;
-import com.podium.repository.CityRepository;
-import com.podium.repository.LocalizationRepository;
-import com.podium.repository.StreetRepository;
+import com.podium.dal.entity.City;
+import com.podium.dal.entity.Localization;
+import com.podium.dal.entity.Street;
+import com.podium.dal.repository.LocalizationRepository;
+import com.podium.service.dto.LocalizationServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 public class LocalizationService {
@@ -26,34 +25,25 @@ public class LocalizationService {
         this.streetService = streetService;
     }
 
-    public void addLocalization(LocalizationDto dto){
+    @Transactional
+    public void addLocalization(LocalizationServiceDto localizationServiceDto){
 
-        if(this.existLocalization(dto))
+        String city = localizationServiceDto.getCity();
+        String street = localizationServiceDto.getStreet();
+        String postalCode = localizationServiceDto.getPostalCode();
+
+        int buildingNumber = localizationServiceDto.getBuildingNumber();
+
+        if(this.existLocalizationByCityStreetPostalCodeBuildingNumber(city,street,postalCode,buildingNumber))
             throw new PodiumEntityAlreadyExistException("Given localization");
 
-        City city = this.cityService.findCityByName(dto.getCity());
-
-        Street street = this.streetService.findStreetByName(dto.getStreet());
-
-       this.localizationRepository.save(
-               new Localization(
-                       city,street,
-                       dto.getBuildingNumber(),
-                       dto.getPostalCode(),
-                       dto.getLocalizationRemarks())
-       );
+        this.convertServiceAddDtoToEntity(localizationServiceDto);
 
     }
 
-    public boolean existLocalization(LocalizationDto localizationDto){
+    public boolean existLocalizationByCityStreetPostalCodeBuildingNumber(String city, String street, String postalCode, int buildingNumber){
 
-       String city = localizationDto.getCity();
-       String street = localizationDto.getStreet();
-       String postalCode = localizationDto.getPostalCode();
-
-       int buildingNumber = localizationDto.getBuildingNumber();
-
-       if(this.cityService.existByCityName(city) &&
+       if(this.cityService.existCityByName(city) &&
                this.streetService.existStreetByName(street))
 
        return
@@ -67,17 +57,33 @@ public class LocalizationService {
        else return false;
     }
 
-    public Localization findLocalization(LocalizationDto localizationDto){
+    public Localization findLocalization(LocalizationServiceDto localizationServiceDto){
 
-        City city = this.cityService.findCityByName(localizationDto.getCity());
-        Street street = this.streetService.findStreetByName(localizationDto.getStreet());
-        String postalCode = localizationDto.getPostalCode();
+        City city = this.cityService.findCityByName(localizationServiceDto.getCity());
+        Street street = this.streetService.findStreetByName(localizationServiceDto.getStreet());
+        String postalCode = localizationServiceDto.getPostalCode();
 
-        int buildingNumber = localizationDto.getBuildingNumber();
+        int buildingNumber = localizationServiceDto.getBuildingNumber();
 
         return this.localizationRepository
                 .findByCityAndStreetAndBuildingNumberAndPostalCode(city,street,buildingNumber,postalCode)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Localization"));
 
     }
+
+    private Localization convertServiceAddDtoToEntity(LocalizationServiceDto addDto){
+
+        City city = this.cityService.findCityByName(addDto.getCity());
+
+        Street street = this.streetService.findStreetByName(addDto.getStreet());
+
+       return this.localizationRepository.save(
+                new Localization(
+                        city,street,
+                        addDto.getBuildingNumber(),
+                        addDto.getPostalCode(),
+                        addDto.getLocalizationRemarks())
+        );
+    }
+
 }

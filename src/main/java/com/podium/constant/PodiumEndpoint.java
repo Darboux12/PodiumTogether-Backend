@@ -7,7 +7,7 @@ public class PodiumEndpoint {
     /** GET | Find all cities */
     public static final String findAllCity = "/city/find/all";
 
-    /** POST | Add city | CityRequestDto body required */
+    /** POST | Add city | CityAddRequestDto body required */
     public static final String addCity = "/city/add";
 
     /** GET | Exist city by name | City name path variable required */
@@ -21,7 +21,7 @@ public class PodiumEndpoint {
 
     // CONTACT
 
-    /** POST | Add contact | ContactRequestDto body required */
+    /** POST | Add contact | ContactAddRequestDto body required */
     public static final String addContact = "/contact/add";
 
     /** GET | Find all contact */
@@ -55,7 +55,7 @@ public class PodiumEndpoint {
 
     // DISCIPLINE
 
-    /** POST | Add discipline | DisciplineRequestDto body required */
+    /** POST | Add discipline | DisciplineAddRequestDto body required */
     public static final String addDiscipline = "/discipline/add";
 
     /** GET | Find all discipline */
@@ -75,7 +75,7 @@ public class PodiumEndpoint {
     /** GET | Find all gender */
     public static final String findAllGender = "/gender/find/all";
 
-    /** POST | Add gender | GenderRequestDto body required */
+    /** POST | Add gender | GenderAddRequestDto body required */
     public static final String addGender = "/gender/add";
 
     /** GET | Exist gender by name | name path variable required */
@@ -179,7 +179,7 @@ public class PodiumEndpoint {
     /** GET | Find news by id | Id path variable required */
     public static final String findNewsById = "/news/find/id/{id}";
 
-    /** POST | Add news | NewsRequestDto body required */
+    /** POST | Add news | NewsAddRequestDto body required */
     public static final String addNews = "/news/add";
 
     /** DELETE | Delete news by id | News path variable required */
