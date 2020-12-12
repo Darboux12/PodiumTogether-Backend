@@ -6,11 +6,16 @@ import com.podium.controller.dto.request.NewsAddRequest;
 import com.podium.controller.dto.response.ContactResponse;
 import com.podium.controller.dto.response.NewsResponse;
 import com.podium.specification.TestSpecification;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
+import io.restassured.mapper.ObjectMapperType;
+import io.restassured.specification.MultiPartSpecification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -32,8 +37,19 @@ public class NewsValidator {
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+
+                .multiPart(new MultiPartSpecBuilder(requestDto, ObjectMapperType.JACKSON_2)
+                    .fileName("request.json")
+                    .controlName("news")
+                    .mimeType("application/vnd.custom+json").build())
+
+                .multiPart(new MultiPartSpecBuilder("Test-Content-In-File".getBytes()).
+                        fileName("image.jpg").
+                        controlName("images").
+                        mimeType("image/jpeg").
+                        build())
+
                 .when().post(PodiumPath.server + PodiumEndpoint.addNews)
                 .then().assertThat()
                 .statusCode(status.value())

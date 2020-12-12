@@ -2,28 +2,24 @@ package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.controller.dto.other.PodiumFileDto;
-import com.podium.controller.dto.request.CityAddRequest;
 import com.podium.controller.dto.request.NewsAddRequest;
-import com.podium.controller.dto.request.Test;
 import com.podium.controller.dto.response.NewsResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.News;
 import com.podium.service.NewsService;
-import com.podium.service.dto.CityAddServiceDto;
 import com.podium.service.dto.NewsAddServiceDto;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.datasource.embedded.ConnectionProperties;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -37,13 +33,14 @@ public class NewsController {
     }
 
     @PostMapping(PodiumEndpoint.addNews)
-    public ResponseEntity addNews(@RequestPart("images") List<MultipartFile> images,
-                                  @RequestPart("news") NewsAddRequest addRequest
-                               ) throws IOException {
+    protected ResponseEntity addNews(@RequestPart("news") @PodiumValidBody NewsAddRequest addRequest,
+                                  @RequestPart("images") List<MultipartFile> images
 
-        this.newsService.addNews(this.convertAddRequestToServiceDto(addRequest,images));
+    ){
 
-        return ResponseEntity.ok().body("News successfully added");
+       this.newsService.addNews(this.convertAddRequestToServiceDto(addRequest,images));
+
+       return ResponseEntity.ok().body("News successfully added");
     }
 
     @GetMapping(PodiumEndpoint.findAllNews)
@@ -89,12 +86,13 @@ public class NewsController {
 
     }
 
-    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddRequest request, Iterable<MultipartFile> images){
+    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddRequest request, List<MultipartFile> images){
         return new NewsAddServiceDto(
                 request.getTitle(),
                 request.getShortText(),
                 request.getLinkText(),
-                request.getText()
+                request.getText(),
+                new HashSet<>(images)
         );
     }
 
@@ -130,6 +128,8 @@ public class NewsController {
         return podiumFileDtos;
 
     }
+
+
 
 }
 

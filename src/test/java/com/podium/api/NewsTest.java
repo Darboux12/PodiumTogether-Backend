@@ -5,6 +5,8 @@ import com.podium.controller.dto.request.NewsAddRequest;
 import com.podium.controller.dto.response.NewsResponse;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.NewsValidator;
+import io.restassured.builder.MultiPartSpecBuilder;
+import io.restassured.specification.MultiPartSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +26,23 @@ import java.util.stream.Stream;
 
     private static Stream<String> provideEmptyValuesForTests(){
         return Stream.of("", " ", "  ", "       ");
+    }
+
+    private static MultiPartSpecification getMultiPart() {
+
+        return new MultiPartSpecBuilder("Test-Content-In-File".getBytes()).
+                fileName("image.jpg").
+                controlName("images").
+                mimeType("image/jpeg").
+                build();
+    }
+
+    private static MultiPartSpecification getMultiPartTwo() {
+
+        return new MultiPartSpecBuilder(new NewsAddRequest())
+                .controlName("news")
+                .build();
+
     }
 
     private static Stream<NewsAddRequest> provideNewsForTests(){
@@ -137,7 +156,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideNewsForTests")
-    void T08_Find_AndDeleteCreatedValidNews_ShouldReturnStatus_OK(NewsAddRequest requestDto){
+    void T08_Find_And_DeleteCreatedValidNews_ShouldReturnStatus_OK(NewsAddRequest requestDto){
 
         NewsResponse newsResponse =
 
@@ -261,5 +280,8 @@ import java.util.stream.Stream;
         newsRequest.setLinkText(valueHolder);
 
     }
+
+
+
 
 }

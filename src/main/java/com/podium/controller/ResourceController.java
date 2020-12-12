@@ -1,8 +1,6 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.ResourceAddRequest;
-import com.podium.controller.validation.exception.PodiumEmptyTextException;
 import com.podium.controller.validation.validator.PodiumDtoValidator;
 import com.podium.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,8 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ResourceController {
+
+    /*
 
     private ResourceService resourceService;
     private PodiumDtoValidator dtoValidator;
@@ -87,5 +87,7 @@ public class ResourceController {
 
         return requestDto;
     }
+    */
+
 
 }

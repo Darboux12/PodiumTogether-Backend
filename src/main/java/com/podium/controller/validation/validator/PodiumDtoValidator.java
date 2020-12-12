@@ -2,14 +2,13 @@ package com.podium.controller.validation.validator;
 
 import com.podium.controller.validation.exception.WrongAnnotationUsageException;
 import com.podium.controller.validation.exception.PodiumEmptyTextException;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -33,19 +32,22 @@ public class PodiumDtoValidator {
     @Pointcut("execution(public * *(..))")
     public void publicMethods() {}
 
-    @Pointcut("execution(* *(@com.podium.controller.validation.validator.annotation.PodiumValidBody (*)))")
-    public void methodsParameterWithPodiumValidBodyAnnotation() {}
+    @Pointcut("execution(private * *(..))")
+    public void privateMethods() {}
 
-    @Pointcut("execution(* *(@com.podium.controller.validation.validator.annotation.PodiumValidVariable (*)))")
-    public void methodsParameterWithPodiumValidVariableAnnotation() {}
+    @Pointcut("execution(protected * *(..))")
+    public void protectedMethods() {}
 
-    @Pointcut("objectAnnotatedWithPodiumValidate() && publicMethods()")
+    @Pointcut("publicMethods() || protectedMethods() || privateMethods()")
+    public void allMethods() {}
+
+    @Pointcut("objectAnnotatedWithPodiumValidate() && allMethods()")
     public void methodsToValidate() {}
 
-    @Pointcut("methodsToValidate() && methodsParameterWithPodiumValidBodyAnnotation()")
+    @Pointcut("methodsToValidate())")
     public void parametersBodyToValidate() {}
 
-    @Pointcut("methodsToValidate() && methodsParameterWithPodiumValidVariableAnnotation()")
+    @Pointcut("methodsToValidate())")
     public void parametersVariableToValidate() {}
 
     @Before("parametersBodyToValidate()")
@@ -59,8 +61,16 @@ public class PodiumDtoValidator {
 
             Parameter[] parameters = method.getParameters();
 
-            if(parameters.length == 1)
-                this.validateRequestBody(joinPoint.getArgs()[0]);
+            int i = 0;
+
+            for(Parameter parameter : parameters){
+
+                if(parameter.isAnnotationPresent(PodiumValidBody.class))
+                    this.validateRequestBody(joinPoint.getArgs()[i]);
+
+                i++;
+
+            }
 
         }
 
@@ -73,7 +83,7 @@ public class PodiumDtoValidator {
 
     }
 
-    public void validateRequestBody(Object object) throws PodiumEmptyTextException {
+    private void validateRequestBody(Object object) throws PodiumEmptyTextException {
 
         // Check if object is collection
         if(object instanceof Collection){
@@ -83,6 +93,7 @@ public class PodiumDtoValidator {
 
             // Check if collection elements are one of permitted fields (aka primitive)
             if(this.isPermittedType(elementClass)){
+
                 // Validate annotations of collection => can have annotation
                 this.validatePermittedTypeCollectionAnnotations(object);
             }
@@ -101,6 +112,8 @@ public class PodiumDtoValidator {
 
             // Get object class
             Class requestClass = object.getClass();
+
+            System.out.println(requestClass.getDeclaredFields().length);
 
             // Iterate through object fields
             for(Field field : requestClass.getDeclaredFields()){
@@ -153,8 +166,7 @@ public class PodiumDtoValidator {
                 char.class,
                 Character.class,
                 Date.class,
-                LocalTime.class,
-                MultipartFile.class
+                LocalTime.class
         );
 
     }

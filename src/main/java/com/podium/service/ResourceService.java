@@ -1,167 +1,80 @@
 package com.podium.service;
 
-import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.request.ResourceAddRequest;
-import com.podium.dal.entity.Event;
-import com.podium.dal.entity.News;
 import com.podium.dal.entity.PodiumResource;
-import com.podium.dal.entity.User;
-import com.podium.dal.repository.EventRepository;
-import com.podium.dal.repository.NewsRepository;
+import com.podium.dal.files.FileRepository;
+import com.podium.dal.files.exception.PodiumFileNotExistException;
 import com.podium.dal.repository.ResourceRepository;
-import com.podium.dal.repository.UserRepository;
-import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumFileUploadFailException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ResourceService {
 
-    private UserRepository userRepository;
-    private NewsRepository newsRepository;
+    private FileRepository fileRepository;
     private ResourceRepository resourceRepository;
-    private EventRepository eventRepository;
 
-    public ResourceService(UserRepository userRepository, NewsRepository newsRepository, ResourceRepository resourceRepository, EventRepository eventRepository) {
-        this.userRepository = userRepository;
-        this.newsRepository = newsRepository;
+    public ResourceService(FileRepository fileRepository, ResourceRepository resourceRepository) {
+        this.fileRepository = fileRepository;
         this.resourceRepository = resourceRepository;
-        this.eventRepository = eventRepository;
     }
 
-    public void uploadUserProfileImages(ResourceAddRequest requestDto) throws IOException {
+    public Set<PodiumResource> createPodiumImageResources(Set<MultipartFile> images){
 
-        MultipartFile image = requestDto.getFiles().stream().findAny().orElse(null);
+        Set<PodiumResource> resources = new HashSet<>();
 
-        PodiumResource resource = null;
+        images.forEach(image -> {
 
-        if (image != null) {
+            if(this.fileRepository.isAcceptedImagesTypes(image.getContentType())){
 
-            resource = this.createPodiumResourceImage(image);
-            User user = this.userRepository.findByUsername(requestDto.getId()).orElse(null);
+                try {
 
-            PodiumResource resourceToDelete;
+                    PodiumResource resource = new PodiumResource();
+                    resource.setName(image.getOriginalFilename());
+                    resource.setType(image.getContentType());
 
-            if (user != null) {
+                    String path = this.fileRepository.saveImageAndGetPath(image);
 
-                resourceToDelete = user.getProfileImage();
+                    resource.setPath(path);
 
-                user.setProfileImage(resource);
+                    resources.add(resource);
 
-                if(resourceToDelete != null) {
 
-                    this.resourceRepository.
-                            deleteByResourceId(resourceToDelete.getResourceId());
-
-                    if(!this.resourceRepository.existsByResourceId(resourceToDelete.getResourceId())){
-                        this.deleteResourceFromServer(resourceToDelete);
-                    }
-
+                } catch (IOException e) {
+                    throw new PodiumFileUploadFailException();
                 }
 
             }
 
-            this.userRepository.save(user);
+        });
 
-        }
+        return resources;
 
     }
 
-    public void uploadNewsImages(ResourceAddRequest requestDto) throws IOException {
+    @Transactional
+    public void deleteResources(Set<PodiumResource> resources){
 
-        for (MultipartFile image : requestDto.getFiles()) {
+        this.deleteResourcesFromServer(resources);
 
-            PodiumResource resource = this.createPodiumResourceImage(image);
-
-            News news = this.newsRepository
-                    .findByTitle(requestDto.getId())
-                    .orElseThrow(() -> new PodiumEntityNotFoundException("News with given title"));
-
-            news.getNewsResources().add(resource);
-
-            resource.getNews().add(news);
-
-            this.resourceRepository.save(resource);
-        }
+        this.resourceRepository.deleteAll(resources);
     }
 
-    public void uploadEventImages(ResourceAddRequest requestDto) throws IOException {
+    private void deleteResourcesFromServer(Set<PodiumResource> resources){
 
-        for (MultipartFile image : requestDto.getFiles()) {
+        resources.forEach(resource -> {
 
-            PodiumResource resource = this.createPodiumResourceImage(image);
+            if(!this.fileRepository.existFileByPath(resource.getPath()))
+                throw new PodiumFileNotExistException();
 
-            Event event = this.eventRepository.findByTitle(requestDto.getId());
+            this.fileRepository.deleteFile(resource.getPath());
 
-            event.getEventResources().add(resource);
-
-            resource.getEvents().add(event);
-
-            this.resourceRepository.save(resource);
-        }
-    }
-
-    public void uploadEventFiles(ResourceAddRequest requestDto) throws IOException {
-
-        for (MultipartFile file : requestDto.getFiles()) {
-
-            PodiumResource resource = this.createPodiumResourceFile(file);
-
-            Event event = this.eventRepository.findByTitle(requestDto.getId());
-
-            event.getEventResources().add(resource);
-
-            resource.getEvents().add(event);
-
-            this.resourceRepository.save(resource);
-        }
-    }
-
-    private PodiumResource createPodiumResourceImage(MultipartFile image) throws IOException {
-
-        String path = PodiumPath.images + image.getOriginalFilename();
-
-        File file = new File(path);
-
-        image.transferTo(file);
-
-        PodiumResource resource = new PodiumResource();
-        resource.setName(image.getOriginalFilename());
-        resource.setType(image.getContentType());
-        resource.setPath(path);
-
-        return resource;
-    }
-
-    private PodiumResource createPodiumResourceFile(MultipartFile image) throws IOException {
-
-        String path = PodiumPath.files + image.getOriginalFilename();
-
-        File file = new File(path);
-
-        image.transferTo(file);
-
-        PodiumResource resource = new PodiumResource();
-        resource.setName(image.getOriginalFilename());
-        resource.setType(image.getContentType());
-        resource.setPath(path);
-
-        return resource;
-    }
-
-    private void deleteResourceFromServer(PodiumResource resource){
-
-        File file = new File(resource.getPath());
-
-        if(file.delete())
-            System.out.println("File deleted successfully");
-
-        else
-            System.out.println("Failed to delete the file");
-
+        });
     }
 
 

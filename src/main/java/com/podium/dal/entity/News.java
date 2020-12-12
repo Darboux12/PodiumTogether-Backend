@@ -56,11 +56,12 @@ public class News {
     private Set<PodiumResource> newsResources = new HashSet<>();
 
 
-    public News(String title, String shortText, String text, String linkText, Date date) {
+    public News(String title, String shortText, String text, String linkText, Date date, Set<PodiumResource> newsResources) {
         this.title = title;
         this.shortText = shortText;
         this.text = text;
         this.linkText = linkText;
         this.date = date;
+        this.newsResources = newsResources;
     }
 }
