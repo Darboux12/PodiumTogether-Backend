@@ -55,4 +55,11 @@ public class DisciplineService {
         return new Discipline(addServiceDto.getDiscipline());
     }
 
+    public Discipline getEntity(String disciplineName){
+
+        return this.disciplineRepository
+                .findByDiscipline(disciplineName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
+
+    }
 }

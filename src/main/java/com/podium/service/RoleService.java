@@ -1,6 +1,9 @@
 package com.podium.service;
 
+import com.podium.constant.PodiumLimits;
+import com.podium.dal.entity.Role;
 import com.podium.dal.repository.RoleRepository;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,4 +19,18 @@ public class RoleService {
         return this.roleRepository.existsByRole(roleName);
     }
 
+    public Role getEntity(String roleName){
+
+        return this.roleRepository
+                .findByRole(roleName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
+    }
+
+    public Role getDefaultRole(){
+
+        return this.roleRepository
+                .findByRole(PodiumLimits.defaultUserRole)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
+
+    }
 }

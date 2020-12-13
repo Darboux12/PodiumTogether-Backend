@@ -32,6 +32,10 @@ public class StarRating {
     private int rating;
 
     @ManyToMany(mappedBy = "starRatings")
-    private Set<Review> places = new HashSet<>();
+    private Set<Review> reviews = new HashSet<>();
 
+    public StarRating(RatingCategory category, int rating) {
+        this.category = category;
+        this.rating = rating;
+    }
 }

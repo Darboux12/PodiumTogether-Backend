@@ -137,6 +137,10 @@ public class PodiumLimits {
     public static final int minPlaceReview = 13;
     public static final int maxPlaceReview = 500;
 
+    public static final String defaultUserRole = "subscriber";
+
+
+
 
 
 

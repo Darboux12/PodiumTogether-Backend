@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,12 +16,11 @@ import java.util.List;
 public class PlaceAddServiceDto {
     private String name;
     private String discipline;
-    private LocalizationDto localizationDto;
-    private List<BusinessDayDto> businessDayDtos;
+    private LocalizationServiceDto localizationDto;
+    private Set<BusinessDayServiceDto> businessDayDtos;
     private double cost;
     private double usageTime;
     private int minAge;
     private int maxAge;
-    private List<RatingDto> ratingDtos;
-    private String review;
+    private ReviewServiceDto reviewServiceDto;
 }

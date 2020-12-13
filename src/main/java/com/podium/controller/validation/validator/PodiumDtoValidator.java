@@ -113,8 +113,6 @@ public class PodiumDtoValidator {
             // Get object class
             Class requestClass = object.getClass();
 
-            System.out.println(requestClass.getDeclaredFields().length);
-
             // Iterate through object fields
             for(Field field : requestClass.getDeclaredFields()){
 

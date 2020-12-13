@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Repository
 public interface BusinessDayRepository extends CrudRepository<BusinessDay,Integer> {
@@ -13,6 +14,6 @@ public interface BusinessDayRepository extends CrudRepository<BusinessDay,Intege
     boolean existsByDayAndOpenAndOpenTimeFromAndOpenTimeTo
             (WeekDay weekDay, boolean isOpen, LocalTime openTimeFrom, LocalTime openTimeTo);
 
-    BusinessDay findByDayAndOpenIsAndOpenTimeFromAndOpenTimeTo
+   Optional<BusinessDay>findByDayAndOpenIsAndOpenTimeFromAndOpenTimeTo
             (WeekDay weekDay,boolean isOpen,LocalTime openTimeFrom,LocalTime openTimeTo);
 }

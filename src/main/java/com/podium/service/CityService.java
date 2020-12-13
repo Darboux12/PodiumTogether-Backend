@@ -55,4 +55,8 @@ public class CityService {
         return new City(cityAddServiceDto.getCity());
     }
 
+    public City getEntity(String cityName){
+        return this.cityRepository.findByCity(cityName).orElse(new City(cityName));
+    }
+
 }

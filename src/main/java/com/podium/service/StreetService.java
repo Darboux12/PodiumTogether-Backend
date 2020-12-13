@@ -49,4 +49,8 @@ public class StreetService {
 
     }
 
+    public Street getEntity(String streetName){
+        return this.streetRepository.findByStreet(streetName).orElse(new Street(streetName));
+    }
+
 }

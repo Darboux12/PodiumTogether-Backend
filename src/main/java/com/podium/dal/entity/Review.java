@@ -67,4 +67,13 @@ public class Review {
     @Column(name = "dislikes")
     private int dislikes;
 
+    public Review(Set<StarRating> starRatings, String opinion, User author, Place place, Set<PodiumResource> images, int likes, int dislikes) {
+        this.starRatings = starRatings;
+        this.opinion = opinion;
+        this.author = author;
+        this.place = place;
+        this.images = images;
+        this.likes = likes;
+        this.dislikes = dislikes;
+    }
 }

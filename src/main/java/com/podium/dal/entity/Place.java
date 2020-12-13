@@ -68,7 +68,14 @@ public class Place {
     private Set<Review> reviews = new HashSet<>();
 
 
-
-
-
+    public Place(String name, Discipline discipline, Localization localization, Set<BusinessDay> businessDays, double cost, double usageTime, double minAge, double maxAge) {
+        this.name = name;
+        this.discipline = discipline;
+        this.localization = localization;
+        this.businessDays = businessDays;
+        this.cost = cost;
+        this.usageTime = usageTime;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+    }
 }

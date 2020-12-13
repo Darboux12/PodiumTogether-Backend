@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RatingServiceDto {
+public class StarRatingServiceDto {
     private String category;
     private int rating;
 }

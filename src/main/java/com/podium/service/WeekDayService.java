@@ -34,4 +34,12 @@ public class WeekDayService {
 
     }
 
+    public WeekDay getEntity(String dayName){
+
+        return this.weekDayRepository
+                .findByDay(dayName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Week Day"));
+
+    }
+
 }

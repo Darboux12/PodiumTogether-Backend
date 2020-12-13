@@ -56,4 +56,11 @@ public class RatingCategoryService {
         return new RatingCategory(ratingCategoryAddServiceDto.getCategory());
     }
 
+    public RatingCategory getEntity(String ratingCategoryName){
+
+        return this.ratingCategoryRepository
+                .findByCategory(ratingCategoryName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Rating Category"));
+
+    }
 }

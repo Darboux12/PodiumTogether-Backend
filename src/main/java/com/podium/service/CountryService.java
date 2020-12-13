@@ -76,6 +76,13 @@ public class CountryService {
         );
     }
 
+    public Country getEntity(String countryName){
+
+        return this.countryRepository
+                .findByName(countryName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
+
+    }
 
 
 }

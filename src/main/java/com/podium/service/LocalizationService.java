@@ -86,4 +86,23 @@ public class LocalizationService {
         );
     }
 
+    public Localization getEntity(LocalizationServiceDto serviceDto){
+
+        City city = this.cityService.getEntity(serviceDto.getCity());
+
+        Street street = this.streetService.getEntity(serviceDto.getStreet());
+
+        String postalCode = serviceDto.getPostalCode();
+        String remarks = serviceDto.getLocalizationRemarks();
+
+        int buildingNumber = serviceDto.getBuildingNumber();
+
+        return this.localizationRepository
+
+                .findByCityAndStreetAndBuildingNumberAndPostalCode(city,street,buildingNumber,postalCode)
+
+                .orElse(new Localization(city,street,buildingNumber,postalCode,remarks));
+
+    }
+
 }
