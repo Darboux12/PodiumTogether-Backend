@@ -75,7 +75,7 @@ public class NewsController {
     private NewsResponse convertEntityToResponseDto(News news){
 
         return new NewsResponse(
-                news.getNewsId(),
+                news.getId(),
                 news.getTitle(),
                 news.getShortText(),
                 news.getText(),

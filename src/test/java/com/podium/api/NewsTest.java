@@ -28,23 +28,6 @@ import java.util.stream.Stream;
         return Stream.of("", " ", "  ", "       ");
     }
 
-    private static MultiPartSpecification getMultiPart() {
-
-        return new MultiPartSpecBuilder("Test-Content-In-File".getBytes()).
-                fileName("image.jpg").
-                controlName("images").
-                mimeType("image/jpeg").
-                build();
-    }
-
-    private static MultiPartSpecification getMultiPartTwo() {
-
-        return new MultiPartSpecBuilder(new NewsAddRequest())
-                .controlName("news")
-                .build();
-
-    }
-
     private static Stream<NewsAddRequest> provideNewsForTests(){
 
         return Stream.of(
@@ -163,7 +146,7 @@ import java.util.stream.Stream;
                 NewsValidator
                         .getInstance()
                         .findByTitle(requestDto.getTitle(),HttpStatus.OK);
-        
+
         NewsValidator
                 .getInstance()
                 .deleteNewsById(newsResponse.getId(),HttpStatus.OK);

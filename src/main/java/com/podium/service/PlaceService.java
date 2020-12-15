@@ -21,14 +21,14 @@ public class PlaceService {
     private DisciplineService disciplineService;
     private LocalizationService localizationService;
     private BusinessDayService businessDayService;
-    private ReviewService reviewService;
+    private ResourceService resourceService;
 
-    public PlaceService(PlaceRepository placeRepository, DisciplineService disciplineService, LocalizationService localizationService, BusinessDayService businessDayService, ReviewService reviewService) {
+    public PlaceService(PlaceRepository placeRepository, DisciplineService disciplineService, LocalizationService localizationService, BusinessDayService businessDayService, ResourceService resourceService) {
         this.placeRepository = placeRepository;
         this.disciplineService = disciplineService;
         this.localizationService = localizationService;
         this.businessDayService = businessDayService;
-        this.reviewService = reviewService;
+        this.resourceService = resourceService;
     }
 
     @Transactional
@@ -45,19 +45,30 @@ public class PlaceService {
             Localization localization = this.localizationService
                     .findLocalization(localizationServiceDto);
 
-            if(this.placeRepository.existsByLocalization(localization))
+            if(this.placeRepository.existsByPlaceLocalization(localization))
                 throw new PodiumEntityAlreadyExistException("Place with given localization");
 
         }
 
         this.placeRepository.save(this.convertServiceAddDtoToEntity(addServiceDto));
 
-        Place place = this.getEntity(addServiceDto.getName());
+    }
 
-        place.getReviews().add(this.reviewService.getEntity(
-                place.getName(),
-                addServiceDto.getReviewServiceDto()
-        ));
+    @Transactional
+    public void deletePlaceById(int id){
+
+        Place place = this.placeRepository.findById(id)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given id"));
+
+        this.placeRepository.deleteById(id);
+
+        this.resourceService.deleteResources(place.getPlaceImages());
+
+        this.localizationService
+                .deleteLocalizationById(place.getPlaceLocalization().getId());
+
+        this.businessDayService.deleteBusinessDays(place.getBusinessDays());
+
 
     }
 
@@ -65,7 +76,18 @@ public class PlaceService {
         return this.placeRepository.existsByName(name);
     }
 
+    public Place findPlaceByName(String placeName){
+
+        return this.placeRepository
+                .findByName(placeName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given name"));
+
+    }
+
     private Place convertServiceAddDtoToEntity(PlaceAddServiceDto requestDto){
+
+        Set<PodiumResource> resources = this.resourceService
+                .createPodiumImageResources(requestDto.getImages());
 
         return new Place(
                 requestDto.getName(),
@@ -75,7 +97,8 @@ public class PlaceService {
                 requestDto.getCost(),
                 requestDto.getUsageTime(),
                 requestDto.getMinAge(),
-                requestDto.getMaxAge()
+                requestDto.getMaxAge(),
+                resources
         );
     }
 

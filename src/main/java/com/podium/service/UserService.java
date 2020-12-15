@@ -160,24 +160,6 @@ public class UserService {
         return user;
     }
 
-    private UserResponse convertEntityToResponseDto(User user){
-
-            return new UserResponse(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getEmail(),
-                    user.getPassword(),
-                    user.getCountry().getPrintableName(),
-                    user.getRoles().stream().map(Role::getRole).collect(Collectors.toSet()),
-                    user.getBirthday(),
-                    this.loadProfileImage(user),
-                    user.getEventsJoined(),
-                    user.getEventsCreated(),
-                    user.getDescription()
-            );
-
-    }
-
     private PodiumFileDto loadProfileImage(User user){
 
         if(user.getProfileImage() != null) {

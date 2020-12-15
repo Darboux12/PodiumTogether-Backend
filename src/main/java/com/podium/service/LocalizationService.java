@@ -41,6 +41,18 @@ public class LocalizationService {
 
     }
 
+    @Transactional
+    public void deleteLocalizationById(int id){
+
+        Localization localization= this.localizationRepository.findById(id)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Localization with given id"));
+
+        System.out.println("TO JEST ID" + id);
+
+        if(localization.getPlaces().size() == 1)
+            this.localizationRepository.delete(localization);
+    }
+
     public boolean existLocalizationByCityStreetPostalCodeBuildingNumber(String city, String street, String postalCode, int buildingNumber){
 
        if(this.cityService.existCityByName(city) &&

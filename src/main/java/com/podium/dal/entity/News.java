@@ -21,7 +21,7 @@ public class News {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "news_id")
-    private int newsId;
+    private int id;
 
     @NotNull
     @Column(name = "title")

@@ -22,7 +22,5 @@ public class UserResponse {
     private Set<String> roles;
     private Date birthday;
     private PodiumFileDto profileImage;
-    private Set<Event> eventsJoined;
-    private Set<Event> eventsCreated;
     private String description;
 }

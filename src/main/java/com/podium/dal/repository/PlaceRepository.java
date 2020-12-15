@@ -12,7 +12,7 @@ public interface PlaceRepository extends CrudRepository<Place,Integer> {
 
     Optional<Place> findByName(String placeName);
 
-    boolean existsByLocalization(Localization localization);
+    boolean existsByPlaceLocalization(Localization localization);
 
 
 }

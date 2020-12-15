@@ -12,7 +12,6 @@ public interface CountryRepository extends CrudRepository<Country,Integer> {
 
     boolean existsByName(String countryName);
 
-    @Transactional
     void deleteByName(String discipline);
 
 }

@@ -2,8 +2,10 @@ package com.podium.controller.advice;
 
 import com.podium.controller.status.PodiumResponse;
 import com.podium.controller.validation.exception.*;
+import com.podium.dal.files.exception.PodiumFileNotExistException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumFileUploadFailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.IOException;
 import java.util.Date;
 
 @ControllerAdvice
@@ -201,6 +204,26 @@ public class PodiumControllerAdvice {
 
         return new ResponseEntity<>(
                 this.createResponseMessage("Object Already Exist Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<PodiumResponse> handleIOException(IOException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Object Already Exist Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumFileUploadFailException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumFileNotExistException(PodiumFileUploadFailException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("File Not Exist", HttpStatus.CONFLICT,
                         e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
         );
 

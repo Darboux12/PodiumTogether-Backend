@@ -31,13 +31,19 @@ public class FileRepository {
 
     public String saveImageAndGetPath(MultipartFile image) throws IOException {
 
+        System.out.println("Dodaje pliki");
+
         if(this.isAcceptedImagesTypes(image.getContentType())){
+
+            System.out.println("Dodaje pliki 2");
 
         String uniqueFileName = this.getUniqueImageName(image.getOriginalFilename());
 
         String path = this.getImagesDirectoryPath() + "\\" + uniqueFileName;
 
         File storeImage = new File(path);
+
+            System.out.println(path);
 
         image.transferTo(storeImage);
 

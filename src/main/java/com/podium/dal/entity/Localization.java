@@ -2,6 +2,7 @@ package com.podium.dal.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,12 +13,13 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "LOCALIZATION")
+@NoArgsConstructor
 public class Localization {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "localization_id")
-    private int localizationId;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -47,8 +49,11 @@ public class Localization {
     @Column(name = "remarks")
     private String remarks;
 
-    @OneToMany(mappedBy="localization")
+    @OneToMany(mappedBy="eventLocalization")
     private Set<Event> events = new HashSet<>();
+
+    @OneToMany(mappedBy="placeLocalization")
+    private Set<Place> places = new HashSet<>();
 
     public Localization(City city, Street street, int buildingNumber, String postalCode, String remarks) {
         this.city = city;

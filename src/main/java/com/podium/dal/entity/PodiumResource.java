@@ -2,6 +2,7 @@ package com.podium.dal.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,12 +13,13 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "PODIUM_RESOURCES")
+@NoArgsConstructor
 public class PodiumResource {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "resource_id")
-    private int resourceId;
+    private int id;
 
     @NotNull
     @Column(name="name")

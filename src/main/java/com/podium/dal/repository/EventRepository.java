@@ -13,7 +13,6 @@ public interface EventRepository extends CrudRepository<Event,Integer> {
 
     Event findByTitle(String title);
 
-    @Transactional
     void deleteByTitle(String eventTitle);
 
 

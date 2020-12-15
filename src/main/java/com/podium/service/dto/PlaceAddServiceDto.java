@@ -1,13 +1,10 @@
 package com.podium.service.dto;
 
-import com.podium.controller.dto.other.BusinessDayDto;
-import com.podium.controller.dto.other.LocalizationDto;
-import com.podium.controller.dto.other.RatingDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -22,5 +19,5 @@ public class PlaceAddServiceDto {
     private double usageTime;
     private int minAge;
     private int maxAge;
-    private ReviewServiceDto reviewServiceDto;
+    private Set<MultipartFile> images;
 }

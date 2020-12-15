@@ -288,6 +288,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/country/find/name/{name}")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/test/dto")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/place/find/name/{name}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/place/delete/id/{id}")
+                .permitAll()
+
+
+
+
+
+
 
                 // all other requests need to be authenticated
                         .anyRequest().authenticated().and().

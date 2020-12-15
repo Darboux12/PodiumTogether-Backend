@@ -70,7 +70,7 @@ public class ResourceService {
         resources.forEach(resource -> {
 
             if(!this.fileRepository.existFileByPath(resource.getPath()))
-                throw new PodiumFileNotExistException();
+                throw new PodiumFileUploadFailException();
 
             this.fileRepository.deleteFile(resource.getPath());
 

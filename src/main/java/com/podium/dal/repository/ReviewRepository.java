@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends CrudRepository<Review,Integer> {
 
-    boolean existsByAuthorAndAndPlace(User author, Place place);
+    boolean existsByAuthorAndPlace(User author, Place place);
 
     Optional<Review> findByAuthorAndPlace(User author, Place place);
 }

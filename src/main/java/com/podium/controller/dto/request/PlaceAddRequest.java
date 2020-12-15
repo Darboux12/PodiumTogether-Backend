@@ -36,8 +36,4 @@ public class PlaceAddRequest {
     private int minAge;
     @PodiumNumberInt(min = PodiumLimits.minPlaceMaxAge, max = PodiumLimits.maxPlaceMaxAge)
     private int maxAge;
-    private List<RatingDto> ratingDtos;
-    @PodiumLength(min = PodiumLimits.minPlaceReview, max = PodiumLimits.maxPlaceReview)
-    private String review;
-
 }

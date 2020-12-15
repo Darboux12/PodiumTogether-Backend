@@ -2,6 +2,7 @@ package com.podium.dal.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
@@ -15,12 +16,13 @@ import java.util.Set;
 @Entity
 @Table(name = "EVENT")
 @SecondaryTable(name = "EVENT_DETAILS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "event_details_id"))
+@NoArgsConstructor
 public class Event {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "event_id")
-    private int eventId;
+    private int id;
 
     @NotNull
     @Column(name = "title")
@@ -72,7 +74,7 @@ public class Event {
                     CascadeType.MERGE
             })
     @JoinColumn(name="localization_id", nullable=false)
-    private Localization localization;
+    private Localization eventLocalization;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {

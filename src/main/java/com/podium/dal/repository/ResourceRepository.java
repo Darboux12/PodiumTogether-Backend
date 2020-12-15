@@ -9,10 +9,6 @@ public interface ResourceRepository extends CrudRepository<PodiumResource,Intege
 
     PodiumResource findByName(String resourceName);
 
-    @Transactional
-    void deleteByResourceId(int id);
-
-    boolean existsByResourceId(int id);
-
+    boolean existsById(int id);
 
 }

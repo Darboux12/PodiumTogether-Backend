@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
         TestLogger.setUp();
 
-        LocalizationDto localizationDto = new LocalizationDto(
+       LocalizationDto localizationDto = new LocalizationDto(
                 "PlaceTestCityName",
                 "PlaceTestStreetName",
                 123,
@@ -64,14 +64,6 @@ import java.util.stream.Stream;
         businessDayDtos.add(new BusinessDayDto("Sunday",true,
                 timeFrom,timeTo));
 
-        List<RatingDto> ratingDtos = List.of(
-                new RatingDto("Service",1),
-                new RatingDto("Service",2),
-                new RatingDto("Equipment",3),
-                new RatingDto("Equipment",4),
-                new RatingDto("Price",5)
-        );
-
         requestDto = new PlaceAddRequest(
                 "Test Place Name",
                 "Football",
@@ -80,9 +72,7 @@ import java.util.stream.Stream;
                 50,
                 PodiumLimits.minUsageTimeHours + 1,
                 10,
-                20,
-                ratingDtos,
-                "This is test place review"
+                20
         );
 
 
@@ -117,7 +107,6 @@ import java.util.stream.Stream;
 
 
     }
-
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
@@ -595,85 +584,6 @@ import java.util.stream.Stream;
     }
 
     @ParameterizedTest
-    @MethodSource("provideEmptyValuesForTests")
-    void T32_Add_Place_Empty_Rating_Category_Return_Status_CONFLICT(String emptyCategory){
-
-        textValueHolder = requestDto.getRatingDtos().get(0).getCategory();
-        requestDto.getRatingDtos().get(0).setCategory(emptyCategory);
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto, HttpStatus.CONFLICT);
-
-        requestDto.getRatingDtos().get(0).setCategory(textValueHolder);
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0,1,2,3,4})
-    void T33_Add_Place_Too_Small_Rating_Return_Status_CONFLICT(int index){
-
-        intValueHolder = requestDto.getRatingDtos().get(index).getRating();
-        requestDto.getRatingDtos().get(index).setRating(PodiumLimits.minPlaceRating - 1);
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.getRatingDtos().get(index).setRating(intValueHolder);
-
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {0,1,2,3,4})
-    void T34_Add_Place_Too_Large_Rating_Return_Status_CONFLICT(int index){
-
-        intValueHolder = requestDto.getRatingDtos().get(index).getRating();
-        requestDto.getRatingDtos().get(index).setRating(PodiumLimits.maxPlaceRating + 1);
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.getRatingDtos().get(index).setRating(intValueHolder);
-
-    }
-
-    @Test
-    void T35_Add_Place_ToShort_Review_Return_Status_CONFLICT(){
-
-        String toShort =
-                StringUtils.repeat("*", PodiumLimits.minPlaceReview - 1);
-
-        textValueHolder = requestDto.getReview();
-        requestDto.setReview(toShort);
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setReview(textValueHolder);
-
-    }
-
-    @Test
-    void T36_Add_Place_To_Large_Localization_Remarks_Return_CONFLICT(){
-
-
-        String toLong =
-                StringUtils.repeat("*", PodiumLimits.maxPlaceReview + 1);
-
-        textValueHolder = requestDto.getReview();
-        requestDto.setReview(toLong);
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setReview(textValueHolder);
-
-    }
-
-    @ParameterizedTest
     @ValueSource(strings = {"DISCIPLINE_ONE","DISCIPLINE_TWO"})
     void T36_Add_Place_Non_Existing_Discipline_Return_Status_NOTFOUND(String discipline){
 
@@ -701,18 +611,24 @@ import java.util.stream.Stream;
         requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(timeFrom);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0,1,2,3,4})
-    void T38_Add_Place_Non_Existing_Rating_Category_Return_Status_NOTFOUND(int index){
-
-        textValueHolder = requestDto.getRatingDtos().get(index).getCategory();
-        requestDto.getRatingDtos().get(index).setCategory("WRONG_CATEGORY");
+    @Test
+    void T38_Add_Valid_Place_Should_Return_Status_OK(){
 
         PlaceValidator
                 .getInstance()
-                .add(requestDto, HttpStatus.NOT_FOUND);
+                .add(requestDto, HttpStatus.OK);
 
-        requestDto.getRatingDtos().get(index).setCategory(textValueHolder);
+    }
+
+
+    @Test
+    void T40_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+
+
+
+
+
+
     }
 
 }

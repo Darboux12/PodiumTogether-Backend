@@ -6,6 +6,9 @@ import com.podium.dal.repository.BusinessDayRepository;
 import com.podium.service.dto.BusinessDayServiceDto;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class BusinessDayService {
 
@@ -23,6 +26,22 @@ public class BusinessDayService {
         this.businessDayRepository.save(
                 this.convertServiceDtoToEntity(serviceDto)
         );
+
+    }
+
+    public void deleteBusinessDays(Set<BusinessDay> businessDays){
+
+        var daysToDelete = new HashSet<BusinessDay>();
+
+        businessDays.forEach(day -> {
+
+            if(day.getPlaces().size() == 1)
+                daysToDelete.add(day);
+
+        });
+
+        this.businessDayRepository.deleteAll(daysToDelete);
+
 
     }
 
@@ -57,5 +76,7 @@ public class BusinessDayService {
                 ));
 
     }
+
+
 
 }

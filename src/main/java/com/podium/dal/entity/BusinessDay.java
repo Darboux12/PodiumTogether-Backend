@@ -2,6 +2,7 @@ package com.podium.dal.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,12 +14,13 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "BUSINESS_DAY")
+@NoArgsConstructor
 public class BusinessDay {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "business_day_id")
-    private int businessDayId;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
