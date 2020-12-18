@@ -91,4 +91,15 @@ public class Place {
         this.maxAge = maxAge;
         this.placeImages = placeImages;
     }
+
+    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge) {
+        this.name = name;
+        this.discipline = discipline;
+        this.placeLocalization = placeLocalization;
+        this.businessDays = businessDays;
+        this.cost = cost;
+        this.usageTime = usageTime;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+    }
 }

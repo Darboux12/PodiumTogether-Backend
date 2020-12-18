@@ -133,9 +133,9 @@ public class PodiumLimits {
     public static final int minPlaceRating = 0;
     public static final int maxPlaceRating = 5;
 
-    /** PLACE Review*/
-    public static final int minPlaceReview = 13;
-    public static final int maxPlaceReview = 500;
+    /** PLACE Review Opinion*/
+    public static final int minPlaceReviewOpinion = 13;
+    public static final int maxPlaceReviewOpinion = 500;
 
     public static final String defaultUserRole = "subscriber";
 

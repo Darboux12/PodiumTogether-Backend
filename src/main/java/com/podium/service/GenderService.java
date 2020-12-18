@@ -20,7 +20,7 @@ public class GenderService {
     }
 
     @Transactional
-    public void addGender(GenderAddServiceDto requestDto){
+    public void addGender(GenderAddServiceDto requestDto) throws PodiumEntityAlreadyExistException {
 
         if(this.genderRepository.existsByGender(requestDto.getGender()))
             throw new PodiumEntityAlreadyExistException("Gender");
@@ -29,7 +29,7 @@ public class GenderService {
     }
 
     @Transactional
-    public void deleteGenderByName(String name){
+    public void deleteGenderByName(String name) throws PodiumEntityNotFoundException {
 
         if(!this.genderRepository.existsByGender(name))
             throw new PodiumEntityNotFoundException("Gender");
@@ -41,7 +41,7 @@ public class GenderService {
         return this.genderRepository.existsByGender(genderName);
     }
 
-    public Gender findByGenderName(String genderName){
+    public Gender findByGenderName(String genderName) throws PodiumEntityNotFoundException {
 
         return this.genderRepository
                 .findByGender(genderName)

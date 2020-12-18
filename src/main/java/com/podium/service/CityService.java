@@ -19,7 +19,7 @@ public class CityService {
     }
 
     @Transactional
-    public void addCity(CityAddServiceDto cityAddServiceDto){
+    public void addCity(CityAddServiceDto cityAddServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.cityRepository.existsByCity(cityAddServiceDto.getCity()))
             throw new PodiumEntityAlreadyExistException("City");
@@ -28,19 +28,27 @@ public class CityService {
     }
 
     @Transactional
-    public void deleteCityByName(String cityName){
+    public void deleteCityByName(String cityName) throws PodiumEntityNotFoundException {
 
-        if(!this.cityRepository.existsByCity(cityName))
-            throw new PodiumEntityNotFoundException("City");
+        City city = this.findCityByName(cityName);
 
-        this.cityRepository.deleteByCity(cityName);
+        this.cityRepository.delete(city);
+
+    }
+
+    @Transactional
+    public void deleteCity(City city) {
+
+        if(city.getLocalizations().size() == 1)
+            this.cityRepository.delete(city);
+
     }
 
     public boolean existCityByName(String cityName){
         return this.cityRepository.existsByCity(cityName);
     }
 
-    public City findCityByName(String cityName){
+    public City findCityByName(String cityName) throws PodiumEntityNotFoundException {
 
         return this.cityRepository
                 .findByCity(cityName)

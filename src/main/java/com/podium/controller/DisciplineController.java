@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Discipline;
 import com.podium.service.DisciplineService;
 import com.podium.service.dto.DisciplineAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,7 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findByDisciplineName)
-    public ResponseEntity<DisciplineResponse> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+    public ResponseEntity<DisciplineResponse> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline) throws PodiumEntityNotFoundException {
 
         var dis = this.disciplineService.findDisciplineByName(discipline);
 
@@ -42,7 +44,7 @@ public class DisciplineController {
     }
 
     @PostMapping(PodiumEndpoint.addDiscipline)
-    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineAddRequest requestDto) {
+    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineAddRequest requestDto) throws PodiumEntityAlreadyExistException {
         this.disciplineService.addDiscipline(this.convertAddRequestToServiceModel(requestDto));
         return ResponseEntity.ok().body("Discipline successfully added");
 
@@ -54,7 +56,7 @@ public class DisciplineController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteDisciplineByName)
-    public ResponseEntity deleteDisciplineByName(@PathVariable @PodiumValidVariable String discipline){
+    public ResponseEntity deleteDisciplineByName(@PathVariable @PodiumValidVariable String discipline) throws PodiumEntityNotFoundException {
         this.disciplineService.deleteDisciplineByName(discipline);
         return ResponseEntity.ok().body("Discipline successfully deleted");
     }

@@ -1,5 +1,6 @@
 package com.podium.configuration;
 
+import com.podium.constant.PodiumEndpoint;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -297,6 +298,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers("/place/delete/id/{id}")
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers( "/place/review/add")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers( "/place/review/delete/id/{id}")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers( "/place/review/find/author/{username}")
+                .permitAll()
+
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewLikes)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewDislikes)
+                .permitAll()
 
 
 

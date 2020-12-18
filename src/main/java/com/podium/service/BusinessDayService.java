@@ -4,8 +4,11 @@ import com.podium.dal.entity.BusinessDay;
 import com.podium.dal.entity.WeekDay;
 import com.podium.dal.repository.BusinessDayRepository;
 import com.podium.service.dto.BusinessDayServiceDto;
+import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +24,7 @@ public class BusinessDayService {
         this.weekDayService = weekDayService;
     }
 
-    public void addBusinessDay(BusinessDayServiceDto serviceDto){
+    public void addBusinessDay(BusinessDayServiceDto serviceDto) throws PodiumEntityNotFoundException {
 
         this.businessDayRepository.save(
                 this.convertServiceDtoToEntity(serviceDto)
@@ -45,7 +48,7 @@ public class BusinessDayService {
 
     }
 
-    private BusinessDay convertServiceDtoToEntity(BusinessDayServiceDto businessDayServiceDto){
+    private BusinessDay convertServiceDtoToEntity(BusinessDayServiceDto businessDayServiceDto) throws PodiumEntityNotFoundException {
 
         WeekDay weekDay = this.weekDayService.getEntity(businessDayServiceDto.getDay());
 
@@ -57,9 +60,16 @@ public class BusinessDayService {
         );
     }
 
-    public BusinessDay getEntity(BusinessDayServiceDto businessDayServiceDto){
+    public BusinessDay getEntity(BusinessDayServiceDto businessDayServiceDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
         WeekDay weekDay = this.weekDayService.getEntity(businessDayServiceDto.getDay());
+
+        LocalTime timeFrom = businessDayServiceDto.getOpeningTimeFrom();
+
+        LocalTime timeTo = businessDayServiceDto.getOpeningTimeTo();
+
+        if(timeFrom.isAfter(timeTo))
+            throw new PodiumEntityTimeConsistencyError("Business Day Opening Times");
 
         return this.businessDayRepository
 

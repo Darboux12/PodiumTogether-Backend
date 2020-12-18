@@ -19,7 +19,7 @@ public class RatingCategoryService {
     }
 
     @Transactional
-    public void addCategory(RatingCategoryAddServiceDto ratingCategoryAddServiceDto){
+    public void addCategory(RatingCategoryAddServiceDto ratingCategoryAddServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.ratingCategoryRepository.existsByCategory(ratingCategoryAddServiceDto.getCategory()))
             throw new PodiumEntityAlreadyExistException("RatingDto Category");
@@ -28,12 +28,17 @@ public class RatingCategoryService {
     }
 
     @Transactional
-    public void deleteRatingCategoryByCategory(String category){
+    public void deleteRatingCategoryByCategory(String category) throws PodiumEntityNotFoundException {
 
         if(!this.ratingCategoryRepository.existsByCategory(category))
             throw new PodiumEntityNotFoundException("RatingDto Category");
 
         this.ratingCategoryRepository.deleteByCategory(category);
+    }
+
+    @Transactional
+    public long countAllRatingCategories(){
+        return this.ratingCategoryRepository.count();
     }
 
     public boolean existCategoryByCategory(String category){
@@ -44,7 +49,7 @@ public class RatingCategoryService {
         return this.ratingCategoryRepository.findAll();
     }
 
-    public RatingCategory findCategoryByCategory(String category){
+    public RatingCategory findCategoryByCategory(String category) throws PodiumEntityNotFoundException {
 
         return this.ratingCategoryRepository
                 .findByCategory(category).orElseThrow(() ->
@@ -56,7 +61,7 @@ public class RatingCategoryService {
         return new RatingCategory(ratingCategoryAddServiceDto.getCategory());
     }
 
-    public RatingCategory getEntity(String ratingCategoryName){
+    public RatingCategory getEntity(String ratingCategoryName) throws PodiumEntityNotFoundException {
 
         return this.ratingCategoryRepository
                 .findByCategory(ratingCategoryName)

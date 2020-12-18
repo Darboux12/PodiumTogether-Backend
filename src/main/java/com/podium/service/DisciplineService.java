@@ -19,7 +19,7 @@ public class DisciplineService {
     }
 
     @Transactional
-    public void addDiscipline(DisciplineAddServiceDto addServiceDto){
+    public void addDiscipline(DisciplineAddServiceDto addServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.disciplineRepository.existsByDiscipline(addServiceDto.getDiscipline()))
             throw new PodiumEntityAlreadyExistException("Discipline");
@@ -28,7 +28,7 @@ public class DisciplineService {
     }
 
     @Transactional
-    public void deleteDisciplineByName(String discipline){
+    public void deleteDisciplineByName(String discipline) throws PodiumEntityNotFoundException {
 
         if(!this.disciplineRepository.existsByDiscipline(discipline))
             throw new PodiumEntityNotFoundException("Discipline");
@@ -44,7 +44,7 @@ public class DisciplineService {
         return this.disciplineRepository.findAll();
     }
 
-    public Discipline findDisciplineByName(String disciplineName){
+    public Discipline findDisciplineByName(String disciplineName) throws PodiumEntityNotFoundException {
 
         return this.disciplineRepository
                 .findByDiscipline(disciplineName)
@@ -55,7 +55,7 @@ public class DisciplineService {
         return new Discipline(addServiceDto.getDiscipline());
     }
 
-    public Discipline getEntity(String disciplineName){
+    public Discipline getEntity(String disciplineName) throws PodiumEntityNotFoundException {
 
         return this.disciplineRepository
                 .findByDiscipline(disciplineName)

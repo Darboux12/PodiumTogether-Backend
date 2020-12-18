@@ -5,6 +5,7 @@ import com.podium.controller.validation.exception.*;
 import com.podium.dal.files.exception.PodiumFileNotExistException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import com.podium.service.exception.PodiumFileUploadFailException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -224,6 +225,16 @@ public class PodiumControllerAdvice {
 
         return new ResponseEntity<>(
                 this.createResponseMessage("File Not Exist", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumEntityTimeConsistencyError.class)
+    public ResponseEntity<PodiumResponse> handlePodiumEntityTimeConsistencyError(PodiumEntityTimeConsistencyError e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Time Consistency Error", HttpStatus.CONFLICT,
                         e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
         );
 

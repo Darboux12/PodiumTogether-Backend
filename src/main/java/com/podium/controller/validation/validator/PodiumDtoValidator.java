@@ -88,21 +88,24 @@ public class PodiumDtoValidator {
         // Check if object is collection
         if(object instanceof Collection){
 
-            // If object is collection => check its class type
-            Class elementClass = ((Collection) object).toArray()[0].getClass();
+            if(!((Collection) object).isEmpty()) {
 
-            // Check if collection elements are one of permitted fields (aka primitive)
-            if(this.isPermittedType(elementClass)){
+                // If object is collection => check its class type
+                Class elementClass = ((Collection) object).toArray()[0].getClass();
 
-                // Validate annotations of collection => can have annotation
-                this.validatePermittedTypeCollectionAnnotations(object);
-            }
-            // Else go deeper
-            else {
+                // Check if collection elements are one of permitted fields (aka primitive)
+                if (this.isPermittedType(elementClass)) {
 
-                for(Object o : ((Collection) object).toArray())
-                    this.validateRequestBody(o);
+                    // Validate annotations of collection => can have annotation
+                    this.validatePermittedTypeCollectionAnnotations(object);
+                }
+                // Else go deeper
+                else {
 
+                    for (Object o : ((Collection) object).toArray())
+                        this.validateRequestBody(o);
+
+                }
             }
 
         }

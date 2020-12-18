@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Gender;
 import com.podium.service.GenderService;
 import com.podium.service.dto.GenderAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,7 @@ public class GenderController {
     }
 
     @GetMapping(PodiumEndpoint.findGenderByName)
-    public ResponseEntity<GenderResponse> findGenderByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity<GenderResponse> findGenderByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var gender = this.genderService.findByGenderName(name);
 
@@ -46,7 +48,7 @@ public class GenderController {
     }
 
     @PostMapping(PodiumEndpoint.addGender)
-    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderAddRequest requestDto){
+    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderAddRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         this.genderService.addGender(this.convertAddRequestToServiceDto(requestDto));
 
@@ -59,7 +61,7 @@ public class GenderController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteGenderByName)
-    public ResponseEntity deleteGenderByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity deleteGenderByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         if(!this.genderService.existGenderByName(name))
             throw new ResponseStatusException(

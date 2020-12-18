@@ -20,7 +20,7 @@ public class WeekDayService {
         return this.weekDayRepository.findAll();
     }
 
-    public WeekDay findWeekDay(String dayName){
+    public WeekDay findWeekDay(String dayName) throws PodiumEntityNotFoundException {
 
         return this.weekDayRepository
                 .findByDay(dayName)
@@ -34,7 +34,7 @@ public class WeekDayService {
 
     }
 
-    public WeekDay getEntity(String dayName){
+    public WeekDay getEntity(String dayName) throws PodiumEntityNotFoundException {
 
         return this.weekDayRepository
                 .findByDay(dayName)

@@ -20,7 +20,7 @@ public class CountryService {
     }
 
     @Transactional
-    public void addCountry(CountryAddRequest requestDto){
+    public void addCountry(CountryAddRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         if(this.countryRepository.existsByName(requestDto.getName()))
             throw new PodiumEntityAlreadyExistException("Country");
@@ -29,7 +29,7 @@ public class CountryService {
     }
 
     @Transactional
-    public void deleteCountryByName(String name){
+    public void deleteCountryByName(String name) throws PodiumEntityNotFoundException {
 
         if(!this.countryRepository.existsByName(name))
             throw new PodiumEntityNotFoundException("Country");
@@ -46,7 +46,7 @@ public class CountryService {
 
     }
 
-    public Country findCountryByName(String countryName){
+    public Country findCountryByName(String countryName) throws PodiumEntityNotFoundException {
 
         return this.countryRepository
                 .findByName(countryName)
@@ -76,7 +76,7 @@ public class CountryService {
         );
     }
 
-    public Country getEntity(String countryName){
+    public Country getEntity(String countryName) throws PodiumEntityNotFoundException {
 
         return this.countryRepository
                 .findByName(countryName)

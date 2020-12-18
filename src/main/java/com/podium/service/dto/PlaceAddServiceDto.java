@@ -20,4 +20,5 @@ public class PlaceAddServiceDto {
     private int minAge;
     private int maxAge;
     private Set<MultipartFile> images;
+    private Set<MultipartFile> documents;
 }

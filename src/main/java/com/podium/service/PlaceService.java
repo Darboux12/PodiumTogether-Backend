@@ -6,7 +6,9 @@ import com.podium.service.dto.BusinessDayServiceDto;
 import com.podium.service.dto.LocalizationServiceDto;
 import com.podium.service.dto.PlaceAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,7 +34,7 @@ public class PlaceService {
     }
 
     @Transactional
-    public void addPlace(PlaceAddServiceDto addServiceDto){
+    public void addPlace(PlaceAddServiceDto addServiceDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
         if(this.placeRepository.existsByName(addServiceDto.getName()))
             throw new PodiumEntityAlreadyExistException("Place with given name");
@@ -55,7 +57,7 @@ public class PlaceService {
     }
 
     @Transactional
-    public void deletePlaceById(int id){
+    public void deletePlaceById(int id) throws PodiumEntityNotFoundException {
 
         Place place = this.placeRepository.findById(id)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given id"));
@@ -76,7 +78,7 @@ public class PlaceService {
         return this.placeRepository.existsByName(name);
     }
 
-    public Place findPlaceByName(String placeName){
+    public Place findPlaceByName(String placeName) throws PodiumEntityNotFoundException {
 
         return this.placeRepository
                 .findByName(placeName)
@@ -84,16 +86,30 @@ public class PlaceService {
 
     }
 
-    private Place convertServiceAddDtoToEntity(PlaceAddServiceDto requestDto){
+    private Place convertServiceAddDtoToEntity(PlaceAddServiceDto requestDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
-        Set<PodiumResource> resources = this.resourceService
+        Discipline discipline = this.getPlaceDiscipline(requestDto.getDiscipline());
+
+        Localization localization = this.getPlaceLocalization(requestDto.getLocalizationDto());
+
+        Set<BusinessDay> businessDays = this.getBusinessDays(requestDto.getBusinessDayDtos());
+
+        Set<PodiumResource> imageResources = this.resourceService
                 .createPodiumImageResources(requestDto.getImages());
+
+        Set<PodiumResource> documentResources = this.resourceService
+                .createPodiumDocumentResources(requestDto.getDocuments());
+
+        Set<PodiumResource> resources = new HashSet<>();
+
+        resources.addAll(imageResources);
+        resources.addAll(documentResources);
 
         return new Place(
                 requestDto.getName(),
-                this.getPlaceDiscipline(requestDto.getDiscipline()),
-                this.getPlaceLocalization(requestDto.getLocalizationDto()),
-                this.getBusinessDays(requestDto.getBusinessDayDtos()),
+                discipline,
+                localization,
+                businessDays,
                 requestDto.getCost(),
                 requestDto.getUsageTime(),
                 requestDto.getMinAge(),
@@ -106,22 +122,22 @@ public class PlaceService {
         return this.localizationService.getEntity(localizationDto);
     }
 
-    private Discipline getPlaceDiscipline(String disciplineName){
+    private Discipline getPlaceDiscipline(String disciplineName) throws PodiumEntityNotFoundException {
         return this.disciplineService.getEntity(disciplineName);
     }
 
-    private Set<BusinessDay> getBusinessDays(Set<BusinessDayServiceDto> businessDayServiceDtos){
+    private Set<BusinessDay> getBusinessDays(Set<BusinessDayServiceDto> businessDayServiceDtos) throws PodiumEntityTimeConsistencyError, PodiumEntityNotFoundException {
 
         Set<BusinessDay> businessDays = new HashSet<>();
 
-        businessDayServiceDtos
-                .forEach(day -> businessDays.add(this.businessDayService.getEntity(day)));
+        for(BusinessDayServiceDto dto : businessDayServiceDtos)
+            businessDays.add(this.businessDayService.getEntity(dto));
 
         return businessDays;
 
     }
 
-    private boolean existLocalization(LocalizationServiceDto serviceDto){
+    private boolean existLocalization(LocalizationServiceDto serviceDto) throws PodiumEntityNotFoundException {
 
         return this.localizationService
 
@@ -133,7 +149,7 @@ public class PlaceService {
                 );
     }
 
-    public Place getEntity(String placeName){
+    public Place getEntity(String placeName) throws PodiumEntityNotFoundException {
 
        return this.placeRepository
                .findByName(placeName)

@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Country;
 import com.podium.service.CountryService;
 import com.podium.service.dto.CountryAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,7 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.findCountryByName)
-    public ResponseEntity<CountryResponse> findCountryByName(@PathVariable @PodiumValidVariable String name ){
+    public ResponseEntity<CountryResponse> findCountryByName(@PathVariable @PodiumValidVariable String name ) throws PodiumEntityNotFoundException {
 
         var country = this.countryService.findCountryByName(name);
 
@@ -42,7 +44,7 @@ public class CountryController {
     }
 
     @PostMapping(PodiumEndpoint.addCountry)
-    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryAddRequest requestDto){
+    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryAddRequest requestDto) throws PodiumEntityAlreadyExistException {
         this.countryService.addCountry(requestDto);
         return ResponseEntity.ok().body("Country successfully added");
     }
@@ -53,7 +55,7 @@ public class CountryController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCountryByName)
-    public ResponseEntity deleteCountryByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity deleteCountryByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
         this.countryService.deleteCountryByName(name);
         return ResponseEntity.ok().body("Country successfully deleted");
     }

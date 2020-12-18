@@ -3,6 +3,8 @@ package com.podium.service;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.files.FileRepository;
 import com.podium.dal.files.exception.PodiumFileNotExistException;
+import com.podium.dal.files.exception.PodiumMoreThanOneFileException;
+import com.podium.dal.files.exception.PodiumNotSupportedImageType;
 import com.podium.dal.repository.ResourceRepository;
 import com.podium.service.exception.PodiumFileUploadFailException;
 import org.springframework.stereotype.Service;
@@ -28,28 +30,45 @@ public class ResourceService {
 
         Set<PodiumResource> resources = new HashSet<>();
 
-        images.forEach(image -> {
-
-            if(this.fileRepository.isAcceptedImagesTypes(image.getContentType())){
-
-                try {
-
-                    PodiumResource resource = new PodiumResource();
-                    resource.setName(image.getOriginalFilename());
-                    resource.setType(image.getContentType());
-
-                    String path = this.fileRepository.saveImageAndGetPath(image);
-
-                    resource.setPath(path);
-
-                    resources.add(resource);
+        images.stream().filter(image -> this.fileRepository.isAcceptedImagesType(image.getContentType())).forEach(image -> {
 
 
-                } catch (IOException e) {
-                    throw new PodiumFileUploadFailException();
-                }
+                PodiumResource resource = new PodiumResource();
+                resource.setName(image.getOriginalFilename());
+                resource.setType(image.getContentType());
 
-            }
+                String path = this.fileRepository.saveImageAndGetPath(image);
+
+                resource.setPath(path);
+
+                resources.add(resource);
+
+
+
+        });
+
+        return resources;
+
+    }
+
+    public Set<PodiumResource> createPodiumDocumentResources(Set<MultipartFile> documents){
+
+        Set<PodiumResource> resources = new HashSet<>();
+
+        documents
+                .stream()
+                .filter(doc -> this.fileRepository.isAcceptedDocumentType(doc.getContentType()))
+                .forEach(doc -> {
+
+                PodiumResource resource = new PodiumResource();
+                resource.setName(doc.getOriginalFilename());
+                resource.setType(doc.getContentType());
+
+                String path = this.fileRepository.saveDocumentAndGetPath(doc);
+
+                resource.setPath(path);
+
+                resources.add(resource);
 
         });
 
@@ -70,7 +89,11 @@ public class ResourceService {
         resources.forEach(resource -> {
 
             if(!this.fileRepository.existFileByPath(resource.getPath()))
-                throw new PodiumFileUploadFailException();
+                try {
+                    throw new PodiumFileUploadFailException();
+                } catch (PodiumFileUploadFailException e) {
+                    e.printStackTrace();
+                }
 
             this.fileRepository.deleteFile(resource.getPath());
 

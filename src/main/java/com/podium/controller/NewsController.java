@@ -10,6 +10,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.News;
 import com.podium.service.NewsService;
 import com.podium.service.dto.NewsAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +38,7 @@ public class NewsController {
     protected ResponseEntity addNews(@RequestPart("news") @PodiumValidBody NewsAddRequest addRequest,
                                   @RequestPart("images") List<MultipartFile> images
 
-    ){
+    ) throws PodiumEntityAlreadyExistException {
 
        this.newsService.addNews(this.convertAddRequestToServiceDto(addRequest,images));
 
@@ -52,7 +54,7 @@ public class NewsController {
 
     @GetMapping(PodiumEndpoint.findNewsById)
     public ResponseEntity<NewsResponse>
-    findNewsById(@PathVariable @PodiumValidVariable int id){
+    findNewsById(@PathVariable @PodiumValidVariable int id) throws PodiumEntityNotFoundException {
 
         var news = this.newsService.findNewsById(id);
         return ResponseEntity.ok().body(this.convertEntityToResponseDto(news));
@@ -60,14 +62,15 @@ public class NewsController {
 
     @GetMapping(PodiumEndpoint.findNewsByTitle)
     public ResponseEntity<NewsResponse>
-    findNewsByTitle(@PathVariable @PodiumValidVariable String title){
+    findNewsByTitle(@PathVariable @PodiumValidVariable String title) throws PodiumEntityNotFoundException {
 
         var news = this.newsService.findNewsByTitle(title);
         return ResponseEntity.ok().body(this.convertEntityToResponseDto(news));
     }
 
     @DeleteMapping(PodiumEndpoint.deleteNewsById)
-    public ResponseEntity deleteNewsById(@PathVariable @PodiumValidVariable int id) {
+    public ResponseEntity deleteNewsById(@PathVariable @PodiumValidVariable int id) throws PodiumEntityNotFoundException {
+
         this.newsService.deleteNewsById(id);
         return ResponseEntity.ok().body("News successfully deleted");
     }

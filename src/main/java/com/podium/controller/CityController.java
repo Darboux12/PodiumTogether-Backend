@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.City;
 import com.podium.service.CityService;
 import com.podium.service.dto.CityAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +36,7 @@ public class CityController{
     }
 
     @GetMapping(PodiumEndpoint.findCityByName)
-    public ResponseEntity<CityResponse> findCityByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity<CityResponse> findCityByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var city = this.cityService.findCityByName(name);
 
@@ -42,7 +44,7 @@ public class CityController{
     }
 
     @PostMapping(PodiumEndpoint.addCity)
-    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddRequest requestDto){
+    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         this.cityService.addCity(this.convertAddRequestToServiceDto(requestDto));
 
@@ -56,7 +58,7 @@ public class CityController{
     }
 
     @DeleteMapping(PodiumEndpoint.deleteCityByName)
-    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         this.cityService.deleteCityByName(name);
 

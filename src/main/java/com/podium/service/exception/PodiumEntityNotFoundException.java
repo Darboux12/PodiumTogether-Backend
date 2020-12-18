@@ -1,8 +1,8 @@
 package com.podium.service.exception;
 
-public class PodiumEntityNotFoundException extends RuntimeException {
+public class PodiumEntityNotFoundException extends Exception {
 
     public PodiumEntityNotFoundException(String entityName) {
-        super("Given " + entityName + "cannot be found!");
+        super("Given " + entityName + " cannot be found!");
     }
 }

@@ -14,6 +14,8 @@ import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.User;
 import com.podium.service.UserService;
 import com.podium.service.dto.SignUpServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
@@ -38,13 +40,13 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.addUser)
-    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequest request){
+    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
         this.userService.addUser(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("User successfully signed up");
     }
 
     @GetMapping(PodiumEndpoint.findUserByUsername)
-    public ResponseEntity<UserResponse> findUser(@PathVariable String username) {
+    public ResponseEntity<UserResponse> findUser(@PathVariable String username) throws PodiumEntityNotFoundException {
 
         var user = this.userService.findUserByUsername(username);
 
@@ -61,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteUser)
-    public ResponseEntity deleteUser(@PathVariable @PodiumValidVariable String username){
+    public ResponseEntity deleteUser(@PathVariable @PodiumValidVariable String username) throws PodiumEntityNotFoundException {
             this.userService.deleteUserByUsername(username);
             return ResponseEntity.ok().body("User successfully deleted");
     }
@@ -77,7 +79,7 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.updateUserProfile)
-    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequest request){
+    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
         this.userService.updateUser(request);
         return ResponseEntity.ok().build();
     }

@@ -231,6 +231,18 @@ public class PodiumEndpoint {
     public static final String deleteEvent = "/event/delete/{title}";
 
 
+    public static final String addReview = "/place/review/add";
+
+    public static final String deleteReviewById = "/place/review/delete/id/{id}";
+
+    public static final String findReviewsByAuthor = "/place/review/find/author/{username}";
+
+    public static final String incrementReviewLikes = "/place/review/increment/likes/{id}";
+
+    public static final String incrementReviewDislikes = "/place/review/increment/dislikes/{id}";
+
+
+
     public static final String uploadEventImages= "/image/upload/event";
 
     public static final String uploadEventFiles = "/file/upload/event";

@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Subject;
 import com.podium.service.SubjectService;
 import com.podium.service.dto.SubjectAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +28,14 @@ public class SubjectController {
     }
 
     @PostMapping(PodiumEndpoint.addSubject)
-    public ResponseEntity addSubject(@RequestBody @PodiumValidBody SubjectAddRequest request){
+    public ResponseEntity addSubject(@RequestBody @PodiumValidBody SubjectAddRequest request) throws PodiumEntityAlreadyExistException {
         this.subjectService.addSubject(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("Subject successfully added");
 
     }
 
     @DeleteMapping(PodiumEndpoint.deleteSubject)
-    public ResponseEntity deleteSubject(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity deleteSubject(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
         this.subjectService.deleteSubjectByName(name);
         return ResponseEntity.ok().body("Subject successfully deleted");
     }
@@ -47,7 +49,7 @@ public class SubjectController {
     }
 
     @GetMapping("/subject/find/{name}")
-    public ResponseEntity<SubjectResponse> findSubjectByName(@PathVariable @PodiumValidVariable String name){
+    public ResponseEntity<SubjectResponse> findSubjectByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var subject= this.subjectService.findSubjectByName(name);
 

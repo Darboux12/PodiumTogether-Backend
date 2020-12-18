@@ -9,6 +9,8 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.RatingCategory;
 import com.podium.service.RatingCategoryService;
 import com.podium.service.dto.RatingCategoryAddServiceDto;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,7 @@ public class RatingCategoryController {
     }
 
     @PostMapping(PodiumEndpoint.addRatingCategory)
-    public ResponseEntity addRatingCategory(@RequestBody @PodiumValidBody RatingCategoryAddRequest requestDto){
+    public ResponseEntity addRatingCategory(@RequestBody @PodiumValidBody RatingCategoryAddRequest requestDto) throws PodiumEntityAlreadyExistException {
         this.ratingCategoryService.addCategory(this.convertAddRequestToServiceDto(requestDto));
         return ResponseEntity.ok().body("RatingDto category successfully added");
     }
@@ -40,7 +42,7 @@ public class RatingCategoryController {
     }
 
     @GetMapping(PodiumEndpoint.findRatingCategory)
-    public ResponseEntity<RatingCategoryResponse> findCategory(@PathVariable @PodiumValidVariable String category){
+    public ResponseEntity<RatingCategoryResponse> findCategory(@PathVariable @PodiumValidVariable String category) throws PodiumEntityNotFoundException {
 
            var categoryEntity = this.ratingCategoryService.findCategoryByCategory(category);
 
@@ -53,7 +55,7 @@ public class RatingCategoryController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteRatingCategory)
-    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String category){
+    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String category) throws PodiumEntityNotFoundException {
         this.ratingCategoryService.deleteRatingCategoryByCategory(category);
         return ResponseEntity.ok().body("RatingDto category successfully deleted");
     }

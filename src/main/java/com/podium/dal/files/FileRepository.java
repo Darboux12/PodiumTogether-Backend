@@ -1,9 +1,6 @@
 package com.podium.dal.files;
 
-import com.podium.dal.files.exception.PodiumFileDeleteFailException;
-import com.podium.dal.files.exception.PodiumFileNotExistException;
-import com.podium.dal.files.exception.PodiumMoreThanOneFileException;
-import com.podium.dal.files.exception.PodiumNotSupportedImageType;
+import com.podium.dal.files.exception.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -13,41 +10,23 @@ import java.util.List;
 @Repository
 public class FileRepository {
 
-    public void saveDocument(MultipartFile file){
+    public String saveImageAndGetPath(MultipartFile image){
 
-            String uniqueFileName = this.getUniqueImageName(file.getOriginalFilename());
+        if(this.isAcceptedImagesType(image.getContentType())){
 
-            String path = this.getDocumentsDirectoryPath() + "\\" + uniqueFileName;
-
-            File storeFile = new File(path);
-
-            try {
-                file.transferTo(storeFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-    }
-
-    public String saveImageAndGetPath(MultipartFile image) throws IOException {
-
-        System.out.println("Dodaje pliki");
-
-        if(this.isAcceptedImagesTypes(image.getContentType())){
-
-            System.out.println("Dodaje pliki 2");
-
-        String uniqueFileName = this.getUniqueImageName(image.getOriginalFilename());
+        String uniqueFileName = this.getUniqueFileName(image.getOriginalFilename());
 
         String path = this.getImagesDirectoryPath() + "\\" + uniqueFileName;
 
         File storeImage = new File(path);
 
-            System.out.println(path);
+            try {
+                image.transferTo(storeImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        image.transferTo(storeImage);
-
-        return this.findImagePathByName(uniqueFileName);
+            return this.findImagePathByName(uniqueFileName);
 
         }
 
@@ -55,8 +34,36 @@ public class FileRepository {
 
     }
 
-    public boolean isAcceptedImagesTypes(String imageType){
+    public String saveDocumentAndGetPath(MultipartFile document){
+
+        if(this.isAcceptedDocumentType(document.getContentType())){
+
+            String uniqueFileName = this.getUniqueFileName(document.getOriginalFilename());
+
+            String path = this.getDocumentsDirectoryPath() + "\\" + uniqueFileName;
+
+            File storeDocument = new File(path);
+
+            try {
+                document.transferTo(storeDocument);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return this.findDocumentPathByName(uniqueFileName);
+
+        }
+
+        throw new PodiumNotSupportedDocumentType();
+
+    }
+
+    public boolean isAcceptedImagesType(String imageType){
         return this.getAcceptedImagesTypes().contains(imageType);
+    }
+
+    public boolean isAcceptedDocumentType(String documentType){
+        return this.getAcceptedDocumentsTypes().contains(documentType);
     }
 
     public void deleteFile(String filePath){
@@ -98,7 +105,7 @@ public class FileRepository {
 
     }
 
-    private String getUniqueImageName(String fileName) {
+    private String getUniqueFileName(String fileName) {
 
         int num = 0;
 
@@ -111,24 +118,6 @@ public class FileRepository {
         while (file.exists()) {
             num++;
             file = new File(this.getImagesDirectoryPath(), name + "-" + num + ext);
-        }
-
-        return file.getName();
-    }
-
-    private String getUniqueDocumentName(String fileName) {
-
-        int num = 0;
-
-        final String ext = getFileExtension(fileName);
-
-        final String name = getFileName(fileName);
-
-        File file = new File(this.getDocumentsDirectoryPath(), fileName);
-
-        while (file.exists()) {
-            num++;
-            file = new File(this.getDocumentsDirectoryPath(), name + "-" + num + ext);
         }
 
         return file.getName();
@@ -153,7 +142,21 @@ public class FileRepository {
                 "image/png",
                 "image/tiff",
                 "image/gif",
-                "image/raw"
+                "image/raw",
+                "image/bmp",
+                "image/webp"
+        );
+
+    }
+
+    private List<String> getAcceptedDocumentsTypes(){
+
+        return List.of(
+                "text/plain",
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.oasis.opendocument.text",
+                "application/pdf"
         );
 
     }

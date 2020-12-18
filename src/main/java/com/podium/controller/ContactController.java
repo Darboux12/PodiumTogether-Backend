@@ -9,6 +9,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Contact;
 import com.podium.service.ContactService;
 import com.podium.service.dto.ContactAddServiceDto;
+import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class ContactController {
     }
 
     @PostMapping(PodiumEndpoint.addContact)
-    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddRequest request){
+    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddRequest request) throws PodiumEntityNotFoundException {
 
         this.contactService.addContact(convertAddRequestToServiceDto(request));
 
@@ -34,7 +35,7 @@ public class ContactController {
     }
 
     @DeleteMapping(PodiumEndpoint.deleteContact)
-    public ResponseEntity deleteContact(@PathVariable @PodiumValidVariable int id){
+    public ResponseEntity deleteContact(@PathVariable @PodiumValidVariable int id) throws PodiumEntityNotFoundException {
 
         this.contactService.deleteContact(id);
 
@@ -51,7 +52,7 @@ public class ContactController {
     }
 
     @GetMapping(PodiumEndpoint.findAllContactBySubject)
-    public ResponseEntity<Iterable<ContactResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject){
+    public ResponseEntity<Iterable<ContactResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject) throws PodiumEntityNotFoundException {
 
         var contacts = this.contactService.findAllContactBySubject(subject);
 

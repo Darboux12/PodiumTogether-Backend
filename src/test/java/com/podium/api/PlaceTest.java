@@ -1,6 +1,7 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
+import com.podium.dal.entity.Place;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.PlaceAddRequest;
 import com.podium.controller.dto.other.BusinessDayDto;
@@ -8,10 +9,7 @@ import com.podium.controller.dto.other.LocalizationDto;
 import com.podium.controller.dto.other.RatingDto;
 import com.podium.validator.PlaceValidator;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -24,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
- class PlaceTest {
+class PlaceTest {
 
     private static PlaceAddRequest requestDto;
     private static String textValueHolder;
@@ -295,7 +293,20 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T13_Add_Place_Empty_Localization_BuildingNumber_Return_Status_OK_As_Its_Optional(){
+    void T13_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+
+        int id = PlaceValidator
+
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getId();
+
+        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
+
+    }
+
+    @Test
+    void T14_Add_Place_Empty_Localization_BuildingNumber_Return_Status_OK_As_Its_Optional(){
 
         intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
         requestDto.getLocalizationDto().setBuildingNumber(0);
@@ -308,12 +319,24 @@ import java.util.stream.Stream;
 
     }
 
-    @ParameterizedTest
-    @MethodSource("provideEmptyValuesForTests")
-    void T14_Add_Place_Empty_Localization_PostalCode_Return_Status_OK_As_Its_Optional(String emptyPostal){
+    @Test
+    void T15_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+
+        int id = PlaceValidator
+
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getId();
+
+        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
+
+    }
+
+    @Test
+    void T16_Add_Place_Empty_Localization_PostalCode_Return_Status_OK_As_Its_Optional(){
 
         textValueHolder = requestDto.getLocalizationDto().getPostalCode();
-        requestDto.getLocalizationDto().setPostalCode(emptyPostal);
+        requestDto.getLocalizationDto().setPostalCode("");
 
         PlaceValidator
                 .getInstance()
@@ -323,12 +346,24 @@ import java.util.stream.Stream;
 
     }
 
-    @ParameterizedTest
-    @MethodSource("provideEmptyValuesForTests")
-    void T15_Add_Place_Empty_Localization_Remarks_Return_Status_OK_As_Its_Optional(String emptyRemarks){
+    @Test
+    void T17_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+
+        int id = PlaceValidator
+
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getId();
+
+        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
+
+    }
+
+    @Test
+    void T18_Add_Place_Empty_Localization_Remarks_Return_Status_OK_As_Its_Optional(){
 
         textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
-        requestDto.getLocalizationDto().setLocalizationRemarks(emptyRemarks);
+        requestDto.getLocalizationDto().setLocalizationRemarks("");
 
         PlaceValidator
                 .getInstance()
@@ -339,7 +374,20 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T16_Add_Place_Too_Short_Localization_PostalCode_Status_CONFLICT(){
+    void T19_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+
+        int id = PlaceValidator
+
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getId();
+
+        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
+
+    }
+
+    @Test
+    void T20_Add_Place_Too_Short_Localization_PostalCode_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
@@ -355,7 +403,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T17_Add_Place_Too_Long_Localization_PostalCode_Return_Status_CONFLICT(){
+    void T21_Add_Place_Too_Long_Localization_PostalCode_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
@@ -372,7 +420,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
-    void T18_Add_Place_Empty_Discipline_Return_Status_CONFLICT(String emptyDiscipline){
+    void T22_Add_Place_Empty_Discipline_Return_Status_CONFLICT(String emptyDiscipline){
 
         textValueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(emptyDiscipline);
@@ -386,7 +434,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
-    void T19_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
+    void T23_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
 
         textValueHolder = requestDto.getLocalizationDto().getCity();
         requestDto.getLocalizationDto().setCity(emptyCity);
@@ -399,7 +447,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T20_Add_Place_Too_Short_Localization_Remarks_Status_CONFLICT(){
+    void T24_Add_Place_Too_Short_Localization_Remarks_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minLocalizationRemarksLength - 1);
@@ -415,7 +463,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T21_Add_Place_Too_Long_Localization_Remarks_Return_Status_CONFLICT(){
+    void T25_Add_Place_Too_Long_Localization_Remarks_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxLocalizationRemarksLength + 1);
@@ -432,7 +480,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesAndDaysIndexesForTests")
-    void T22_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
+    void T26_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
 
         textValueHolder = requestDto.getBusinessDayDtos().get(index).getDay();
         requestDto.getBusinessDayDtos().get(index).setDay(emptyDay);
@@ -446,7 +494,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
-    void T23_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
+    void T27_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
 
         textValueHolder = requestDto.getBusinessDayDtos().get( index).getDay();
         requestDto.getBusinessDayDtos().get( index).setDay("WrongWeekDay");
@@ -459,7 +507,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T24_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
+    void T28_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
 
         BusinessDayDto businessDayDto = requestDto.getBusinessDayDtos().get(0);
         requestDto.getBusinessDayDtos().remove(0);
@@ -472,7 +520,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T25_Add_Place_Too_Small_Cost_Return_Status_CONFLICT(){
+    void T29_Add_Place_Too_Small_Cost_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getCost();
         requestDto.setCost(PodiumLimits.minCost - 1);
@@ -486,7 +534,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T26_Add_Place_Too_Large_Cost_Return_Status_CONFLICT(){
+    void T30_Add_Place_Too_Large_Cost_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getCost();
         requestDto.setCost(PodiumLimits.maxCost + 1);
@@ -500,7 +548,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T27_Add_Place_Too_Small_usageTime_Return_Status_CONFLICT(){
+    void T31_Add_Place_Too_Small_usageTime_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getUsageTime();
         requestDto.setUsageTime(PodiumLimits.minUsageTimeHours - 1);
@@ -514,7 +562,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T28_Add_Place_Too_Large_usageTime_Return_Status_CONFLICT(){
+    void T32_Add_Place_Too_Large_usageTime_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getUsageTime();
         requestDto.setUsageTime(PodiumLimits.maxUsageTimeHours + 1);
@@ -528,7 +576,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T29_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
+    void T33_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMinAge();
         requestDto.setMinAge(PodiumLimits.minPlaceMinAge - 1);
@@ -542,7 +590,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T29_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
+    void T34_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMinAge();
         requestDto.setMinAge(PodiumLimits.maxPlaceMinAge + 1);
@@ -556,7 +604,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T30_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
+    void T35_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMaxAge();
         requestDto.setMaxAge(PodiumLimits.minPlaceMaxAge - 1);
@@ -570,7 +618,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T31_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
+    void T36_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMaxAge();
         requestDto.setMaxAge(PodiumLimits.maxPlaceMaxAge + 1);
@@ -585,7 +633,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @ValueSource(strings = {"DISCIPLINE_ONE","DISCIPLINE_TWO"})
-    void T36_Add_Place_Non_Existing_Discipline_Return_Status_NOTFOUND(String discipline){
+    void T37_Add_Place_Non_Existing_Discipline_Return_Status_NOTFOUND(String discipline){
 
         textValueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(discipline);
@@ -599,7 +647,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
-    void T37_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
+    void T38_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
 
        LocalTime timeFrom  = requestDto.getBusinessDayDtos().get(index).getOpeningTimeFrom();
         requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
@@ -612,7 +660,7 @@ import java.util.stream.Stream;
     }
 
     @Test
-    void T38_Add_Valid_Place_Should_Return_Status_OK(){
+    void T39_Add_Valid_Place_Should_Return_Status_OK(){
 
         PlaceValidator
                 .getInstance()
@@ -620,14 +668,38 @@ import java.util.stream.Stream;
 
     }
 
+    @Test
+    void T40_Find_Created_Place_Return_Status_OK_Find_Entity(){
+
+        String actualName = PlaceValidator
+
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getName();
+
+        Assertions.assertEquals(requestDto.getName(),actualName);
+
+    }
 
     @Test
-    void T40_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+    void T41_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
 
+        int id = PlaceValidator
 
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.OK)
+                .getId();
 
+        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
 
+    }
 
+    @Test
+    void T42_Find_Deleted_Place_Return_Status_NOT_FOUND(){
+
+        PlaceValidator
+                .getInstance()
+                .findByName(requestDto.getName(),HttpStatus.NOT_FOUND);
 
     }
 

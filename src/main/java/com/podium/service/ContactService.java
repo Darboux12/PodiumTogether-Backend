@@ -22,13 +22,13 @@ public class ContactService {
     }
 
     @Transactional
-    public void addContact(ContactAddServiceDto addServiceDto){
+    public void addContact(ContactAddServiceDto addServiceDto) throws PodiumEntityNotFoundException {
         this.contactRepository
                 .save(this.convertServiceAddDtoToEntity(addServiceDto));
     }
 
     @Transactional
-    public void deleteContact(int id){
+    public void deleteContact(int id) throws PodiumEntityNotFoundException {
 
         if(!this.contactRepository.existsById(id))
             throw new PodiumEntityNotFoundException("Contact");
@@ -44,7 +44,7 @@ public class ContactService {
         return this.contactRepository.findAllByUserEmail(email);
     }
 
-    public Iterable<Contact> findAllContactBySubject(String subject){
+    public Iterable<Contact> findAllContactBySubject(String subject) throws PodiumEntityNotFoundException {
 
         var subjectEntity = this.subjectService.findSubjectByName(subject);
 
@@ -56,7 +56,7 @@ public class ContactService {
         return this.contactRepository.existsById(id);
     }
 
-    private Contact convertServiceAddDtoToEntity(ContactAddServiceDto addDto){
+    private Contact convertServiceAddDtoToEntity(ContactAddServiceDto addDto) throws PodiumEntityNotFoundException {
 
         Subject subject = this.subjectService.findSubjectByName(addDto.getSubject());
 

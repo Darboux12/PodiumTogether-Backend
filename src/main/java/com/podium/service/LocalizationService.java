@@ -26,7 +26,7 @@ public class LocalizationService {
     }
 
     @Transactional
-    public void addLocalization(LocalizationServiceDto localizationServiceDto){
+    public void addLocalization(LocalizationServiceDto localizationServiceDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
 
         String city = localizationServiceDto.getCity();
         String street = localizationServiceDto.getStreet();
@@ -42,18 +42,20 @@ public class LocalizationService {
     }
 
     @Transactional
-    public void deleteLocalizationById(int id){
+    public void deleteLocalizationById(int id) throws PodiumEntityNotFoundException {
 
         Localization localization= this.localizationRepository.findById(id)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Localization with given id"));
 
-        System.out.println("TO JEST ID" + id);
-
         if(localization.getPlaces().size() == 1)
             this.localizationRepository.delete(localization);
+
+        this.cityService.deleteCity(localization.getCity());
+
+        this.streetService.deleteStreet(localization.getStreet());
     }
 
-    public boolean existLocalizationByCityStreetPostalCodeBuildingNumber(String city, String street, String postalCode, int buildingNumber){
+    public boolean existLocalizationByCityStreetPostalCodeBuildingNumber(String city, String street, String postalCode, int buildingNumber) throws PodiumEntityNotFoundException {
 
        if(this.cityService.existCityByName(city) &&
                this.streetService.existStreetByName(street))
@@ -69,7 +71,7 @@ public class LocalizationService {
        else return false;
     }
 
-    public Localization findLocalization(LocalizationServiceDto localizationServiceDto){
+    public Localization findLocalization(LocalizationServiceDto localizationServiceDto) throws PodiumEntityNotFoundException {
 
         City city = this.cityService.findCityByName(localizationServiceDto.getCity());
         Street street = this.streetService.findStreetByName(localizationServiceDto.getStreet());
@@ -83,7 +85,7 @@ public class LocalizationService {
 
     }
 
-    private Localization convertServiceAddDtoToEntity(LocalizationServiceDto addDto){
+    private Localization convertServiceAddDtoToEntity(LocalizationServiceDto addDto) throws PodiumEntityNotFoundException {
 
         City city = this.cityService.findCityByName(addDto.getCity());
 

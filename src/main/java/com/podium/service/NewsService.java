@@ -25,7 +25,7 @@ public class NewsService {
     }
 
     @Transactional
-    public void addNews(NewsAddServiceDto newsAddServiceDto) {
+    public void addNews(NewsAddServiceDto newsAddServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.newsRepository.existsByTitle(newsAddServiceDto.getTitle()))
             throw new PodiumEntityAlreadyExistException("News with given title");
@@ -34,7 +34,7 @@ public class NewsService {
     }
 
     @Transactional
-    public void deleteNewsById(int id){
+    public void deleteNewsById(int id) throws PodiumEntityNotFoundException {
 
         News news = this.newsRepository.findById(id)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("News with given id"));
@@ -48,14 +48,14 @@ public class NewsService {
         return this.newsRepository.findAll();
     }
 
-    public News findNewsById(int id) {
+    public News findNewsById(int id) throws PodiumEntityNotFoundException {
 
         return this.newsRepository.findById(id).orElseThrow(() ->
                 new PodiumEntityNotFoundException("News with given id"));
 
     }
 
-    public News findNewsByTitle(String title) {
+    public News findNewsByTitle(String title) throws PodiumEntityNotFoundException {
 
         return this.newsRepository.findByTitle(title).orElseThrow(() ->
                 new PodiumEntityNotFoundException("News with given title"));

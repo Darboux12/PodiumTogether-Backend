@@ -40,7 +40,7 @@ public class Review {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinColumn(name="author", nullable=false)
+    @JoinColumn(name="author_id", nullable=false)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY,

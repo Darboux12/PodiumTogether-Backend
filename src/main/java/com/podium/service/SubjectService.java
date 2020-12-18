@@ -19,7 +19,7 @@ public class SubjectService {
     }
 
     @Transactional
-    public void addSubject(SubjectAddServiceDto subjectAddServiceDto){
+    public void addSubject(SubjectAddServiceDto subjectAddServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.subjectRepository.existsBySubject(subjectAddServiceDto.getSubject()))
             throw new PodiumEntityAlreadyExistException("Subject");
@@ -31,7 +31,7 @@ public class SubjectService {
     }
 
     @Transactional
-    public void deleteSubjectByName(String name){
+    public void deleteSubjectByName(String name) throws PodiumEntityNotFoundException {
 
         if(!this.subjectRepository.existsBySubject(name))
             throw new PodiumEntityNotFoundException("Subject");
@@ -43,7 +43,7 @@ public class SubjectService {
         return this.subjectRepository.findAll();
     }
 
-    public Subject findSubjectByName(String subjectName){
+    public Subject findSubjectByName(String subjectName) throws PodiumEntityNotFoundException {
 
         return this
                 .subjectRepository.findBySubject(subjectName)

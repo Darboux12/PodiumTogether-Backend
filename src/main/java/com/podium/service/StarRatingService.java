@@ -21,7 +21,7 @@ public class StarRatingService {
     }
 
     @Transactional
-    public void deleteRating(StarRating rating){
+    public void deleteRating(StarRating rating) throws PodiumEntityNotFoundException {
 
         RatingCategory category =
                 this.ratingCategoryService.findCategoryByCategory(rating.getCategory().getCategory());
@@ -34,7 +34,7 @@ public class StarRatingService {
 
     }
 
-    public StarRating getEntity(String categoryName, int rating){
+    public StarRating getEntity(String categoryName, int rating) throws PodiumEntityNotFoundException {
 
         RatingCategory category =
                 this.ratingCategoryService.findCategoryByCategory(categoryName);

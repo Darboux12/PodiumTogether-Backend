@@ -18,7 +18,7 @@ public class StreetService {
     }
 
     @Transactional
-    public void deleteStreetByName(String name){
+    public void deleteStreetByName(String name) throws PodiumEntityNotFoundException {
 
         if(!this.streetRepository.existsByStreet(name))
             throw new PodiumEntityNotFoundException("Street");
@@ -26,11 +26,18 @@ public class StreetService {
         this.streetRepository.deleteByStreet(name);
     }
 
+    @Transactional
+    public void deleteStreet(Street street) {
+
+        if(street.getLocalizations().size() == 1)
+            this.streetRepository.delete(street);
+    }
+
     public boolean existStreetByName(String streetName){
         return this.streetRepository.existsByStreet(streetName);
     }
 
-    public Street findStreetByName(String streetName){
+    public Street findStreetByName(String streetName) throws PodiumEntityNotFoundException {
 
         return this.streetRepository
                 .findByStreet(streetName)

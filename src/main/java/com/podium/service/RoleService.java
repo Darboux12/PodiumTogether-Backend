@@ -19,14 +19,14 @@ public class RoleService {
         return this.roleRepository.existsByRole(roleName);
     }
 
-    public Role getEntity(String roleName){
+    public Role getEntity(String roleName) throws PodiumEntityNotFoundException {
 
         return this.roleRepository
                 .findByRole(roleName)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
     }
 
-    public Role getDefaultRole(){
+    public Role getDefaultRole() throws PodiumEntityNotFoundException {
 
         return this.roleRepository
                 .findByRole(PodiumLimits.defaultUserRole)
