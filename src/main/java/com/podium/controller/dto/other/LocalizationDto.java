@@ -1,10 +1,7 @@
 package com.podium.controller.dto.other;
 
 import com.podium.constant.PodiumLimits;
-import com.podium.controller.validation.annotation.PodiumNumberInt;
-import com.podium.controller.validation.annotation.PodiumLength;
-import com.podium.controller.validation.annotation.PodiumOptionalValue;
-import com.podium.controller.validation.annotation.PodiumTextNotEmpty;
+import com.podium.controller.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,16 +16,16 @@ public class LocalizationDto {
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minCityLength, max = PodiumLimits.maxCityLength)
     private String city;
-    @PodiumOptionalValue
+    @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minStreetLength, max = PodiumLimits.maxStreetLength)
     private String street;
-    @PodiumOptionalValue
+    @PodiumNotNull
     @PodiumNumberInt(min = PodiumLimits.minBuildingNumberLength, max = PodiumLimits.maxBuildingNumberLength)
     private int buildingNumber;
-    @PodiumOptionalValue
+    @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minPostalLength, max = PodiumLimits.maxPostalLength)
     private String postalCode;
-    @PodiumOptionalValue
+    @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minLocalizationRemarksLength, max = PodiumLimits.maxLocalizationRemarksLength)
     private String localizationRemarks;
 

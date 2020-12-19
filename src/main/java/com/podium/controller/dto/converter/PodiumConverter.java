@@ -134,17 +134,23 @@ public class PodiumConverter{
 
         resources.forEach(x -> {
 
-            try {
-                podiumFileDtos.add(new PodiumFileDto(
-                        x.getName(),
-                        x.getType(),
-                        FileCopyUtils.copyToByteArray(new File(x.getPath()))
-                ));
+                    if (x != null) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+                        try {
+                            podiumFileDtos.add(new PodiumFileDto(
+                                    x.getName(),
+                                    x.getType(),
+                                    FileCopyUtils.copyToByteArray(new File(x.getPath()))
+                            ));
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+
+        );
 
         return podiumFileDtos;
 

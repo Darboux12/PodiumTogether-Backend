@@ -51,7 +51,7 @@ public class PodiumDtoValidator {
     public void parametersVariableToValidate() {}
 
     @Before("parametersBodyToValidate()")
-    public void aspectRequestBodyValidation(JoinPoint joinPoint) throws Throwable {
+    public void aspectRequestBodyValidation(JoinPoint joinPoint) {
 
         if(joinPoint.getSignature() instanceof MethodSignature){
 

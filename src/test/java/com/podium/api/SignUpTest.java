@@ -51,7 +51,7 @@ import java.util.Date;
     }
 
     @Test
-    void T01_Sign_Up_Valid_User_Should_Return_Status_OK() throws ParseException {
+    void T01_Sign_Up_Valid_User_Should_Return_Status_OK() {
 
         UserValidator
                 .getInstance()

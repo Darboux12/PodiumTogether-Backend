@@ -31,8 +31,6 @@ public class UserService {
     private RoleService roleService;
     private CountryService countryService;
 
-
-
     private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, RoleService roleService, CountryRepository countryRepository, CountryService countryService) {

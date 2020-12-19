@@ -120,7 +120,7 @@ import java.util.Date;
     @Test
     void T06_Update_User_Country_Should_Return_Status_OK_And_Update_Data(){
 
-        updateRequestDto.setCountry("Armenia");
+        updateRequestDto.setCountry("ARMENIA");
 
         UserValidator
                 .getInstance()

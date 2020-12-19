@@ -279,115 +279,63 @@ class PlaceTest {
     }
 
     @Test
-    void T12_Add_Place_Empty_Localization_Street_Return_Status_OK_As_Its_Optional(){
+    void T12_Add_Place_Empty_Localization_Street_Return_Status_CONFLICTl(){
 
         textValueHolder = requestDto.getLocalizationDto().getStreet();
         requestDto.getLocalizationDto().setStreet("");
 
         PlaceValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.getLocalizationDto().setStreet(textValueHolder);
 
     }
 
     @Test
-    void T13_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
-
-        int id = PlaceValidator
-
-                .getInstance()
-                .findByName(requestDto.getName(),HttpStatus.OK)
-                .getId();
-
-        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
-
-    }
-
-    @Test
-    void T14_Add_Place_Empty_Localization_BuildingNumber_Return_Status_OK_As_Its_Optional(){
+    void T13_Add_Place_Empty_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
         requestDto.getLocalizationDto().setBuildingNumber(0);
 
         PlaceValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
 
     }
 
     @Test
-    void T15_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
-
-        int id = PlaceValidator
-
-                .getInstance()
-                .findByName(requestDto.getName(),HttpStatus.OK)
-                .getId();
-
-        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
-
-    }
-
-    @Test
-    void T16_Add_Place_Empty_Localization_PostalCode_Return_Status_OK_As_Its_Optional(){
+    void T14_Add_Place_Empty_Localization_PostalCode_Return_Status_CONFLICT(){
 
         textValueHolder = requestDto.getLocalizationDto().getPostalCode();
         requestDto.getLocalizationDto().setPostalCode("");
 
         PlaceValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.getLocalizationDto().setPostalCode(textValueHolder);
 
     }
 
     @Test
-    void T17_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
-
-        int id = PlaceValidator
-
-                .getInstance()
-                .findByName(requestDto.getName(),HttpStatus.OK)
-                .getId();
-
-        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
-
-    }
-
-    @Test
-    void T18_Add_Place_Empty_Localization_Remarks_Return_Status_OK_As_Its_Optional(){
+    void T15_Add_Place_Empty_Localization_Remarks_Return_Status_CONFLICTl(){
 
         textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
         requestDto.getLocalizationDto().setLocalizationRemarks("");
 
         PlaceValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .add(requestDto,HttpStatus.CONFLICT);
 
         requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
 
     }
 
     @Test
-    void T19_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
-
-        int id = PlaceValidator
-
-                .getInstance()
-                .findByName(requestDto.getName(),HttpStatus.OK)
-                .getId();
-
-        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
-
-    }
-
-    @Test
-    void T20_Add_Place_Too_Short_Localization_PostalCode_Status_CONFLICT(){
+    void T16_Add_Place_Too_Short_Localization_PostalCode_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
@@ -403,7 +351,7 @@ class PlaceTest {
     }
 
     @Test
-    void T21_Add_Place_Too_Long_Localization_PostalCode_Return_Status_CONFLICT(){
+    void T17_Add_Place_Too_Long_Localization_PostalCode_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
@@ -420,7 +368,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
-    void T22_Add_Place_Empty_Discipline_Return_Status_CONFLICT(String emptyDiscipline){
+    void T18_Add_Place_Empty_Discipline_Return_Status_CONFLICT(String emptyDiscipline){
 
         textValueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(emptyDiscipline);
@@ -434,7 +382,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
-    void T23_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
+    void T19_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
 
         textValueHolder = requestDto.getLocalizationDto().getCity();
         requestDto.getLocalizationDto().setCity(emptyCity);
@@ -447,7 +395,7 @@ class PlaceTest {
     }
 
     @Test
-    void T24_Add_Place_Too_Short_Localization_Remarks_Status_CONFLICT(){
+    void T20_Add_Place_Too_Short_Localization_Remarks_Status_CONFLICT(){
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minLocalizationRemarksLength - 1);
@@ -463,7 +411,7 @@ class PlaceTest {
     }
 
     @Test
-    void T25_Add_Place_Too_Long_Localization_Remarks_Return_Status_CONFLICT(){
+    void T21_Add_Place_Too_Long_Localization_Remarks_Return_Status_CONFLICT(){
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxLocalizationRemarksLength + 1);
@@ -480,7 +428,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesAndDaysIndexesForTests")
-    void T26_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
+    void T22_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
 
         textValueHolder = requestDto.getBusinessDayDtos().get(index).getDay();
         requestDto.getBusinessDayDtos().get(index).setDay(emptyDay);
@@ -494,7 +442,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
-    void T27_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
+    void T23_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
 
         textValueHolder = requestDto.getBusinessDayDtos().get( index).getDay();
         requestDto.getBusinessDayDtos().get( index).setDay("WrongWeekDay");
@@ -507,7 +455,7 @@ class PlaceTest {
     }
 
     @Test
-    void T28_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
+    void T24_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
 
         BusinessDayDto businessDayDto = requestDto.getBusinessDayDtos().get(0);
         requestDto.getBusinessDayDtos().remove(0);
@@ -520,7 +468,7 @@ class PlaceTest {
     }
 
     @Test
-    void T29_Add_Place_Too_Small_Cost_Return_Status_CONFLICT(){
+    void T25_Add_Place_Too_Small_Cost_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getCost();
         requestDto.setCost(PodiumLimits.minCost - 1);
@@ -534,7 +482,7 @@ class PlaceTest {
     }
 
     @Test
-    void T30_Add_Place_Too_Large_Cost_Return_Status_CONFLICT(){
+    void T26_Add_Place_Too_Large_Cost_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getCost();
         requestDto.setCost(PodiumLimits.maxCost + 1);
@@ -548,7 +496,7 @@ class PlaceTest {
     }
 
     @Test
-    void T31_Add_Place_Too_Small_usageTime_Return_Status_CONFLICT(){
+    void T27_Add_Place_Too_Small_usageTime_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getUsageTime();
         requestDto.setUsageTime(PodiumLimits.minUsageTimeHours - 1);
@@ -562,7 +510,7 @@ class PlaceTest {
     }
 
     @Test
-    void T32_Add_Place_Too_Large_usageTime_Return_Status_CONFLICT(){
+    void T28_Add_Place_Too_Large_usageTime_Return_Status_CONFLICT(){
 
         doubleValueHolder = requestDto.getUsageTime();
         requestDto.setUsageTime(PodiumLimits.maxUsageTimeHours + 1);
@@ -576,7 +524,7 @@ class PlaceTest {
     }
 
     @Test
-    void T33_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
+    void T29_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMinAge();
         requestDto.setMinAge(PodiumLimits.minPlaceMinAge - 1);
@@ -590,7 +538,7 @@ class PlaceTest {
     }
 
     @Test
-    void T34_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
+    void T30_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMinAge();
         requestDto.setMinAge(PodiumLimits.maxPlaceMinAge + 1);
@@ -604,7 +552,7 @@ class PlaceTest {
     }
 
     @Test
-    void T35_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
+    void T31_Add_Place_Too_Small_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMaxAge();
         requestDto.setMaxAge(PodiumLimits.minPlaceMaxAge - 1);
@@ -618,7 +566,7 @@ class PlaceTest {
     }
 
     @Test
-    void T36_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
+    void T32_Add_Place_Too_Large_MinAge_Return_Status_CONFLICT(){
 
         intValueHolder = requestDto.getMaxAge();
         requestDto.setMaxAge(PodiumLimits.maxPlaceMaxAge + 1);
@@ -633,7 +581,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"DISCIPLINE_ONE","DISCIPLINE_TWO"})
-    void T37_Add_Place_Non_Existing_Discipline_Return_Status_NOTFOUND(String discipline){
+    void T33_Add_Place_Non_Existing_Discipline_Return_Status_NOTFOUND(String discipline){
 
         textValueHolder = requestDto.getDiscipline();
         requestDto.setDiscipline(discipline);
@@ -647,7 +595,7 @@ class PlaceTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
-    void T38_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
+    void T34_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
 
        LocalTime timeFrom  = requestDto.getBusinessDayDtos().get(index).getOpeningTimeFrom();
         requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
@@ -660,7 +608,7 @@ class PlaceTest {
     }
 
     @Test
-    void T39_Add_Valid_Place_Should_Return_Status_OK(){
+    void T35_Add_Valid_Place_Should_Return_Status_OK(){
 
         PlaceValidator
                 .getInstance()
@@ -669,7 +617,7 @@ class PlaceTest {
     }
 
     @Test
-    void T40_Find_Created_Place_Return_Status_OK_Find_Entity(){
+    void T36_Find_Created_Place_Return_Status_OK_Find_Entity(){
 
         String actualName = PlaceValidator
 
@@ -682,7 +630,7 @@ class PlaceTest {
     }
 
     @Test
-    void T41_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+    void T37_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
 
         int id = PlaceValidator
 
@@ -695,7 +643,7 @@ class PlaceTest {
     }
 
     @Test
-    void T42_Find_Deleted_Place_Return_Status_NOT_FOUND(){
+    void T38_Find_Deleted_Place_Return_Status_NOT_FOUND(){
 
         PlaceValidator
                 .getInstance()

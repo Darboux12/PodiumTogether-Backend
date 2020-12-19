@@ -44,7 +44,9 @@ public class PlaceController {
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart("documents") List<MultipartFile> documents) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
-        this.placeService.addPlace(this.convertAddRequestToServiceDto(requestDto,images,documents));
+      //  this.placeService.addPlace(this.convertAddRequestToServiceDto(requestDto,images,documents));
+
+
 
         return ResponseEntity.ok().build();
 

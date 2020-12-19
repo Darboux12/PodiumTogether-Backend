@@ -131,14 +131,17 @@ public class UserController {
 
         PodiumResource userResource = user.getProfileImage();
 
-        try {
-            return new PodiumFileDto(
-                    userResource.getName(),
-                    userResource.getType(),
-                    FileCopyUtils.copyToByteArray(new File(userResource.getPath()))
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(userResource != null) {
+
+            try {
+                return new PodiumFileDto(
+                        userResource.getName(),
+                        userResource.getType(),
+                        FileCopyUtils.copyToByteArray(new File(userResource.getPath()))
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

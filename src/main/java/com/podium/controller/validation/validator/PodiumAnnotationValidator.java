@@ -12,13 +12,13 @@ import java.util.Date;
 
 @Component
 public class PodiumAnnotationValidator {
-    
+
     private PodiumValidationHandler validationHandler;
 
     public PodiumAnnotationValidator(PodiumValidationHandler validationHandler) {
         this.validationHandler = validationHandler;
     }
-    
+
     void podiumTextNotEmpty(Object object, Field field) throws IllegalAccessException, WrongAnnotationUsageException, PodiumEmptyTextException {
 
         if(field.isAnnotationPresent(PodiumTextNotEmpty.class)
@@ -37,10 +37,24 @@ public class PodiumAnnotationValidator {
     void podiumNotNull(Object object, Field field) throws IllegalAccessException {
 
         if(field.isAnnotationPresent(PodiumNotNull.class) &&
-                this.isNotOptionalValue(object, field))
+                this.isNotOptionalValue(object, field)){
 
             if(validationHandler.isNull(field.get(object)))
                 throw new PodiumNullException(field.getName());
+
+            if(field.getType().equals(int.class)){
+
+                if((int)field.get(object) == 0)
+                    throw new PodiumNullException(field.getName());
+
+            }
+
+
+
+
+        }
+
+
 
     }
 

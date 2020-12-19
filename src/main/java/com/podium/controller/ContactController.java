@@ -71,8 +71,8 @@ public class ContactController {
 
         return new ContactAddServiceDto(
                 request.getUserEmail(),
-                request.getMessage(),
-                request.getSubject()
+                request.getSubject(),
+                request.getMessage()
         );
     }
 
