@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.ContactAddRequest;
-import com.podium.controller.dto.response.ContactResponse;
+import com.podium.controller.dto.request.ContactAddControllerRequest;
+import com.podium.controller.dto.response.ContactControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Contact;
 import com.podium.service.ContactService;
-import com.podium.service.dto.ContactAddServiceDto;
+import com.podium.service.dto.request.ContactAddServiceDto;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class ContactController {
     }
 
     @PostMapping(PodiumEndpoint.addContact)
-    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddRequest request) throws PodiumEntityNotFoundException {
+    public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddControllerRequest request) throws PodiumEntityNotFoundException {
 
         this.contactService.addContact(convertAddRequestToServiceDto(request));
 
@@ -43,7 +43,7 @@ public class ContactController {
     }
 
     @GetMapping(PodiumEndpoint.findAllContactByEmail)
-    public ResponseEntity<Iterable<ContactResponse>>
+    public ResponseEntity<Iterable<ContactControllerResponse>>
     findAllContactByEmail(@PathVariable @PodiumValidVariable String email){
 
         var contacts = this.contactService.findAllContactByEmail(email);
@@ -52,7 +52,7 @@ public class ContactController {
     }
 
     @GetMapping(PodiumEndpoint.findAllContactBySubject)
-    public ResponseEntity<Iterable<ContactResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject) throws PodiumEntityNotFoundException {
+    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject) throws PodiumEntityNotFoundException {
 
         var contacts = this.contactService.findAllContactBySubject(subject);
 
@@ -60,14 +60,14 @@ public class ContactController {
     }
 
     @GetMapping(PodiumEndpoint.findAllContact)
-    public ResponseEntity<Iterable<ContactResponse>> findAllContact(){
+    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContact(){
 
         var contacts = this.contactService.findAllContact();
 
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
-    private ContactAddServiceDto convertAddRequestToServiceDto(ContactAddRequest request ){
+    private ContactAddServiceDto convertAddRequestToServiceDto(ContactAddControllerRequest request ){
 
         return new ContactAddServiceDto(
                 request.getUserEmail(),
@@ -76,9 +76,9 @@ public class ContactController {
         );
     }
 
-    private ContactResponse convertEntityToResponseDto(Contact contact){
+    private ContactControllerResponse convertEntityToResponseDto(Contact contact){
 
-        return new ContactResponse(
+        return new ContactControllerResponse(
                 contact.getId(),
                 contact.getUserEmail(),
                 contact.getMessage(),
@@ -87,9 +87,9 @@ public class ContactController {
 
     }
 
-    private Iterable<ContactResponse> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
+    private Iterable<ContactControllerResponse> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
 
-        var contactResponses = new ArrayList<ContactResponse>();
+        var contactResponses = new ArrayList<ContactControllerResponse>();
 
         contacts.forEach(x -> contactResponses.add(this.convertEntityToResponseDto(x)));
 

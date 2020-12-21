@@ -1,16 +1,15 @@
 package com.podium.service;
 
-import com.podium.controller.dto.request.ProfileUpdateRequest;
-import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
 import com.podium.dal.entity.Country;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.Role;
 import com.podium.dal.entity.User;
-import com.podium.controller.dto.other.PodiumFileDto;
+import com.podium.controller.dto.other.FileControllerDto;
 import com.podium.dal.repository.CountryRepository;
 import com.podium.dal.repository.RoleRepository;
 import com.podium.dal.repository.UserRepository;
-import com.podium.service.dto.SignUpServiceDto;
+import com.podium.service.dto.request.SignUpServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,6 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -53,7 +51,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(ProfileUpdateRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public void updateUser(ProfileUpdateControllerRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
 
         if(!this.isUpdateDataConsistent(requestDto))
             throw new PodiumEntityAlreadyExistException("User with given username or email");
@@ -112,7 +110,7 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    private boolean isUpdateDataConsistent(ProfileUpdateRequest requestDto){
+    private boolean isUpdateDataConsistent(ProfileUpdateControllerRequest requestDto){
 
         User userById = this.userRepository.findById(requestDto.getId()).orElse(null);
 
@@ -140,7 +138,7 @@ public class UserService {
 
     }
 
-    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateRequest requestDto) throws PodiumEntityNotFoundException {
+    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateControllerRequest requestDto) throws PodiumEntityNotFoundException {
 
         User user = this.userRepository
                 .findById(requestDto.getId())
@@ -158,14 +156,14 @@ public class UserService {
         return user;
     }
 
-    private PodiumFileDto loadProfileImage(User user){
+    private FileControllerDto loadProfileImage(User user){
 
         if(user.getProfileImage() != null) {
 
             PodiumResource resource = user.getProfileImage();
 
             try {
-                return new PodiumFileDto(
+                return new FileControllerDto(
                         resource.getName(),
                         resource.getType(),
                         FileCopyUtils.copyToByteArray(new File(resource.getPath()))

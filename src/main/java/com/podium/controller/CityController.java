@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.CityAddRequest;
-import com.podium.controller.dto.response.CityResponse;
+import com.podium.controller.dto.request.CityAddControllerRequest;
+import com.podium.controller.dto.response.CityControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.City;
 import com.podium.service.CityService;
-import com.podium.service.dto.CityAddServiceDto;
+import com.podium.service.dto.request.CityAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class CityController{
     }
 
     @GetMapping(PodiumEndpoint.findAllCity)
-    public ResponseEntity<Iterable<CityResponse>> findAllCity(){
+    public ResponseEntity<Iterable<CityControllerResponse>> findAllCity(){
 
         var cities = this.cityService.findAllCity();
 
@@ -36,7 +36,7 @@ public class CityController{
     }
 
     @GetMapping(PodiumEndpoint.findCityByName)
-    public ResponseEntity<CityResponse> findCityByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
+    public ResponseEntity<CityControllerResponse> findCityByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var city = this.cityService.findCityByName(name);
 
@@ -44,7 +44,7 @@ public class CityController{
     }
 
     @PostMapping(PodiumEndpoint.addCity)
-    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         this.cityService.addCity(this.convertAddRequestToServiceDto(requestDto));
 
@@ -65,17 +65,17 @@ public class CityController{
         return ResponseEntity.ok().body("City successfully deleted");
     }
 
-    private CityAddServiceDto convertAddRequestToServiceDto(CityAddRequest request){
+    private CityAddServiceDto convertAddRequestToServiceDto(CityAddControllerRequest request){
         return new CityAddServiceDto(request.getCity());
     }
 
-    private CityResponse convertEntityToResponseDto(City city){
-        return new CityResponse(city.getCity());
+    private CityControllerResponse convertEntityToResponseDto(City city){
+        return new CityControllerResponse(city.getCity());
     }
 
-    private Iterable<CityResponse> convertEntityIterableToResponseDto(Iterable<City> cities){
+    private Iterable<CityControllerResponse> convertEntityIterableToResponseDto(Iterable<City> cities){
 
-        var cityResponses = new ArrayList<CityResponse>();
+        var cityResponses = new ArrayList<CityControllerResponse>();
 
         cities.forEach(x -> cityResponses.add(this.convertEntityToResponseDto(x)));
 

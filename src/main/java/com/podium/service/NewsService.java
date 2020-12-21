@@ -3,7 +3,7 @@ package com.podium.service;
 import com.podium.dal.entity.News;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.repository.NewsRepository;
-import com.podium.service.dto.NewsAddServiceDto;
+import com.podium.service.dto.request.NewsAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;

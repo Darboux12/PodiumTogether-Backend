@@ -1,12 +1,10 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.NewsAddRequest;
-import com.podium.controller.dto.response.NewsResponse;
+import com.podium.controller.dto.request.NewsAddControllerRequest;
+import com.podium.controller.dto.response.NewsControllerResponse;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.NewsValidator;
-import io.restassured.builder.MultiPartSpecBuilder;
-import io.restassured.specification.MultiPartSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,32 +19,32 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class NewsTest {
 
-    private static NewsAddRequest newsRequest;
+    private static NewsAddControllerRequest newsRequest;
     private static String valueHolder;
 
     private static Stream<String> provideEmptyValuesForTests(){
         return Stream.of("", " ", "  ", "       ");
     }
 
-    private static Stream<NewsAddRequest> provideNewsForTests(){
+    private static Stream<NewsAddControllerRequest> provideNewsForTests(){
 
         return Stream.of(
 
-                newsRequest = new NewsAddRequest(
+                newsRequest = new NewsAddControllerRequest(
                         "TestTitleOne",
                         "TestShortTextOne",
                         "TestLinkTextOne",
                         "TestFullTextOne"
                 ),
 
-                newsRequest = new NewsAddRequest(
+                newsRequest = new NewsAddControllerRequest(
                         "TestTitleTwo",
                         "TestShortTextTwo",
                         "TestLinkTextTwo",
                         "TestFullTextTwo"
                 ),
 
-                newsRequest = new NewsAddRequest(
+                newsRequest = new NewsAddControllerRequest(
                         "TestTitleThreeThree",
                         "TestShortTextThree",
                         "TestLinkTextThree",
@@ -64,7 +62,7 @@ import java.util.stream.Stream;
 
         TestLogger.setUp();
 
-        newsRequest = new NewsAddRequest
+        newsRequest = new NewsAddControllerRequest
                 ("TestTitle",
                         "TestShortText",
                         "TestLinkText","TextText");
@@ -110,13 +108,13 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideNewsForTests")
-    void T05_Add_Valid_News_ShouldReturnStatus_OK(NewsAddRequest requestDto){
+    void T05_Add_Valid_News_ShouldReturnStatus_OK(NewsAddControllerRequest requestDto){
         NewsValidator.getInstance().add(requestDto,HttpStatus.OK);
     }
 
     @ParameterizedTest
     @MethodSource("provideNewsForTests")
-    void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(NewsAddRequest requestDto){
+    void T06_AddSameNewsAgain_ShouldReturnStatus_CONFLICT(NewsAddControllerRequest requestDto){
         NewsValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
     }
 
@@ -127,21 +125,21 @@ import java.util.stream.Stream;
                 .getInstance()
                 .findAll()
                 .stream()
-                .map(NewsResponse::getTitle)
+                .map(NewsControllerResponse::getTitle)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue(responseNewsTitles.containsAll
                         (provideNewsForTests()
-                                .map(NewsAddRequest::getTitle)
+                                .map(NewsAddControllerRequest::getTitle)
                                 .collect(Collectors.toList())));
 
     }
 
     @ParameterizedTest
     @MethodSource("provideNewsForTests")
-    void T08_Find_And_DeleteCreatedValidNews_ShouldReturnStatus_OK(NewsAddRequest requestDto){
+    void T08_Find_And_DeleteCreatedValidNews_ShouldReturnStatus_OK(NewsAddControllerRequest requestDto){
 
-        NewsResponse newsResponse =
+        NewsControllerResponse newsControllerResponse =
 
                 NewsValidator
                         .getInstance()
@@ -149,7 +147,7 @@ import java.util.stream.Stream;
 
         NewsValidator
                 .getInstance()
-                .deleteNewsById(newsResponse.getId(),HttpStatus.OK);
+                .deleteNewsById(newsControllerResponse.getId(),HttpStatus.OK);
     }
 
     @Test

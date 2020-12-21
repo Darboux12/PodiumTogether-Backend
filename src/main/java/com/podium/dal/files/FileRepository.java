@@ -14,7 +14,7 @@ public class FileRepository {
 
         if(this.isAcceptedImagesType(image.getContentType())){
 
-        String uniqueFileName = this.getUniqueFileName(image.getOriginalFilename());
+        String uniqueFileName = this.getUniqueImageFileName(image.getOriginalFilename());
 
         String path = this.getImagesDirectoryPath() + "\\" + uniqueFileName;
 
@@ -38,7 +38,7 @@ public class FileRepository {
 
         if(this.isAcceptedDocumentType(document.getContentType())){
 
-            String uniqueFileName = this.getUniqueFileName(document.getOriginalFilename());
+            String uniqueFileName = this.getUniqueDocumentFileName(document.getOriginalFilename());
 
             String path = this.getDocumentsDirectoryPath() + "\\" + uniqueFileName;
 
@@ -105,7 +105,7 @@ public class FileRepository {
 
     }
 
-    private String getUniqueFileName(String fileName) {
+    private String getUniqueImageFileName(String fileName) {
 
         int num = 0;
 
@@ -118,6 +118,24 @@ public class FileRepository {
         while (file.exists()) {
             num++;
             file = new File(this.getImagesDirectoryPath(), name + "-" + num + ext);
+        }
+
+        return file.getName();
+    }
+
+    private String getUniqueDocumentFileName(String fileName) {
+
+        int num = 0;
+
+        final String ext = getFileExtension(fileName);
+
+        final String name = getFileName(fileName);
+
+        File file = new File(this.getDocumentsDirectoryPath(), fileName);
+
+        while (file.exists()) {
+            num++;
+            file = new File(this.getDocumentsDirectoryPath(), name + "-" + num + ext);
         }
 
         return file.getName();

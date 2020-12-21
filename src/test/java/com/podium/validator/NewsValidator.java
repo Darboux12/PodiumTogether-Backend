@@ -2,20 +2,18 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.request.NewsAddRequest;
-import com.podium.controller.dto.response.ContactResponse;
-import com.podium.controller.dto.response.NewsResponse;
+import com.podium.controller.dto.request.NewsAddControllerRequest;
+import com.podium.controller.dto.response.ContactControllerResponse;
+import com.podium.controller.dto.response.NewsControllerResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.mapper.ObjectMapperType;
-import io.restassured.specification.MultiPartSpecification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -33,7 +31,7 @@ public class NewsValidator {
         return instance;
     }
 
-    public void add(NewsAddRequest requestDto, HttpStatus status){
+    public void add(NewsAddControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -57,9 +55,9 @@ public class NewsValidator {
 
     }
 
-    public List<NewsResponse> findAll(){
+    public List<NewsControllerResponse> findAll(){
 
-        NewsResponse[] dtos =
+        NewsControllerResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -68,13 +66,13 @@ public class NewsValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) NewsResponse[].class);
+                        .extract().as((Type) NewsControllerResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public NewsResponse findByTitle(String title, HttpStatus status){
+    public NewsControllerResponse findByTitle(String title, HttpStatus status){
 
         return
 
@@ -85,13 +83,13 @@ public class NewsValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findNewsByTitle)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) NewsResponse.class);
+                        .extract().as((Type) NewsControllerResponse.class);
 
     }
 
-    public List<ContactResponse> findBySubject(String subject, HttpStatus status){
+    public List<ContactControllerResponse> findBySubject(String subject, HttpStatus status){
 
-        ContactResponse[] dtos =
+        ContactControllerResponse[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
@@ -100,7 +98,7 @@ public class NewsValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findAllContactBySubject)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) ContactResponse[].class);
+                        .extract().as((Type) ContactControllerResponse[].class);
 
         return Arrays.asList(dtos);
 

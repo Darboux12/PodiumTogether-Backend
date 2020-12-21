@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.dal.entity.Subject;
 import com.podium.dal.repository.SubjectRepository;
-import com.podium.service.dto.SubjectAddServiceDto;
+import com.podium.service.dto.request.SubjectAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;

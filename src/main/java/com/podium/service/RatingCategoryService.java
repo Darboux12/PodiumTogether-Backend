@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.dal.entity.RatingCategory;
 import com.podium.dal.repository.RatingCategoryRepository;
-import com.podium.service.dto.RatingCategoryAddServiceDto;
+import com.podium.service.dto.request.RatingCategoryAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;

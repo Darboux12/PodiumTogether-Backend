@@ -2,11 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.other.ReviewResponse;
-import com.podium.controller.dto.request.ReviewAddRequest;
-import com.podium.controller.dto.response.RatingCategoryResponse;
+import com.podium.controller.dto.response.ReviewControllerResponse;
+import com.podium.controller.dto.request.ReviewAddControllerRequest;
 import io.restassured.builder.MultiPartSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.mapper.ObjectMapperType;
 import org.springframework.http.HttpStatus;
 
@@ -31,7 +29,7 @@ public class ReviewValidator {
         return instance;
     }
 
-    public void add(ReviewAddRequest requestDto, HttpStatus status){
+    public void add(ReviewAddControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -55,9 +53,9 @@ public class ReviewValidator {
 
     }
 
-    public List<ReviewResponse> findAllReviewsByAuthor(String userName,HttpStatus status){
+    public List<ReviewControllerResponse> findAllReviewsByAuthor(String userName, HttpStatus status){
 
-        ReviewResponse[] responses =
+        ReviewControllerResponse[] responses =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -67,7 +65,7 @@ public class ReviewValidator {
                         .then().assertThat()
                         .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)ReviewResponse[].class);
+                        .extract().as((Type) ReviewControllerResponse[].class);
 
         return Arrays.asList(responses);
 

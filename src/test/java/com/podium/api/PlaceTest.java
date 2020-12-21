@@ -1,12 +1,10 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
-import com.podium.dal.entity.Place;
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.PlaceAddRequest;
-import com.podium.controller.dto.other.BusinessDayDto;
-import com.podium.controller.dto.other.LocalizationDto;
-import com.podium.controller.dto.other.RatingDto;
+import com.podium.controller.dto.request.PlaceAddControllerRequest;
+import com.podium.controller.dto.other.BusinessDayControllerDto;
+import com.podium.controller.dto.other.LocalizationControllerDto;
 import com.podium.validator.PlaceValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -24,7 +22,7 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class PlaceTest {
 
-    private static PlaceAddRequest requestDto;
+    private static PlaceAddControllerRequest requestDto;
     private static String textValueHolder;
     private static int intValueHolder;
     private static double doubleValueHolder;
@@ -34,7 +32,7 @@ class PlaceTest {
 
         TestLogger.setUp();
 
-       LocalizationDto localizationDto = new LocalizationDto(
+       LocalizationControllerDto localizationControllerDto = new LocalizationControllerDto(
                 "PlaceTestCityName",
                 "PlaceTestStreetName",
                 123,
@@ -42,31 +40,31 @@ class PlaceTest {
                 "Place test localization remarks"
         );
 
-        List<BusinessDayDto> businessDayDtos = new LinkedList<>();
+        List<BusinessDayControllerDto> businessDayControllerDtos = new LinkedList<>();
 
         LocalTime timeFrom = LocalTime.parse("10:33:22");
         LocalTime timeTo = LocalTime.parse("17:00");
 
-        businessDayDtos.add(new BusinessDayDto("Monday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Monday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Tuesday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Tuesday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Wednesday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Wednesday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Thursday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Thursday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Friday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Friday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Saturday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Saturday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Sunday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Sunday",true,
                 timeFrom,timeTo));
 
-        requestDto = new PlaceAddRequest(
+        requestDto = new PlaceAddControllerRequest(
                 "Test Place Name",
                 "Football",
-                localizationDto,
-                businessDayDtos,
+                localizationControllerDto,
+                businessDayControllerDtos,
                 50,
                 PodiumLimits.minUsageTimeHours + 1,
                 10,
@@ -189,14 +187,14 @@ class PlaceTest {
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minCityLength - 1);
-        textValueHolder = requestDto.getLocalizationDto().getCity();
-        requestDto.getLocalizationDto().setCity(toShort);
+        textValueHolder = requestDto.getLocalizationControllerDto().getCity();
+        requestDto.getLocalizationControllerDto().setCity(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setCity(textValueHolder);
+        requestDto.getLocalizationControllerDto().setCity(textValueHolder);
 
     }
 
@@ -205,14 +203,14 @@ class PlaceTest {
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxCityLength + 1);
-        textValueHolder = requestDto.getLocalizationDto().getCity();
-        requestDto.getLocalizationDto().setCity(toLong);
+        textValueHolder = requestDto.getLocalizationControllerDto().getCity();
+        requestDto.getLocalizationControllerDto().setCity(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setCity(textValueHolder);
+        requestDto.getLocalizationControllerDto().setCity(textValueHolder);
 
     }
 
@@ -221,14 +219,14 @@ class PlaceTest {
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minStreetLength - 1);
-        textValueHolder = requestDto.getLocalizationDto().getStreet();
-        requestDto.getLocalizationDto().setStreet(toShort);
+        textValueHolder = requestDto.getLocalizationControllerDto().getStreet();
+        requestDto.getLocalizationControllerDto().setStreet(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setStreet(textValueHolder);
+        requestDto.getLocalizationControllerDto().setStreet(textValueHolder);
 
     }
 
@@ -237,14 +235,14 @@ class PlaceTest {
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxStreetLength + 1);
-        textValueHolder = requestDto.getLocalizationDto().getStreet();
-        requestDto.getLocalizationDto().setStreet(toLong);
+        textValueHolder = requestDto.getLocalizationControllerDto().getStreet();
+        requestDto.getLocalizationControllerDto().setStreet(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setStreet(textValueHolder);
+        requestDto.getLocalizationControllerDto().setStreet(textValueHolder);
 
     }
 
@@ -252,14 +250,14 @@ class PlaceTest {
     void T10_Add_Place_Too_Short_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toShort = PodiumLimits.minBuildingNumberLength - 1;
-        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
-        requestDto.getLocalizationDto().setBuildingNumber(toShort);
+        intValueHolder = requestDto.getLocalizationControllerDto().getBuildingNumber();
+        requestDto.getLocalizationControllerDto().setBuildingNumber(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationControllerDto().setBuildingNumber(intValueHolder);
 
     }
 
@@ -267,70 +265,70 @@ class PlaceTest {
     void T11_Add_Place_Too_Long_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
         int toLong = PodiumLimits.maxBuildingNumberLength + 1;
-        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
-        requestDto.getLocalizationDto().setBuildingNumber(toLong);
+        intValueHolder = requestDto.getLocalizationControllerDto().getBuildingNumber();
+        requestDto.getLocalizationControllerDto().setBuildingNumber(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationControllerDto().setBuildingNumber(intValueHolder);
 
     }
 
     @Test
     void T12_Add_Place_Empty_Localization_Street_Return_Status_CONFLICTl(){
 
-        textValueHolder = requestDto.getLocalizationDto().getStreet();
-        requestDto.getLocalizationDto().setStreet("");
+        textValueHolder = requestDto.getLocalizationControllerDto().getStreet();
+        requestDto.getLocalizationControllerDto().setStreet("");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setStreet(textValueHolder);
+        requestDto.getLocalizationControllerDto().setStreet(textValueHolder);
 
     }
 
     @Test
     void T13_Add_Place_Empty_Localization_BuildingNumber_Return_Status_CONFLICT(){
 
-        intValueHolder = requestDto.getLocalizationDto().getBuildingNumber();
-        requestDto.getLocalizationDto().setBuildingNumber(0);
+        intValueHolder = requestDto.getLocalizationControllerDto().getBuildingNumber();
+        requestDto.getLocalizationControllerDto().setBuildingNumber(0);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setBuildingNumber(intValueHolder);
+        requestDto.getLocalizationControllerDto().setBuildingNumber(intValueHolder);
 
     }
 
     @Test
     void T14_Add_Place_Empty_Localization_PostalCode_Return_Status_CONFLICT(){
 
-        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
-        requestDto.getLocalizationDto().setPostalCode("");
+        textValueHolder = requestDto.getLocalizationControllerDto().getPostalCode();
+        requestDto.getLocalizationControllerDto().setPostalCode("");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
+        requestDto.getLocalizationControllerDto().setPostalCode(textValueHolder);
 
     }
 
     @Test
     void T15_Add_Place_Empty_Localization_Remarks_Return_Status_CONFLICTl(){
 
-        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
-        requestDto.getLocalizationDto().setLocalizationRemarks("");
+        textValueHolder = requestDto.getLocalizationControllerDto().getLocalizationRemarks();
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks("");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -339,14 +337,14 @@ class PlaceTest {
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
-        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
-        requestDto.getLocalizationDto().setPostalCode(toShort);
+        textValueHolder = requestDto.getLocalizationControllerDto().getPostalCode();
+        requestDto.getLocalizationControllerDto().setPostalCode(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
+        requestDto.getLocalizationControllerDto().setPostalCode(textValueHolder);
 
     }
 
@@ -355,14 +353,14 @@ class PlaceTest {
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
-        textValueHolder = requestDto.getLocalizationDto().getPostalCode();
-        requestDto.getLocalizationDto().setPostalCode(toLong);
+        textValueHolder = requestDto.getLocalizationControllerDto().getPostalCode();
+        requestDto.getLocalizationControllerDto().setPostalCode(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setPostalCode(textValueHolder);
+        requestDto.getLocalizationControllerDto().setPostalCode(textValueHolder);
 
     }
 
@@ -384,14 +382,14 @@ class PlaceTest {
     @MethodSource("provideEmptyValuesForTests")
     void T19_Add_Place_Empty_Localization_City_Return_Status_CONFLICT(String emptyCity){
 
-        textValueHolder = requestDto.getLocalizationDto().getCity();
-        requestDto.getLocalizationDto().setCity(emptyCity);
+        textValueHolder = requestDto.getLocalizationControllerDto().getCity();
+        requestDto.getLocalizationControllerDto().setCity(emptyCity);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setCity(textValueHolder);
+        requestDto.getLocalizationControllerDto().setCity(textValueHolder);
     }
 
     @Test
@@ -399,14 +397,14 @@ class PlaceTest {
 
         String toShort =
                 StringUtils.repeat("*", PodiumLimits.minLocalizationRemarksLength - 1);
-        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
-        requestDto.getLocalizationDto().setLocalizationRemarks(toShort);
+        textValueHolder = requestDto.getLocalizationControllerDto().getLocalizationRemarks();
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks(toShort);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -415,14 +413,14 @@ class PlaceTest {
 
         String toLong =
                 StringUtils.repeat("*", PodiumLimits.maxLocalizationRemarksLength + 1);
-        textValueHolder = requestDto.getLocalizationDto().getLocalizationRemarks();
-        requestDto.getLocalizationDto().setLocalizationRemarks(toLong);
+        textValueHolder = requestDto.getLocalizationControllerDto().getLocalizationRemarks();
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks(toLong);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto,HttpStatus.CONFLICT);
 
-        requestDto.getLocalizationDto().setLocalizationRemarks(textValueHolder);
+        requestDto.getLocalizationControllerDto().setLocalizationRemarks(textValueHolder);
 
     }
 
@@ -430,41 +428,41 @@ class PlaceTest {
     @MethodSource("provideEmptyValuesAndDaysIndexesForTests")
     void T22_Add_Place_Empty_OpeningDay_Day_Return_Status_CONFLICT(String emptyDay, int index){
 
-        textValueHolder = requestDto.getBusinessDayDtos().get(index).getDay();
-        requestDto.getBusinessDayDtos().get(index).setDay(emptyDay);
+        textValueHolder = requestDto.getBusinessDayControllerDtos().get(index).getDay();
+        requestDto.getBusinessDayControllerDtos().get(index).setDay(emptyDay);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getBusinessDayDtos().get(index).setDay(textValueHolder);
+        requestDto.getBusinessDayControllerDtos().get(index).setDay(textValueHolder);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0,1,2,3,4,5,6})
     void T23_Add_Place_Wrong_OpeningDay_Day_Return_Status_CONFLICT(int index){
 
-        textValueHolder = requestDto.getBusinessDayDtos().get( index).getDay();
-        requestDto.getBusinessDayDtos().get( index).setDay("WrongWeekDay");
+        textValueHolder = requestDto.getBusinessDayControllerDtos().get( index).getDay();
+        requestDto.getBusinessDayControllerDtos().get( index).setDay("WrongWeekDay");
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getBusinessDayDtos().get(index).setDay(textValueHolder);
+        requestDto.getBusinessDayControllerDtos().get(index).setDay(textValueHolder);
     }
 
     @Test
     void T24_Add_Place_ToShortList_OpeningDays_Return_Status_CONFLICT(){
 
-        BusinessDayDto businessDayDto = requestDto.getBusinessDayDtos().get(0);
-        requestDto.getBusinessDayDtos().remove(0);
+        BusinessDayControllerDto businessDayControllerDto = requestDto.getBusinessDayControllerDtos().get(0);
+        requestDto.getBusinessDayControllerDtos().remove(0);
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getBusinessDayDtos().add(businessDayDto);
+        requestDto.getBusinessDayControllerDtos().add(businessDayControllerDto);
     }
 
     @Test
@@ -597,14 +595,14 @@ class PlaceTest {
     @ValueSource(ints = {0,1,2,3,4,5,6})
     void T34_Add_Place_OpeningDay_OpeningTimeFrom_After_OpeningTimeTo_Return_Status_CONFLICT(int index){
 
-       LocalTime timeFrom  = requestDto.getBusinessDayDtos().get(index).getOpeningTimeFrom();
-        requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
+       LocalTime timeFrom  = requestDto.getBusinessDayControllerDtos().get(index).getOpeningTimeFrom();
+        requestDto.getBusinessDayControllerDtos().get(index).setOpeningTimeFrom(LocalTime.parse("18:00:00"));
 
         PlaceValidator
                 .getInstance()
                 .add(requestDto, HttpStatus.CONFLICT);
 
-        requestDto.getBusinessDayDtos().get(index).setOpeningTimeFrom(timeFrom);
+        requestDto.getBusinessDayControllerDtos().get(index).setOpeningTimeFrom(timeFrom);
     }
 
     @Test

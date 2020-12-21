@@ -1,9 +1,9 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.ProfileUpdateRequest;
-import com.podium.controller.dto.request.SignUpRequest;
-import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
+import com.podium.controller.dto.request.SignUpControllerRequest;
+import com.podium.controller.dto.response.UserControllerResponse;
 import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.*;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,13 @@ import java.util.Date;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class UserProfileUpdateTest {
 
-    private static SignUpRequest signUpRequestOne;
-    private static ProfileUpdateRequest updateRequestDto;
+    private static SignUpControllerRequest signUpControllerRequestOne;
+    private static ProfileUpdateControllerRequest updateRequestDto;
 
     @BeforeAll
     static void beforeClass() throws ParseException {
         TestLogger.setUp();
-        signUpRequestOne = new SignUpRequest(
+        signUpControllerRequestOne = new SignUpControllerRequest(
                 "TEST USERNAME_ONE",
                 "TEST_MAIL_ONE@gmail.com",
                 "TEST PASSWORD ONE",
@@ -29,12 +29,12 @@ import java.util.Date;
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 
-        updateRequestDto = new ProfileUpdateRequest();
-        updateRequestDto.setUsername(signUpRequestOne.getUsername());
-        updateRequestDto.setEmail(signUpRequestOne.getEmail());
-        updateRequestDto.setPassword(signUpRequestOne.getPassword());
-        updateRequestDto.setCountry(signUpRequestOne.getCountry());
-        updateRequestDto.setBirthday(signUpRequestOne.getBirthday());
+        updateRequestDto = new ProfileUpdateControllerRequest();
+        updateRequestDto.setUsername(signUpControllerRequestOne.getUsername());
+        updateRequestDto.setEmail(signUpControllerRequestOne.getEmail());
+        updateRequestDto.setPassword(signUpControllerRequestOne.getPassword());
+        updateRequestDto.setCountry(signUpControllerRequestOne.getCountry());
+        updateRequestDto.setBirthday(signUpControllerRequestOne.getBirthday());
         updateRequestDto.setDescription("");
     }
 
@@ -43,18 +43,18 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne, HttpStatus.OK);
+                .signUp(signUpControllerRequestOne, HttpStatus.OK);
 
     }
 
     @Test
     void T02_Find_Signed_Up_User_Id_Fill_Update_Request(){
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()
-                        .findUserByUsername(signUpRequestOne.getUsername(),HttpStatus.OK);
+                        .findUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.OK);
 
         updateRequestDto.setId(responseDto.getId());
 
@@ -71,7 +71,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -90,7 +90,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -109,7 +109,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -126,7 +126,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()
@@ -149,7 +149,7 @@ import java.util.Date;
                 .getInstance()
                 .updateUser(updateRequestDto,HttpStatus.OK);
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
                 UserValidator
                         .getInstance()

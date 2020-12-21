@@ -1,9 +1,9 @@
 package com.podium.service;
 
-import com.podium.controller.dto.request.CountryAddRequest;
+import com.podium.controller.dto.request.CountryAddControllerRequest;
 import com.podium.dal.entity.Country;
 import com.podium.dal.repository.CountryRepository;
-import com.podium.service.dto.CountryAddServiceDto;
+import com.podium.service.dto.request.CountryAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CountryService {
     }
 
     @Transactional
-    public void addCountry(CountryAddRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public void addCountry(CountryAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         if(this.countryRepository.existsByName(requestDto.getName()))
             throw new PodiumEntityAlreadyExistException("Country");
@@ -29,7 +29,8 @@ public class CountryService {
     }
 
     @Transactional
-    public void deleteCountryByName(String name) throws PodiumEntityNotFoundException {
+    public void deleteCountryByName(String name)
+            throws PodiumEntityNotFoundException {
 
         if(!this.countryRepository.existsByName(name))
             throw new PodiumEntityNotFoundException("Country");
@@ -54,7 +55,7 @@ public class CountryService {
 
     }
 
-    private Country convertRequestDtoToEntity(CountryAddRequest requestDto){
+    private Country convertRequestDtoToEntity(CountryAddControllerRequest requestDto){
 
         return new Country(
                 requestDto.getCountryId(),

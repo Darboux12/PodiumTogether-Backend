@@ -2,8 +2,8 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.request.PlaceAddRequest;
-import com.podium.controller.dto.response.PlaceResponse;
+import com.podium.controller.dto.request.PlaceAddControllerRequest;
+import com.podium.controller.dto.response.PlaceControllerResponse;
 import com.podium.specification.TestSpecification;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
@@ -27,7 +27,7 @@ public class PlaceValidator {
         return instance;
     }
 
-    public void add(PlaceAddRequest requestDto, HttpStatus status){
+    public void add(PlaceAddControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -69,7 +69,7 @@ public class PlaceValidator {
                 .spec(TestSpecification.buildResponseSpec());
     }
 
-    public PlaceResponse findByName(String name, HttpStatus status){
+    public PlaceControllerResponse findByName(String name, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -82,7 +82,7 @@ public class PlaceValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findPlaceByName)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type)PlaceResponse.class);
+                        .extract().as((Type) PlaceControllerResponse.class);
 
         else
 

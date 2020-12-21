@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.GenderAddRequest;
-import com.podium.controller.dto.response.GenderResponse;
+import com.podium.controller.dto.request.GenderAddControllerRequest;
+import com.podium.controller.dto.response.GenderControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Gender;
 import com.podium.service.GenderService;
-import com.podium.service.dto.GenderAddServiceDto;
+import com.podium.service.dto.request.GenderAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class GenderController {
     }
 
     @GetMapping(PodiumEndpoint.findAllGender)
-    public ResponseEntity<Iterable<GenderResponse>> findAllGender(){
+    public ResponseEntity<Iterable<GenderControllerResponse>> findAllGender(){
 
         var genders = this.genderService.findAllGenders();
 
@@ -38,7 +38,7 @@ public class GenderController {
     }
 
     @GetMapping(PodiumEndpoint.findGenderByName)
-    public ResponseEntity<GenderResponse> findGenderByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
+    public ResponseEntity<GenderControllerResponse> findGenderByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var gender = this.genderService.findByGenderName(name);
 
@@ -48,7 +48,7 @@ public class GenderController {
     }
 
     @PostMapping(PodiumEndpoint.addGender)
-    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderAddRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addGender(@RequestBody @PodiumValidBody GenderAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         this.genderService.addGender(this.convertAddRequestToServiceDto(requestDto));
 
@@ -71,17 +71,17 @@ public class GenderController {
         return ResponseEntity.ok().body("Gender successfully deleted");
     }
 
-    private GenderAddServiceDto convertAddRequestToServiceDto(GenderAddRequest request){
+    private GenderAddServiceDto convertAddRequestToServiceDto(GenderAddControllerRequest request){
         return new GenderAddServiceDto(request.getGender());
     }
 
-    private GenderResponse convertEntityToResponseDto(Gender gender){
-        return new GenderResponse(gender.getGender());
+    private GenderControllerResponse convertEntityToResponseDto(Gender gender){
+        return new GenderControllerResponse(gender.getGender());
     }
 
-    private Iterable<GenderResponse> convertEntityIterableToResponseDto(Iterable<Gender> genders){
+    private Iterable<GenderControllerResponse> convertEntityIterableToResponseDto(Iterable<Gender> genders){
 
-        var genderResponses = new ArrayList<GenderResponse>();
+        var genderResponses = new ArrayList<GenderControllerResponse>();
 
         genders.forEach(x -> genderResponses.add(this.convertEntityToResponseDto(x)));
 

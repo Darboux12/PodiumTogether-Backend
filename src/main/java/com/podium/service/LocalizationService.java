@@ -4,7 +4,7 @@ import com.podium.dal.entity.City;
 import com.podium.dal.entity.Localization;
 import com.podium.dal.entity.Street;
 import com.podium.dal.repository.LocalizationRepository;
-import com.podium.service.dto.LocalizationServiceDto;
+import com.podium.service.dto.other.LocalizationServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;

@@ -21,7 +21,8 @@ import java.util.Date;
 public class PodiumControllerAdvice {
 
     @ExceptionHandler(PodiumEmptyTextException.class)
-    public ResponseEntity<PodiumResponse> handlePodiumEmptyTextException(PodiumEmptyTextException e, WebRequest request) {
+    public ResponseEntity<PodiumResponse> handlePodiumEmptyTextException
+            (PodiumEmptyTextException e, WebRequest request) {
 
         return new ResponseEntity<>(
                 this.createResponseMessage("Empty Text Error", HttpStatus.CONFLICT,

@@ -2,10 +2,10 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.controller.dto.other.*;
-import com.podium.controller.dto.request.NewsAddRequest;
-import com.podium.controller.dto.request.PlaceAddRequest;
-import com.podium.controller.dto.request.ReviewAddRequest;
-import com.podium.controller.dto.request.SignUpRequest;
+import com.podium.controller.dto.request.PlaceAddControllerRequest;
+import com.podium.controller.dto.request.ReviewAddControllerRequest;
+import com.podium.controller.dto.request.SignUpControllerRequest;
+import com.podium.controller.dto.response.ReviewControllerResponse;
 import com.podium.logger.TestLogger;
 import com.podium.validator.PlaceValidator;
 import com.podium.validator.ReviewValidator;
@@ -38,11 +38,11 @@ public class ReviewTest {
         TestLogger.setUp();
     }
 
-    private static Stream<SignUpRequest> provideTwoUsersSignUpRequestsForTests() throws ParseException {
+    private static Stream<SignUpControllerRequest> provideTwoUsersSignUpRequestsForTests() throws ParseException {
 
         return Stream.of(
 
-                 new SignUpRequest(
+                 new SignUpControllerRequest(
                          usernameOne ,
                         "TEST_MAIL_ONE@gmail.com",
                         "TEST PASSWORD ONE",
@@ -50,7 +50,7 @@ public class ReviewTest {
                         new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
                 ),
 
-                 new SignUpRequest(
+                 new SignUpControllerRequest(
                          usernameTwo,
                         "TEST_MAIL_TWO@gmail.com",
                         "TEST PASSWORD TWO",
@@ -61,9 +61,9 @@ public class ReviewTest {
 
     }
 
-    private static Stream<PlaceAddRequest> providePlaceForTests(){
+    private static Stream<PlaceAddControllerRequest> providePlaceForTests(){
 
-        LocalizationDto localizationDto = new LocalizationDto(
+        LocalizationControllerDto localizationControllerDto = new LocalizationControllerDto(
                 placeName,
                 "PlaceTestStreetName",
                 123,
@@ -71,33 +71,33 @@ public class ReviewTest {
                 "Place test localization remarks"
         );
 
-        List<BusinessDayDto> businessDayDtos = new LinkedList<>();
+        List<BusinessDayControllerDto> businessDayControllerDtos = new LinkedList<>();
 
         LocalTime timeFrom = LocalTime.parse("10:33:22");
         LocalTime timeTo = LocalTime.parse("17:00");
 
-        businessDayDtos.add(new BusinessDayDto("Monday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Monday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Tuesday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Tuesday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Wednesday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Wednesday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Thursday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Thursday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Friday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Friday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Saturday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Saturday",true,
                 timeFrom,timeTo));
-        businessDayDtos.add(new BusinessDayDto("Sunday",true,
+        businessDayControllerDtos.add(new BusinessDayControllerDto("Sunday",true,
                 timeFrom,timeTo));
 
 
         return Stream.of(
-                   new PlaceAddRequest(
+                   new PlaceAddControllerRequest(
                             placeName,
                             "Football",
-                            localizationDto,
-                            businessDayDtos,
+                           localizationControllerDto,
+                           businessDayControllerDtos,
                             50,
                             PodiumLimits.minUsageTimeHours + 1,
                             10,
@@ -107,71 +107,71 @@ public class ReviewTest {
 
     }
 
-    private static Stream<ReviewAddRequest> provideEmptyReviewsForTests() {
+    private static Stream<ReviewAddControllerRequest> provideEmptyReviewsForTests() {
 
-        var ratings = new HashSet<RatingDto>();
+        var ratings = new HashSet<RatingControllerDto>();
 
-        ratings.add(new RatingDto("Service",2));
-        ratings.add(new RatingDto("Equipment",4));
-        ratings.add(new RatingDto("Price",5));
+        ratings.add(new RatingControllerDto("Service",2));
+        ratings.add(new RatingControllerDto("Equipment",4));
+        ratings.add(new RatingControllerDto("Price",5));
 
-        var fileList = new ArrayList<PodiumFileDto>();
+        var fileList = new ArrayList<FileControllerDto>();
 
-        var emptySet = new HashSet<RatingDto>();
+        var emptySet = new HashSet<RatingControllerDto>();
 
 
         return Stream.of(
 
-                new ReviewAddRequest("",placeName,ratings,"Opinion"),
-                new ReviewAddRequest(usernameOne,"",ratings,"Opinion"),
-                new ReviewAddRequest(usernameTwo,placeName,emptySet,"Opinion"),
-                new ReviewAddRequest(usernameOne,placeName,ratings,"")
+                new ReviewAddControllerRequest("",placeName,ratings,"Opinion"),
+                new ReviewAddControllerRequest(usernameOne,"",ratings,"Opinion"),
+                new ReviewAddControllerRequest(usernameTwo,placeName,emptySet,"Opinion"),
+                new ReviewAddControllerRequest(usernameOne,placeName,ratings,"")
 
         );
 
     }
 
-    private static Stream<ReviewAddRequest> provideTooLongAndTooShortReviewsForTests() {
+    private static Stream<ReviewAddControllerRequest> provideTooLongAndTooShortReviewsForTests() {
 
-        var ratings = new HashSet<RatingDto>();
+        var ratings = new HashSet<RatingControllerDto>();
 
-        ratings.add(new RatingDto("Service",2));
-        ratings.add(new RatingDto("Equipment",4));
-        ratings.add(new RatingDto("Price",5));
+        ratings.add(new RatingControllerDto("Service",2));
+        ratings.add(new RatingControllerDto("Equipment",4));
+        ratings.add(new RatingControllerDto("Price",5));
 
-        var emptySet = new HashSet<RatingDto>();
+        var emptySet = new HashSet<RatingControllerDto>();
 
         return Stream.of(
 
-                new ReviewAddRequest(StringUtils.repeat("*", PodiumLimits.maxUsernameLength + 1),placeName,ratings,"Opinion"),
-                new ReviewAddRequest(StringUtils.repeat("*", PodiumLimits.minUsernameLength - 1),placeName,ratings,"Opinion"),
-                new ReviewAddRequest(usernameOne,StringUtils.repeat("*", PodiumLimits.maxPlaceNameLength + 1),ratings,"Opinion"),
-                new ReviewAddRequest(usernameOne,StringUtils.repeat("*", PodiumLimits.minPlaceNameLength - 1),ratings,"Opinion"),
-                new ReviewAddRequest(usernameTwo,placeName,emptySet,"Opinion"),
-                new ReviewAddRequest(usernameOne,placeName,ratings,StringUtils.repeat("*", PodiumLimits.maxPlaceReviewOpinion + 1)),
-                new ReviewAddRequest(usernameOne,placeName,ratings,StringUtils.repeat("*", PodiumLimits.minPlaceReviewOpinion - 1))
+                new ReviewAddControllerRequest(StringUtils.repeat("*", PodiumLimits.maxUsernameLength + 1),placeName,ratings,"Opinion"),
+                new ReviewAddControllerRequest(StringUtils.repeat("*", PodiumLimits.minUsernameLength - 1),placeName,ratings,"Opinion"),
+                new ReviewAddControllerRequest(usernameOne,StringUtils.repeat("*", PodiumLimits.maxPlaceNameLength + 1),ratings,"Opinion"),
+                new ReviewAddControllerRequest(usernameOne,StringUtils.repeat("*", PodiumLimits.minPlaceNameLength - 1),ratings,"Opinion"),
+                new ReviewAddControllerRequest(usernameTwo,placeName,emptySet,"Opinion"),
+                new ReviewAddControllerRequest(usernameOne,placeName,ratings,StringUtils.repeat("*", PodiumLimits.maxPlaceReviewOpinion + 1)),
+                new ReviewAddControllerRequest(usernameOne,placeName,ratings,StringUtils.repeat("*", PodiumLimits.minPlaceReviewOpinion - 1))
 
         );
 
     }
 
-    private static Stream<ReviewAddRequest> provideRequestNotExistingPlaceAndUser() {
+    private static Stream<ReviewAddControllerRequest> provideRequestNotExistingPlaceAndUser() {
 
-        var ratings = new HashSet<RatingDto>();
+        var ratings = new HashSet<RatingControllerDto>();
 
-        ratings.add(new RatingDto("Service",2));
-        ratings.add(new RatingDto("Equipment",4));
-        ratings.add(new RatingDto("Price",5));
+        ratings.add(new RatingControllerDto("Service",2));
+        ratings.add(new RatingControllerDto("Equipment",4));
+        ratings.add(new RatingControllerDto("Price",5));
 
         return Stream.of(
 
-                new ReviewAddRequest(
+                new ReviewAddControllerRequest(
                         "NOT EXISTING USERNAME",
                         placeName,
                         ratings,
                         "This is test opinion about place"),
 
-                new ReviewAddRequest(
+                new ReviewAddControllerRequest(
                         usernameOne,
                         "NOT EXISTING PLACE NAME",
                         ratings,
@@ -180,17 +180,17 @@ public class ReviewTest {
 
     }
 
-    private static Stream<ReviewAddRequest> provideValidRequest() {
+    private static Stream<ReviewAddControllerRequest> provideValidRequest() {
 
-        var ratings = new HashSet<RatingDto>();
+        var ratings = new HashSet<RatingControllerDto>();
 
-        ratings.add(new RatingDto("Service",2));
-        ratings.add(new RatingDto("Equipment",4));
-        ratings.add(new RatingDto("Price",5));
+        ratings.add(new RatingControllerDto("Service",2));
+        ratings.add(new RatingControllerDto("Equipment",4));
+        ratings.add(new RatingControllerDto("Price",5));
 
         return Stream.of(
 
-                new ReviewAddRequest(
+                new ReviewAddControllerRequest(
                         usernameOne,
                         placeName,
                         ratings,
@@ -201,17 +201,17 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideTwoUsersSignUpRequestsForTests")
-    void T01_Sign_Up_Users_Who_Add_Review(SignUpRequest signUpRequest){
+    void T01_Sign_Up_Users_Who_Add_Review(SignUpControllerRequest signUpControllerRequest){
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequest, HttpStatus.OK);
+                .signUp(signUpControllerRequest, HttpStatus.OK);
 
     }
 
     @ParameterizedTest
     @MethodSource("providePlaceForTests")
-    void T02_Add_Place_That_Is_Reviewed(PlaceAddRequest requestDto){
+    void T02_Add_Place_That_Is_Reviewed(PlaceAddControllerRequest requestDto){
 
         PlaceValidator
                 .getInstance()
@@ -221,7 +221,7 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideEmptyReviewsForTests")
-    void T03_Add_Review_Empty_Values_Status_CONFLICT(ReviewAddRequest requestDto){
+    void T03_Add_Review_Empty_Values_Status_CONFLICT(ReviewAddControllerRequest requestDto){
 
         ReviewValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
 
@@ -229,7 +229,7 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideTooLongAndTooShortReviewsForTests")
-    void T04_Add_Review_TooLong_TooShort_Values_Status_CONFLICT(ReviewAddRequest requestDto){
+    void T04_Add_Review_TooLong_TooShort_Values_Status_CONFLICT(ReviewAddControllerRequest requestDto){
 
         ReviewValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
 
@@ -237,7 +237,7 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideRequestNotExistingPlaceAndUser")
-    void T05_Add_Review_Not_Existing_User_And_Place_Status_NOT_FOUND(ReviewAddRequest requestDto){
+    void T05_Add_Review_Not_Existing_User_And_Place_Status_NOT_FOUND(ReviewAddControllerRequest requestDto){
 
         ReviewValidator.getInstance().add(requestDto,HttpStatus.NOT_FOUND);
 
@@ -245,7 +245,7 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T06_Add_Valid_Review_Status_OK_Add_Entity(ReviewAddRequest requestDto){
+    void T06_Add_Valid_Review_Status_OK_Add_Entity(ReviewAddControllerRequest requestDto){
 
        ReviewValidator.getInstance().add(requestDto,HttpStatus.OK);
 
@@ -253,14 +253,14 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T06_Find_All_Reviews_By_Author_Status_OK_Correct_PlaceName(ReviewAddRequest requestDto){
+    void T06_Find_All_Reviews_By_Author_Status_OK_Correct_PlaceName(ReviewAddControllerRequest requestDto){
 
         List<String> actualPlaceNames = new ArrayList<>();
 
         ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(),HttpStatus.OK)
-                .stream().map(ReviewResponse::getPlace)
+                .stream().map(ReviewControllerResponse::getPlace)
                 .forEach(actualPlaceNames::add);
 
         Assertions.assertTrue(actualPlaceNames.contains(requestDto.getPlace()));
@@ -269,9 +269,9 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T07_Increment_Review_Likes_Status_OK(ReviewAddRequest requestDto){
+    void T07_Increment_Review_Likes_Status_OK(ReviewAddControllerRequest requestDto){
 
-        List<ReviewResponse> responses = new ArrayList<>(ReviewValidator
+        List<ReviewControllerResponse> responses = new ArrayList<>(ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
 
@@ -279,7 +279,7 @@ public class ReviewTest {
                 .getInstance()
                 .incrementReviewLikesById(x.getId(),HttpStatus.OK));
 
-        List<ReviewResponse> responsesAgain = new ArrayList<>(ReviewValidator
+        List<ReviewControllerResponse> responsesAgain = new ArrayList<>(ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
 
@@ -289,9 +289,9 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T08_Increment_Review_Dislikes_Status_OK(ReviewAddRequest requestDto){
+    void T08_Increment_Review_Dislikes_Status_OK(ReviewAddControllerRequest requestDto){
 
-        List<ReviewResponse> responses = new ArrayList<>(ReviewValidator
+        List<ReviewControllerResponse> responses = new ArrayList<>(ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
 
@@ -299,7 +299,7 @@ public class ReviewTest {
                 .getInstance()
                 .incrementReviewDislikesById(x.getId(),HttpStatus.OK));
 
-        List<ReviewResponse> responsesAgain = new ArrayList<>(ReviewValidator
+        List<ReviewControllerResponse> responsesAgain = new ArrayList<>(ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
 
@@ -311,14 +311,14 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T09_Delete_All_Reviews_By_Id_Status_OK_Delete_Reviews(ReviewAddRequest requestDto){
+    void T09_Delete_All_Reviews_By_Id_Status_OK_Delete_Reviews(ReviewAddControllerRequest requestDto){
 
         List<Integer> ids = new ArrayList<>();
 
         ReviewValidator
                 .getInstance()
                 .findAllReviewsByAuthor(requestDto.getAuthor(),HttpStatus.OK)
-                .stream().map(ReviewResponse::getId)
+                .stream().map(ReviewControllerResponse::getId)
                 .forEach(ids::add);
 
         ids.forEach(x -> ReviewValidator.getInstance().deleteReviewById(x,HttpStatus.OK));
@@ -333,7 +333,7 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("providePlaceForTests")
-    void T41_Delete_Created_Place(PlaceAddRequest requestDto){
+    void T41_Delete_Created_Place(PlaceAddControllerRequest requestDto){
 
         int id = PlaceValidator
 
@@ -351,11 +351,11 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideTwoUsersSignUpRequestsForTests")
-    void T45_Delete_Created_Users(SignUpRequest signUpRequest){
+    void T45_Delete_Created_Users(SignUpControllerRequest signUpControllerRequest){
 
         UserValidator
                 .getInstance()
-                .deleteUserByUsername(signUpRequest.getUsername(),HttpStatus.OK);
+                .deleteUserByUsername(signUpControllerRequest.getUsername(),HttpStatus.OK);
 
     }
 

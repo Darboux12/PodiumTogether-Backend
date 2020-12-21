@@ -75,12 +75,12 @@ public class Place {
     @JoinTable(name = "place_resource",
             joinColumns = { @JoinColumn(name = "place_id") },
             inverseJoinColumns = { @JoinColumn(name = "resource_id") })
-    private Set<PodiumResource> placeImages = new HashSet<>();
+    private Set<PodiumResource> placeResources = new HashSet<>();
 
     @OneToMany(mappedBy="place")
     private Set<Review> reviews = new HashSet<>();
 
-    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge, Set<PodiumResource> placeImages) {
+    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge, Set<PodiumResource> placeResources) {
         this.name = name;
         this.discipline = discipline;
         this.placeLocalization = placeLocalization;
@@ -89,7 +89,7 @@ public class Place {
         this.usageTime = usageTime;
         this.minAge = minAge;
         this.maxAge = maxAge;
-        this.placeImages = placeImages;
+        this.placeResources = placeResources;
     }
 
     public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge) {

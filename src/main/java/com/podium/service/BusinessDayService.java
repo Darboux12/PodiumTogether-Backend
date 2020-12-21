@@ -3,7 +3,7 @@ package com.podium.service;
 import com.podium.dal.entity.BusinessDay;
 import com.podium.dal.entity.WeekDay;
 import com.podium.dal.repository.BusinessDayRepository;
-import com.podium.service.dto.BusinessDayServiceDto;
+import com.podium.service.dto.other.BusinessDayServiceDto;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,8 @@ public class BusinessDayService {
 
         WeekDay weekDay = this.weekDayService.getEntity(businessDayServiceDto.getDay());
 
+        boolean isOpen = businessDayServiceDto.isOpen();
+
         return new BusinessDay(
                 weekDay,
                 businessDayServiceDto.isOpen(),
@@ -64,25 +66,34 @@ public class BusinessDayService {
 
         WeekDay weekDay = this.weekDayService.getEntity(businessDayServiceDto.getDay());
 
-        LocalTime timeFrom = businessDayServiceDto.getOpeningTimeFrom();
+        LocalTime timeFrom;
+        LocalTime timeTo;
 
-        LocalTime timeTo = businessDayServiceDto.getOpeningTimeTo();
+        if(businessDayServiceDto.getOpeningTimeFrom() == null ||
+                businessDayServiceDto.getOpeningTimeTo() == null){
+            timeFrom = LocalTime.parse("00:00:00");
+            timeTo = LocalTime.parse("00:00:00");
+        }
 
-        if(timeFrom.isAfter(timeTo))
-            throw new PodiumEntityTimeConsistencyError("Business Day Opening Times");
+        else {
+            timeFrom = businessDayServiceDto.getOpeningTimeFrom();
+            timeTo = businessDayServiceDto.getOpeningTimeTo();
+            if(businessDayServiceDto.isOpen() && timeFrom.isAfter(timeTo))
+                throw new PodiumEntityTimeConsistencyError("Business Day Opening Times");
+        }
 
         return this.businessDayRepository
 
                 .findByDayAndOpenIsAndOpenTimeFromAndOpenTimeTo(
                         weekDay,
                         businessDayServiceDto.isOpen(),
-                        businessDayServiceDto.getOpeningTimeFrom(),
-                        businessDayServiceDto.getOpeningTimeTo()
+                        timeFrom,
+                        timeTo
                 ).orElse(new BusinessDay(
                         weekDay,
                         businessDayServiceDto.isOpen(),
-                        businessDayServiceDto.getOpeningTimeFrom(),
-                        businessDayServiceDto.getOpeningTimeTo()
+                                timeFrom,
+                        timeTo
                 ));
 
     }

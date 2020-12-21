@@ -1,19 +1,17 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.other.PodiumFileDto;
-import com.podium.controller.dto.request.ProfileUpdateRequest;
-import com.podium.controller.dto.request.SignUpRequest;
-import com.podium.controller.dto.response.RoleResponse;
-import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.dto.other.FileControllerDto;
+import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
+import com.podium.controller.dto.request.SignUpControllerRequest;
+import com.podium.controller.dto.response.UserControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
-import com.podium.dal.entity.News;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.User;
 import com.podium.service.UserService;
-import com.podium.service.dto.SignUpServiceDto;
+import com.podium.service.dto.request.SignUpServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -25,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -40,13 +36,13 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.addUser)
-    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpControllerRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
         this.userService.addUser(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("User successfully signed up");
     }
 
     @GetMapping(PodiumEndpoint.findUserByUsername)
-    public ResponseEntity<UserResponse> findUser(@PathVariable String username) throws PodiumEntityNotFoundException {
+    public ResponseEntity<UserControllerResponse> findUser(@PathVariable String username) throws PodiumEntityNotFoundException {
 
         var user = this.userService.findUserByUsername(username);
 
@@ -54,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping(PodiumEndpoint.findAllUsers)
-    public ResponseEntity<Iterable<UserResponse>> findAllUsers(){
+    public ResponseEntity<Iterable<UserControllerResponse>> findAllUsers(){
 
         var users = this.userService.findAllUsers();
 
@@ -79,12 +75,12 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.updateUserProfile)
-    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateControllerRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
         this.userService.updateUser(request);
         return ResponseEntity.ok().build();
     }
 
-    private SignUpServiceDto convertAddRequestToServiceDto(SignUpRequest request){
+    private SignUpServiceDto convertAddRequestToServiceDto(SignUpControllerRequest request){
         return new SignUpServiceDto(
                 request.getUsername(),
                 request.getEmail(),
@@ -94,7 +90,7 @@ public class UserController {
         );
     }
 
-    private UserResponse convertEntityToResponseDto(User user) {
+    private UserControllerResponse convertEntityToResponseDto(User user) {
 
         var roles = new HashSet<String>();
 
@@ -102,7 +98,7 @@ public class UserController {
                 .getRoles()
                 .forEach(role -> roles.add(role.getRole()));
 
-        return new UserResponse(
+        return new UserControllerResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -116,9 +112,9 @@ public class UserController {
 
     }
 
-    private Iterable<UserResponse> convertEntityIterableToResponseDto(Iterable<User> users){
+    private Iterable<UserControllerResponse> convertEntityIterableToResponseDto(Iterable<User> users){
 
-        var userResponses = new ArrayList<UserResponse>();
+        var userResponses = new ArrayList<UserControllerResponse>();
 
         users.forEach(x -> {
             userResponses.add(this.convertEntityToResponseDto(x));
@@ -127,14 +123,14 @@ public class UserController {
         return userResponses;
     }
 
-    private PodiumFileDto findUserProfileImage(User user) {
+    private FileControllerDto findUserProfileImage(User user) {
 
         PodiumResource userResource = user.getProfileImage();
 
         if(userResource != null) {
 
             try {
-                return new PodiumFileDto(
+                return new FileControllerDto(
                         userResource.getName(),
                         userResource.getType(),
                         FileCopyUtils.copyToByteArray(new File(userResource.getPath()))

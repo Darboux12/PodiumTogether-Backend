@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.SubjectAddRequest;
-import com.podium.controller.dto.response.SubjectResponse;
+import com.podium.controller.dto.request.SubjectAddControllerRequest;
+import com.podium.controller.dto.response.SubjectControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Subject;
 import com.podium.service.SubjectService;
-import com.podium.service.dto.SubjectAddServiceDto;
+import com.podium.service.dto.request.SubjectAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class SubjectController {
     }
 
     @PostMapping(PodiumEndpoint.addSubject)
-    public ResponseEntity addSubject(@RequestBody @PodiumValidBody SubjectAddRequest request) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addSubject(@RequestBody @PodiumValidBody SubjectAddControllerRequest request) throws PodiumEntityAlreadyExistException {
         this.subjectService.addSubject(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("Subject successfully added");
 
@@ -41,7 +41,7 @@ public class SubjectController {
     }
 
     @GetMapping(PodiumEndpoint.findAllSubject)
-    public ResponseEntity<Iterable<SubjectResponse>> findAllSubjects(){
+    public ResponseEntity<Iterable<SubjectControllerResponse>> findAllSubjects(){
 
         var subjects = this.subjectService.findAllSubjects();
 
@@ -49,7 +49,7 @@ public class SubjectController {
     }
 
     @GetMapping("/subject/find/{name}")
-    public ResponseEntity<SubjectResponse> findSubjectByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
+    public ResponseEntity<SubjectControllerResponse> findSubjectByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var subject= this.subjectService.findSubjectByName(name);
 
@@ -61,19 +61,19 @@ public class SubjectController {
         return ResponseEntity.ok().body(this.subjectService.existSubjectByName(name));
     }
 
-    private SubjectAddServiceDto convertAddRequestToServiceDto(SubjectAddRequest request){
+    private SubjectAddServiceDto convertAddRequestToServiceDto(SubjectAddControllerRequest request){
         return new SubjectAddServiceDto(request.getSubject());
     }
 
-    private SubjectResponse convertEntityToResponseDto(Subject subject){
+    private SubjectControllerResponse convertEntityToResponseDto(Subject subject){
 
-        return new SubjectResponse(subject.getSubject());
+        return new SubjectControllerResponse(subject.getSubject());
 
     }
 
-    private Iterable<SubjectResponse> convertEntityIterableToResponseDto(Iterable<Subject> subjects){
+    private Iterable<SubjectControllerResponse> convertEntityIterableToResponseDto(Iterable<Subject> subjects){
 
-        var subjectResponses = new ArrayList<SubjectResponse>();
+        var subjectResponses = new ArrayList<SubjectControllerResponse>();
 
         subjects.forEach(x -> subjectResponses.add(this.convertEntityToResponseDto(x)));
 

@@ -1,10 +1,9 @@
 package com.podium.service;
 
-import com.podium.controller.dto.response.WeekDayResponse;
+import com.podium.controller.dto.response.WeekDayControllerResponse;
 import com.podium.dal.entity.WeekDay;
 import com.podium.dal.repository.WeekDayRepository;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,9 +27,9 @@ public class WeekDayService {
 
     }
 
-    private WeekDayResponse convertEntityToResponseDto(WeekDay weekDay){
+    private WeekDayControllerResponse convertEntityToResponseDto(WeekDay weekDay){
 
-        return new WeekDayResponse(weekDay.getDay());
+        return new WeekDayControllerResponse(weekDay.getDay());
 
     }
 

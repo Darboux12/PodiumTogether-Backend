@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.CountryAddRequest;
-import com.podium.controller.dto.response.CountryResponse;
+import com.podium.controller.dto.request.CountryAddControllerRequest;
+import com.podium.controller.dto.response.CountryControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Country;
 import com.podium.service.CountryService;
-import com.podium.service.dto.CountryAddServiceDto;
+import com.podium.service.dto.request.CountryAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.findAllCountry)
-    public ResponseEntity<Iterable<CountryResponse>> findAllCountry(){
+    public ResponseEntity<Iterable<CountryControllerResponse>> findAllCountry(){
 
         var countries = this.countryService.findAllCountry();
 
@@ -36,7 +36,7 @@ public class CountryController {
     }
 
     @GetMapping(PodiumEndpoint.findCountryByName)
-    public ResponseEntity<CountryResponse> findCountryByName(@PathVariable @PodiumValidVariable String name ) throws PodiumEntityNotFoundException {
+    public ResponseEntity<CountryControllerResponse> findCountryByName(@PathVariable @PodiumValidVariable String name ) throws PodiumEntityNotFoundException {
 
         var country = this.countryService.findCountryByName(name);
 
@@ -44,7 +44,7 @@ public class CountryController {
     }
 
     @PostMapping(PodiumEndpoint.addCountry)
-    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryAddRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addCountry(@RequestBody @PodiumValidBody CountryAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
         this.countryService.addCountry(requestDto);
         return ResponseEntity.ok().body("Country successfully added");
     }
@@ -60,7 +60,7 @@ public class CountryController {
         return ResponseEntity.ok().body("Country successfully deleted");
     }
 
-    private CountryAddServiceDto convertAddRequestToServiceDto(CountryAddRequest request ){
+    private CountryAddServiceDto convertAddRequestToServiceDto(CountryAddControllerRequest request ){
 
         return new CountryAddServiceDto(request.getCountryId(),
                 request.getName(),
@@ -70,9 +70,9 @@ public class CountryController {
         );
     }
 
-    private CountryResponse convertEntityToResponseDto(Country country){
+    private CountryControllerResponse convertEntityToResponseDto(Country country){
 
-        return new CountryResponse(
+        return new CountryControllerResponse(
                 country.getCountryId(),
                 country.getName(),
                 country.getPrintableName(),
@@ -82,9 +82,9 @@ public class CountryController {
 
     }
 
-    private Iterable<CountryResponse> convertEntityIterableToResponseDto(Iterable<Country> countries){
+    private Iterable<CountryControllerResponse> convertEntityIterableToResponseDto(Iterable<Country> countries){
 
-        var countryResponses = new ArrayList<CountryResponse>();
+        var countryResponses = new ArrayList<CountryControllerResponse>();
 
         countries.forEach(x -> countryResponses.add(this.convertEntityToResponseDto(x)));
 

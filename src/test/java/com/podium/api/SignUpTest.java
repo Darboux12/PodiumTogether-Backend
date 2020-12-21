@@ -1,9 +1,9 @@
 package com.podium.api;
 
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.SignUpRequest;
+import com.podium.controller.dto.request.SignUpControllerRequest;
 import com.podium.constant.PodiumLimits;
-import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.dto.response.UserControllerResponse;
 import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -16,8 +16,8 @@ import java.util.Date;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class SignUpTest {
 
-    private static SignUpRequest signUpRequestOne;
-    private static SignUpRequest signUpRequestTwo;
+    private static SignUpControllerRequest signUpControllerRequestOne;
+    private static SignUpControllerRequest signUpControllerRequestTwo;
     private static String initialUsernameTwo;
     private static String initialEmailTwo;
     private static String valueHolder;
@@ -29,7 +29,7 @@ import java.util.Date;
 
         TestLogger.setUp();
 
-        signUpRequestOne = new SignUpRequest(
+        signUpControllerRequestOne = new SignUpControllerRequest(
                 "TEST USERNAME_ONE",
                 "TEST_MAIL_ONE@gmail.com",
                 "TEST PASSWORD ONE",
@@ -37,7 +37,7 @@ import java.util.Date;
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 
-        signUpRequestTwo = new SignUpRequest(
+        signUpControllerRequestTwo = new SignUpControllerRequest(
                 "TEST USERNAME_TWO",
                 "TEST_MAIL_TWO@gmail.com",
                 "TEST PASSWORD TWO",
@@ -45,8 +45,8 @@ import java.util.Date;
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 
-        initialUsernameTwo = signUpRequestTwo.getUsername();
-        initialEmailTwo =  signUpRequestTwo.getEmail();
+        initialUsernameTwo = signUpControllerRequestTwo.getUsername();
+        initialEmailTwo =  signUpControllerRequestTwo.getEmail();
 
     }
 
@@ -55,20 +55,20 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.OK);
+                .signUp(signUpControllerRequestOne,HttpStatus.OK);
 
     }
 
     @Test
     void T02_Find_Signed_Up_User_By_Username_Should_Return_Status_OK_And_DTO(){
 
-        UserResponse responseDto =
+        UserControllerResponse responseDto =
 
         UserValidator
                 .getInstance()
-                .findUserByUsername(signUpRequestOne.getUsername(),HttpStatus.OK);
+                .findUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.OK);
 
-        Assertions.assertEquals(signUpRequestOne.getUsername(),responseDto.getUsername());
+        Assertions.assertEquals(signUpControllerRequestOne.getUsername(),responseDto.getUsername());
     }
 
     @Test
@@ -78,8 +78,8 @@ import java.util.Date;
                 .getInstance()
                 .findAll()
                 .stream()
-                .map(UserResponse::getUsername)
-                .anyMatch(signUpRequestOne.getUsername()::equals);
+                .map(UserControllerResponse::getUsername)
+                .anyMatch(signUpControllerRequestOne.getUsername()::equals);
 
         Assertions.assertTrue(isPresent);
 
@@ -99,46 +99,46 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
     }
 
     @Test
     void T06_Sign_Up_User_With_Same_Username_Should_Return_Status_CONFLICT() throws ParseException {
 
-        signUpRequestTwo.setUsername(signUpRequestOne.getUsername());
+        signUpControllerRequestTwo.setUsername(signUpControllerRequestOne.getUsername());
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestTwo.setUsername(initialUsernameTwo);
+        signUpControllerRequestTwo.setUsername(initialUsernameTwo);
 
     }
 
     @Test
     void T07_Sign_Up_User_Existing_Email_Should_Return_Status_CONFLICT() throws ParseException {
 
-        signUpRequestTwo.setEmail(signUpRequestOne.getEmail());
+        signUpControllerRequestTwo.setEmail(signUpControllerRequestOne.getEmail());
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestTwo.setEmail(initialEmailTwo);
+        signUpControllerRequestTwo.setEmail(initialEmailTwo);
     }
 
     @Test
     void T08_Sign_Up_User_Empty_Username_Should_Return_Status_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername("");
+        valueHolder = signUpControllerRequestOne.getUsername();
+        signUpControllerRequestOne.setUsername("");
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpControllerRequestOne.setUsername(valueHolder);
     }
 
     @Test
@@ -146,14 +146,14 @@ import java.util.Date;
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minUsernameLength - 1);
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername(toShort);
+        valueHolder = signUpControllerRequestOne.getUsername();
+        signUpControllerRequestOne.setUsername(toShort);
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpControllerRequestOne.setUsername(valueHolder);
     }
 
     @Test
@@ -161,41 +161,41 @@ import java.util.Date;
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxUsernameLength + 1);
 
-        valueHolder = signUpRequestOne.getUsername();
-        signUpRequestOne.setUsername(toLong);
+        valueHolder = signUpControllerRequestOne.getUsername();
+        signUpControllerRequestOne.setUsername(toLong);
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setUsername(valueHolder);
+        signUpControllerRequestOne.setUsername(valueHolder);
     }
 
     @Test
     void T11_signUpUserEmptyEmail_Should_Return_Status_CONFLICT() throws ParseException {
 
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail("");
+        valueHolder = signUpControllerRequestOne.getEmail();
+        signUpControllerRequestOne.setEmail("");
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpControllerRequestOne.setEmail(valueHolder);
     }
 
     @Test
     void T12_signUpUserInvalidEmail_Should_Return_Status_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail("invalidEmail@");
+        valueHolder = signUpControllerRequestOne.getEmail();
+        signUpControllerRequestOne.setEmail("invalidEmail@");
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpControllerRequestOne.setEmail(valueHolder);
     }
 
     @Test
@@ -203,14 +203,14 @@ import java.util.Date;
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1);
 
-        valueHolder = signUpRequestOne.getEmail();
-        signUpRequestOne.setEmail(toLong);
+        valueHolder = signUpControllerRequestOne.getEmail();
+        signUpControllerRequestOne.setEmail(toLong);
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setEmail(valueHolder);
+        signUpControllerRequestOne.setEmail(valueHolder);
     }
 
     @Test
@@ -218,14 +218,14 @@ import java.util.Date;
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minPasswordLength - 1);
 
-        valueHolder = signUpRequestOne.getPassword();
-        signUpRequestOne.setPassword(toShort);
+        valueHolder = signUpControllerRequestOne.getPassword();
+        signUpControllerRequestOne.setPassword(toShort);
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setPassword(valueHolder);
+        signUpControllerRequestOne.setPassword(valueHolder);
     }
 
     @Test
@@ -233,40 +233,40 @@ import java.util.Date;
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxPasswordLength + 1);
 
-        valueHolder = signUpRequestOne.getPassword();
-        signUpRequestOne.setPassword(toLong);
+        valueHolder = signUpControllerRequestOne.getPassword();
+        signUpControllerRequestOne.setPassword(toLong);
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setPassword(valueHolder);
+        signUpControllerRequestOne.setPassword(valueHolder);
     }
 
     @Test
     void T16_signUpUserEmptyCountry_Should_Return_Status_CONFLICT() throws ParseException {
 
-        valueHolder = signUpRequestOne.getCountry();
-        signUpRequestOne.setCountry("");
+        valueHolder = signUpControllerRequestOne.getCountry();
+        signUpControllerRequestOne.setCountry("");
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setCountry(valueHolder);
+        signUpControllerRequestOne.setCountry(valueHolder);
     }
 
     @Test
     void T17_signUpUserBirthdayInFuture_Should_Return_Status_CONFLICT() throws ParseException {
 
-        Date tmpDate = signUpRequestOne.getBirthday();
-        signUpRequestOne.setBirthday(new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2100"));
+        Date tmpDate = signUpControllerRequestOne.getBirthday();
+        signUpControllerRequestOne.setBirthday(new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2100"));
 
         UserValidator
                 .getInstance()
-                .signUp(signUpRequestOne,HttpStatus.CONFLICT);
+                .signUp(signUpControllerRequestOne,HttpStatus.CONFLICT);
 
-        signUpRequestOne.setBirthday(tmpDate);
+        signUpControllerRequestOne.setBirthday(tmpDate);
     }
 
     @Test
@@ -274,7 +274,7 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .deleteUserByUsername(signUpRequestOne.getUsername(),HttpStatus.OK);
+                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.OK);
 
     }
 
@@ -283,7 +283,7 @@ import java.util.Date;
 
         UserValidator
                 .getInstance()
-                .deleteUserByUsername(signUpRequestOne.getUsername(),HttpStatus.NOT_FOUND);
+                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.NOT_FOUND);
     }
 
 }

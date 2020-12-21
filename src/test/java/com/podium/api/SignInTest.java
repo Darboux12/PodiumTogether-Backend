@@ -2,7 +2,7 @@ package com.podium.api;
 
 
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.JwtRequest;
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -52,10 +52,10 @@ import java.util.stream.Stream;
         );
     }
 
-    private static Stream<JwtRequest> provideValidSIgnInRequests(){
+    private static Stream<JwtControllerRequest> provideValidSIgnInRequests(){
 
         return Stream.of(
-                new JwtRequest("johndoe","johndoe123")
+                new JwtControllerRequest("johndoe","johndoe123")
 
         );
 
@@ -70,7 +70,7 @@ import java.util.stream.Stream;
 
     @ParameterizedTest
     @MethodSource("provideValidSIgnInRequests")
-    void T01_Sign_In_User_Should__Return__Status_OK(JwtRequest request){
+    void T01_Sign_In_User_Should__Return__Status_OK(JwtControllerRequest request){
         UserValidator.getInstance().signIn(request,HttpStatus.OK);
     }
 
@@ -79,7 +79,7 @@ import java.util.stream.Stream;
     void T02_Sign_In_Empty_Username_Should_Return_Status_CONFLICT(String emptyUsername){
 
         UserValidator.getInstance()
-                .signIn(new JwtRequest(emptyUsername,validPassword),HttpStatus.CONFLICT);
+                .signIn(new JwtControllerRequest(emptyUsername,validPassword),HttpStatus.CONFLICT);
 
     }
 
@@ -88,7 +88,7 @@ import java.util.stream.Stream;
     void T03_SignIn_Empty_Password_Should_Return_Status_CONFLICT(String emptyPassword) {
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequest(validUsername,emptyPassword),HttpStatus.CONFLICT);
+                .signIn(new JwtControllerRequest(validUsername,emptyPassword),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -97,7 +97,7 @@ import java.util.stream.Stream;
 
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequest(validUsername,wrongPassword),HttpStatus.BAD_REQUEST);
+                .signIn(new JwtControllerRequest(validUsername,wrongPassword),HttpStatus.BAD_REQUEST);
 
     }
 
@@ -106,7 +106,7 @@ import java.util.stream.Stream;
     void T05_SignIn_Wrong_Username_Should_Return_Status_UNAUTHORIZED(String wrongUsername){
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequest(wrongUsername,validPassword),HttpStatus.UNAUTHORIZED);
+                .signIn(new JwtControllerRequest(wrongUsername,validPassword),HttpStatus.UNAUTHORIZED);
     }
 
     @ParameterizedTest
@@ -115,7 +115,7 @@ import java.util.stream.Stream;
 
         UserValidator
                 .getInstance()
-                .signIn(new JwtRequest(wrongUsername,wrongPassword),HttpStatus.UNAUTHORIZED);
+                .signIn(new JwtControllerRequest(wrongUsername,wrongPassword),HttpStatus.UNAUTHORIZED);
     }
 
 }

@@ -314,6 +314,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewDislikes)
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllPlaces)
+                .permitAll()
+
 
 
 

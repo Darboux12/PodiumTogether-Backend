@@ -2,11 +2,10 @@ package com.podium.service;
 
 import com.podium.dal.entity.*;
 import com.podium.dal.repository.PlaceRepository;
-import com.podium.service.dto.BusinessDayServiceDto;
-import com.podium.service.dto.LocalizationServiceDto;
-import com.podium.service.dto.PlaceAddServiceDto;
+import com.podium.service.dto.other.BusinessDayServiceDto;
+import com.podium.service.dto.other.LocalizationServiceDto;
+import com.podium.service.dto.request.PlaceAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
-import com.podium.service.exception.PodiumEntityNotExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.stereotype.Service;
@@ -72,6 +71,10 @@ public class PlaceService {
         this.businessDayService.deleteBusinessDays(place.getBusinessDays());
 
 
+    }
+
+    public Iterable<Place> findAllPlace(){
+        return this.placeRepository.findAll();
     }
 
     public boolean existByName(String name){

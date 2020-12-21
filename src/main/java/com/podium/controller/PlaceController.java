@@ -1,30 +1,24 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.converter.PodiumConverter;
-import com.podium.controller.dto.other.*;
-import com.podium.controller.dto.request.PlaceAddRequest;
-import com.podium.controller.dto.response.PlaceResponse;
+import com.podium.controller.dto.converter.ControllerConverter;
+import com.podium.controller.dto.request.PlaceAddControllerRequest;
+import com.podium.controller.dto.response.PlaceControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
-import com.podium.dal.entity.Place;
-import com.podium.dal.entity.PodiumResource;
 import com.podium.service.BusinessDayService;
 import com.podium.service.PlaceService;
-import com.podium.service.dto.BusinessDayServiceDto;
-import com.podium.service.dto.LocalizationServiceDto;
-import com.podium.service.dto.PlaceAddServiceDto;
+import com.podium.service.dto.other.BusinessDayServiceDto;
+import com.podium.service.dto.other.LocalizationServiceDto;
+import com.podium.service.dto.request.PlaceAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -40,11 +34,11 @@ public class PlaceController {
 
     @PostMapping(PodiumEndpoint.addPlace)
     public ResponseEntity addPlace(
-            @RequestPart("place") @PodiumValidBody PlaceAddRequest requestDto,
+            @RequestPart("place") @PodiumValidBody PlaceAddControllerRequest requestDto,
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart("documents") List<MultipartFile> documents) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
-      //  this.placeService.addPlace(this.convertAddRequestToServiceDto(requestDto,images,documents));
+        this.placeService.addPlace(this.convertAddRequestToServiceDto(requestDto,images,documents));
 
 
 
@@ -53,11 +47,25 @@ public class PlaceController {
     }
 
     @GetMapping(PodiumEndpoint.findPlaceByName)
-    public ResponseEntity<PlaceResponse> findPlaceByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
+    public ResponseEntity<PlaceControllerResponse> findPlaceByName(@PathVariable @PodiumValidVariable String name) throws PodiumEntityNotFoundException {
 
         var place = this.placeService.findPlaceByName(name);
 
-        return ResponseEntity.ok().body(PodiumConverter.getInstance().convertPlaceToResponseDto(place));
+        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceToResponseDto(place));
+    }
+
+    @GetMapping(PodiumEndpoint.findAllPlaces)
+    public ResponseEntity<Iterable<PlaceControllerResponse>> findAllPlaces() throws PodiumEntityNotFoundException {
+
+        var places = this.placeService.findAllPlace();
+
+        return ResponseEntity
+                .ok()
+                .body(ControllerConverter.
+                        getInstance()
+                        .convertPlaceIterableToResponseDto(places));
+
+
     }
 
     @DeleteMapping(PodiumEndpoint.deletePlaceById)
@@ -68,21 +76,21 @@ public class PlaceController {
         return ResponseEntity.ok().body("Place successfully deleted");
     }
 
-    private PlaceAddServiceDto convertAddRequestToServiceDto(PlaceAddRequest addRequest,List<MultipartFile> images,List<MultipartFile> documents){
+    private PlaceAddServiceDto convertAddRequestToServiceDto(PlaceAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
 
         LocalizationServiceDto localizationServiceDto =
 
                 new LocalizationServiceDto(
-                        addRequest.getLocalizationDto().getCity(),
-                        addRequest.getLocalizationDto().getStreet(),
-                        addRequest.getLocalizationDto().getBuildingNumber(),
-                        addRequest.getLocalizationDto().getPostalCode(),
-                        addRequest.getLocalizationDto().getLocalizationRemarks()
+                        addRequest.getLocalizationControllerDto().getCity(),
+                        addRequest.getLocalizationControllerDto().getStreet(),
+                        addRequest.getLocalizationControllerDto().getBuildingNumber(),
+                        addRequest.getLocalizationControllerDto().getPostalCode(),
+                        addRequest.getLocalizationControllerDto().getLocalizationRemarks()
                 );
 
         var businessDayServiceDtos = new HashSet<BusinessDayServiceDto>();
 
-        addRequest.getBusinessDayDtos()
+        addRequest.getBusinessDayControllerDtos()
                 .forEach(day -> businessDayServiceDtos
                         .add(new BusinessDayServiceDto(
                 day.getDay(),

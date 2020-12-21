@@ -1,14 +1,14 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.DisciplineAddRequest;
-import com.podium.controller.dto.response.DisciplineResponse;
+import com.podium.controller.dto.request.DisciplineAddControllerRequest;
+import com.podium.controller.dto.response.DisciplineControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Discipline;
 import com.podium.service.DisciplineService;
-import com.podium.service.dto.DisciplineAddServiceDto;
+import com.podium.service.dto.request.DisciplineAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,7 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findAllDiscipline)
-    public ResponseEntity<Iterable<DisciplineResponse>> findAllDiscipline(){
+    public ResponseEntity<Iterable<DisciplineControllerResponse>> findAllDiscipline(){
 
         var disciplines = this.disciplineService.findAllDiscipline();
 
@@ -36,7 +36,7 @@ public class DisciplineController {
     }
 
     @GetMapping(PodiumEndpoint.findByDisciplineName)
-    public ResponseEntity<DisciplineResponse> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline) throws PodiumEntityNotFoundException {
+    public ResponseEntity<DisciplineControllerResponse> findDisciplineByName(@PathVariable @PodiumValidVariable String discipline) throws PodiumEntityNotFoundException {
 
         var dis = this.disciplineService.findDisciplineByName(discipline);
 
@@ -44,7 +44,7 @@ public class DisciplineController {
     }
 
     @PostMapping(PodiumEndpoint.addDiscipline)
-    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineAddRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addDiscipline(@RequestBody @PodiumValidBody DisciplineAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
         this.disciplineService.addDiscipline(this.convertAddRequestToServiceModel(requestDto));
         return ResponseEntity.ok().body("Discipline successfully added");
 
@@ -61,20 +61,20 @@ public class DisciplineController {
         return ResponseEntity.ok().body("Discipline successfully deleted");
     }
 
-    private DisciplineResponse convertEntityToResponseDto(Discipline discipline){
-        return new DisciplineResponse(discipline.getDiscipline());
+    private DisciplineControllerResponse convertEntityToResponseDto(Discipline discipline){
+        return new DisciplineControllerResponse(discipline.getDiscipline());
     }
 
-    private Iterable<DisciplineResponse> convertEntityIterableToResponseDto(Iterable<Discipline> disciplines){
+    private Iterable<DisciplineControllerResponse> convertEntityIterableToResponseDto(Iterable<Discipline> disciplines){
 
-        var disciplineResponses = new ArrayList<DisciplineResponse>();
+        var disciplineResponses = new ArrayList<DisciplineControllerResponse>();
 
         disciplines.forEach(x -> disciplineResponses.add(this.convertEntityToResponseDto(x)));
 
         return disciplineResponses;
     }
 
-    private DisciplineAddServiceDto convertAddRequestToServiceModel(DisciplineAddRequest requestDto){
+    private DisciplineAddServiceDto convertAddRequestToServiceModel(DisciplineAddControllerRequest requestDto){
         return new DisciplineAddServiceDto(requestDto.getDiscipline());
     }
 

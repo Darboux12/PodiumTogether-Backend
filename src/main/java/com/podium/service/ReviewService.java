@@ -2,8 +2,8 @@ package com.podium.service;
 
 import com.podium.dal.entity.*;
 import com.podium.dal.repository.ReviewRepository;
-import com.podium.service.dto.ReviewAddServiceDto;
-import com.podium.service.dto.StarRatingServiceDto;
+import com.podium.service.dto.request.ReviewAddServiceDto;
+import com.podium.service.dto.other.StarRatingServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityNotSameQuantity;

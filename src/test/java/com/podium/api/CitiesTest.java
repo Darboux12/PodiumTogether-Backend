@@ -2,8 +2,8 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.request.CityAddRequest;
-import com.podium.controller.dto.response.CityResponse;
+import com.podium.controller.dto.request.CityAddControllerRequest;
+import com.podium.controller.dto.response.CityControllerResponse;
 import com.podium.validator.CityValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -61,7 +61,7 @@ class CitiesTest {
 
         CityValidator
                 .getInstance()
-                .add(new CityAddRequest(city),HttpStatus.OK);
+                .add(new CityAddControllerRequest(city),HttpStatus.OK);
     }
 
     @ParameterizedTest
@@ -69,7 +69,7 @@ class CitiesTest {
     void T02_Add_Same_City_Again_Should_Return_Status_CONFLICT(String city){
         CityValidator
                 .getInstance()
-                .add(new CityAddRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -78,7 +78,7 @@ class CitiesTest {
 
         CityValidator
                 .getInstance()
-                .add(new CityAddRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
@@ -87,7 +87,7 @@ class CitiesTest {
 
         CityValidator
                 .getInstance()
-                .add(new CityAddRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
     }
 
     @Test
@@ -97,7 +97,7 @@ class CitiesTest {
                 .getInstance()
                 .findAll()
                 .stream()
-                .map(CityResponse::getCity)
+                .map(CityControllerResponse::getCity)
                 .collect(Collectors.toList());
 
         Assertions.assertTrue

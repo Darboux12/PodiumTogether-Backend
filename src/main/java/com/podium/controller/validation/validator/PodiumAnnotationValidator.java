@@ -251,7 +251,7 @@ public class PodiumAnnotationValidator {
         }
 
         else return !field.isAnnotationPresent(PodiumOptionalValue.class) ||
-                    (!field.get(object).equals(0) && field.get(object) != null);
+                    ( field.get(object) != null && !field.get(object).equals(0));
 
     }
 

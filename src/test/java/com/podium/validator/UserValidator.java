@@ -2,11 +2,11 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.request.ProfileUpdateRequest;
-import com.podium.controller.dto.response.UserResponse;
+import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
+import com.podium.controller.dto.response.UserControllerResponse;
 import com.podium.specification.TestSpecification;
-import com.podium.controller.dto.request.JwtRequest;
-import com.podium.controller.dto.request.SignUpRequest;
+import com.podium.controller.dto.request.JwtControllerRequest;
+import com.podium.controller.dto.request.SignUpControllerRequest;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
@@ -29,7 +29,7 @@ public class UserValidator {
         return instance;
     }
 
-    public void signUp(SignUpRequest requestDto, HttpStatus status){
+    public void signUp(SignUpControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -43,7 +43,7 @@ public class UserValidator {
 
     }
 
-    public void signIn(JwtRequest requestDto, HttpStatus status){
+    public void signIn(JwtControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -57,7 +57,7 @@ public class UserValidator {
 
     }
 
-    public UserResponse findUserByUsername(String username, HttpStatus status){
+    public UserControllerResponse findUserByUsername(String username, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -71,7 +71,7 @@ public class UserValidator {
                     .then().assertThat()
                     .statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec())
-                    .extract().as(UserResponse.class);
+                    .extract().as(UserControllerResponse.class);
 
         else
 
@@ -104,9 +104,9 @@ public class UserValidator {
 
     }
 
-    public List<UserResponse> findAll(){
+    public List<UserControllerResponse> findAll(){
 
-        UserResponse[] dtos =
+        UserControllerResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -116,14 +116,14 @@ public class UserValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) UserResponse[].class);
+                        .extract().as((Type) UserControllerResponse[].class);
 
         return Arrays.asList(dtos);
 
 
     }
 
-    public void updateUser(ProfileUpdateRequest requestDto, HttpStatus status ){
+    public void updateUser(ProfileUpdateControllerRequest requestDto, HttpStatus status ){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())

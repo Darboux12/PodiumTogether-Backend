@@ -87,7 +87,7 @@ public class ResourceService {
     private void deleteResourcesFromServer(Set<PodiumResource> resources){
 
         resources.forEach(resource -> {
-
+            
             if(!this.fileRepository.existFileByPath(resource.getPath()))
                 try {
                     throw new PodiumFileUploadFailException();

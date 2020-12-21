@@ -1,16 +1,15 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.converter.PodiumConverter;
-import com.podium.controller.dto.other.RatingDto;
-import com.podium.controller.dto.other.ReviewResponse;
-import com.podium.controller.dto.request.ReviewAddRequest;
+import com.podium.controller.dto.converter.ControllerConverter;
+import com.podium.controller.dto.response.ReviewControllerResponse;
+import com.podium.controller.dto.request.ReviewAddControllerRequest;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Review;
 import com.podium.service.ReviewService;
-import com.podium.service.dto.ReviewAddServiceDto;
-import com.podium.service.dto.StarRatingServiceDto;
+import com.podium.service.dto.request.ReviewAddServiceDto;
+import com.podium.service.dto.other.StarRatingServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityNotSameQuantity;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -36,7 +34,7 @@ public class ReviewController {
 
     @PostMapping(PodiumEndpoint.addReview)
     public ResponseEntity addReview(
-            @RequestPart("review") @PodiumValidBody ReviewAddRequest requestDto,
+            @RequestPart("review") @PodiumValidBody ReviewAddControllerRequest requestDto,
             @RequestPart("images") List<MultipartFile> images) throws PodiumEntityNotSameQuantity, PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
 
         this.reviewService.addReview(this.convertAddRequestToServiceDto(requestDto,images));
@@ -55,7 +53,7 @@ public class ReviewController {
     }
 
     @GetMapping(PodiumEndpoint.findReviewsByAuthor)
-    public ResponseEntity<Iterable<ReviewResponse>> findAllReviewsByAuthor(@PathVariable String username) throws PodiumEntityNotFoundException {
+    public ResponseEntity<Iterable<ReviewControllerResponse>> findAllReviewsByAuthor(@PathVariable String username) throws PodiumEntityNotFoundException {
 
         var reviews = this.reviewService.findAllReviewsByAuthor(username);
 
@@ -83,7 +81,7 @@ public class ReviewController {
 
     }
 
-    private ReviewAddServiceDto convertAddRequestToServiceDto(ReviewAddRequest addRequest, List<MultipartFile> images){
+    private ReviewAddServiceDto convertAddRequestToServiceDto(ReviewAddControllerRequest addRequest, List<MultipartFile> images){
 
         var ratingDtos = new HashSet<StarRatingServiceDto>();
 
@@ -103,12 +101,12 @@ public class ReviewController {
 
     }
 
-    private Iterable<ReviewResponse> convertEntityIterableToResponseDto(Iterable<Review> reviews){
+    private Iterable<ReviewControllerResponse> convertEntityIterableToResponseDto(Iterable<Review> reviews){
 
-        var reviewResponses = new ArrayList<ReviewResponse>();
+        var reviewResponses = new ArrayList<ReviewControllerResponse>();
 
         reviews.forEach(x -> reviewResponses
-                .add(PodiumConverter.
+                .add(ControllerConverter.
                         getInstance().convertReviewToResponseDto(x))
         );
 

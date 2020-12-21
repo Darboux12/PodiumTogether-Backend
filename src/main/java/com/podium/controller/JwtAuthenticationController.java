@@ -2,10 +2,10 @@ package com.podium.controller;
 
 import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.request.JwtRequest;
-import com.podium.controller.dto.response.ExpirationDateTokenResponse;
-import com.podium.controller.dto.response.JwtResponse;
-import com.podium.controller.dto.response.UsernameFromTokenResponse;
+import com.podium.controller.dto.request.JwtControllerRequest;
+import com.podium.controller.dto.response.ExpirationDateTokenControllerResponse;
+import com.podium.controller.dto.response.JwtControllerResponse;
+import com.podium.controller.dto.response.UsernameFromTokenControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidVariable;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
@@ -36,29 +36,29 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(PodiumEndpoint.authenticate)
-    public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody @PodiumValidBody JwtRequest jwtRequest){
+    public ResponseEntity<JwtControllerResponse> createAuthenticationToken(@RequestBody @PodiumValidBody JwtControllerRequest jwtControllerRequest){
 
         final UserDetails userDetails =
-                userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+                userDetailsService.loadUserByUsername(jwtControllerRequest.getUsername());
 
         final boolean accessPermission = this.passwordEncoder.matches(
-                jwtRequest.getPassword(),
+                jwtControllerRequest.getPassword(),
                 userDetails.getPassword());
 
         if(accessPermission)
-            return ResponseEntity.ok(new JwtResponse(jwtTokenUtil.generateToken(userDetails)));
+            return ResponseEntity.ok(new JwtControllerResponse(jwtTokenUtil.generateToken(userDetails)));
 
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Authentication failed");
     }
 
     @PostMapping(PodiumEndpoint.authenticateNoToken)
-    public ResponseEntity<JwtResponse> authenticateWithoutToken(@RequestBody @PodiumValidBody JwtRequest jwtRequest){
+    public ResponseEntity<JwtControllerResponse> authenticateWithoutToken(@RequestBody @PodiumValidBody JwtControllerRequest jwtControllerRequest){
 
         final UserDetails userDetails =
-                userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+                userDetailsService.loadUserByUsername(jwtControllerRequest.getUsername());
 
         final boolean accessPermission = this.passwordEncoder.matches(
-                jwtRequest.getPassword(),
+                jwtControllerRequest.getPassword(),
                 userDetails.getPassword());
 
         if(accessPermission)
@@ -68,11 +68,11 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(PodiumEndpoint.findUsernameFromToken)
-    public ResponseEntity<UsernameFromTokenResponse> findUsernameFromToken(@RequestParam("token") @PodiumValidVariable String token){
+    public ResponseEntity<UsernameFromTokenControllerResponse> findUsernameFromToken(@RequestParam("token") @PodiumValidVariable String token){
 
         try{
                 String username = this.jwtTokenUtil.getUsernameFromToken(token);
-                UsernameFromTokenResponse response = new UsernameFromTokenResponse();
+                UsernameFromTokenControllerResponse response = new UsernameFromTokenControllerResponse();
                 response.setUsername(username);
                 return ResponseEntity.ok().body(response);
         }
@@ -86,11 +86,11 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(PodiumEndpoint.findTokenExpirationDate)
-    public ResponseEntity<ExpirationDateTokenResponse> findExpirationFromToken(@RequestParam("token") @PodiumValidVariable String token){
+    public ResponseEntity<ExpirationDateTokenControllerResponse> findExpirationFromToken(@RequestParam("token") @PodiumValidVariable String token){
 
         try{
 
-            ExpirationDateTokenResponse response = new ExpirationDateTokenResponse();
+            ExpirationDateTokenControllerResponse response = new ExpirationDateTokenControllerResponse();
             Date expirationDate = this.jwtTokenUtil.getExpirationDateFromToken(token);
             response.setExpirationDate(expirationDate);
 

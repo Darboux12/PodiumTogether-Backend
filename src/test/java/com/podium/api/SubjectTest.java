@@ -3,8 +3,8 @@ package com.podium.api;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
 import com.podium.logger.TestLogger;
-import com.podium.controller.dto.response.SubjectResponse;
-import com.podium.controller.dto.request.SubjectAddRequest;
+import com.podium.controller.dto.response.SubjectControllerResponse;
+import com.podium.controller.dto.request.SubjectAddControllerRequest;
 import com.podium.specification.TestSpecification;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.SubjectValidator;
@@ -20,13 +20,13 @@ import static io.restassured.RestAssured.given;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class SubjectTest {
 
-    private static SubjectAddRequest subjectAddRequest;
+    private static SubjectAddControllerRequest subjectAddControllerRequest;
 
     @BeforeAll
     static void beforeClass(){
 
         TestLogger.setUp();
-        subjectAddRequest = new SubjectAddRequest("TestSubject");
+        subjectAddControllerRequest = new SubjectAddControllerRequest("TestSubject");
     }
 
     @Test
@@ -34,7 +34,7 @@ class SubjectTest {
 
         SubjectValidator
                 .getInstance()
-                .add(subjectAddRequest,HttpStatus.OK);
+                .add(subjectAddControllerRequest,HttpStatus.OK);
 
     }
 
@@ -43,20 +43,20 @@ class SubjectTest {
 
         SubjectValidator
                 .getInstance()
-                .add(subjectAddRequest,HttpStatus.CONFLICT);
+                .add(subjectAddControllerRequest,HttpStatus.CONFLICT);
     }
 
     @Test
     void T03_addSubjectEmptySubject_ShouldReturnStatus_CONFLICT() throws ParseException {
 
-        String valueHolder = subjectAddRequest.getSubject();
-        subjectAddRequest.setSubject("");
+        String valueHolder = subjectAddControllerRequest.getSubject();
+        subjectAddControllerRequest.setSubject("");
 
         SubjectValidator
                 .getInstance()
-                .add(subjectAddRequest,HttpStatus.CONFLICT);
+                .add(subjectAddControllerRequest,HttpStatus.CONFLICT);
 
-        subjectAddRequest.setSubject(valueHolder);
+        subjectAddControllerRequest.setSubject(valueHolder);
     }
 
     @Test
@@ -64,14 +64,14 @@ class SubjectTest {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minSubjectLength - 1);
 
-        String valueHolder = subjectAddRequest.getSubject();
-        subjectAddRequest.setSubject(toShort);
+        String valueHolder = subjectAddControllerRequest.getSubject();
+        subjectAddControllerRequest.setSubject(toShort);
 
         SubjectValidator
                 .getInstance()
-                .add(subjectAddRequest,HttpStatus.CONFLICT);
+                .add(subjectAddControllerRequest,HttpStatus.CONFLICT);
 
-        subjectAddRequest.setSubject(valueHolder);
+        subjectAddControllerRequest.setSubject(valueHolder);
     }
 
     @Test
@@ -79,26 +79,26 @@ class SubjectTest {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxSubjectLength + 1);
 
-        String valueHolder = subjectAddRequest.getSubject();
-        subjectAddRequest.setSubject(toLong);
+        String valueHolder = subjectAddControllerRequest.getSubject();
+        subjectAddControllerRequest.setSubject(toLong);
 
         SubjectValidator
                 .getInstance()
-                .add(subjectAddRequest,HttpStatus.CONFLICT);
+                .add(subjectAddControllerRequest,HttpStatus.CONFLICT);
 
-        subjectAddRequest.setSubject(valueHolder);
+        subjectAddControllerRequest.setSubject(valueHolder);
     }
 
     @Test
     void T06_findExistingSubject_ShouldReturnStatus_OK_Response_DTO() throws ParseException {
 
-        SubjectResponse addedSubject =
+        SubjectControllerResponse addedSubject =
 
                 SubjectValidator
                         .getInstance()
-                        .findByName(subjectAddRequest.getSubject(),HttpStatus.OK);
+                        .findByName(subjectAddControllerRequest.getSubject(),HttpStatus.OK);
 
-        Assertions.assertEquals(subjectAddRequest.getSubject(),addedSubject.getSubject());
+        Assertions.assertEquals(subjectAddControllerRequest.getSubject(),addedSubject.getSubject());
 
     }
 

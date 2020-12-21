@@ -2,9 +2,9 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
-import com.podium.controller.dto.request.EventAddRequest;
+import com.podium.controller.dto.request.EventAddControllerRequest;
 import com.podium.specification.TestSpecification;
-import com.podium.controller.dto.response.EventResponse;
+import com.podium.controller.dto.response.EventControllerResponse;
 import io.restassured.http.ContentType;
 import org.springframework.http.HttpStatus;
 
@@ -27,7 +27,7 @@ public class EventValidator {
         return instance;
     }
 
-    public void add(EventAddRequest requestDto, HttpStatus status){
+    public void add(EventAddControllerRequest requestDto, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -40,9 +40,9 @@ public class EventValidator {
 
     }
 
-    public List<EventResponse> findAll(){
+    public List<EventControllerResponse> findAll(){
 
-        EventResponse[] dtos =
+        EventControllerResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
@@ -51,13 +51,13 @@ public class EventValidator {
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as((Type) EventResponse[].class);
+                        .extract().as((Type) EventControllerResponse[].class);
 
         return Arrays.asList(dtos);
 
     }
 
-    public EventResponse findByTitle(String eventTitle, HttpStatus status){
+    public EventControllerResponse findByTitle(String eventTitle, HttpStatus status){
 
         return
 
@@ -68,7 +68,7 @@ public class EventValidator {
                         .get(PodiumPath.server + PodiumEndpoint.findCityByName)
                         .then().assertThat().statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
-                        .extract().as(EventResponse.class);
+                        .extract().as(EventControllerResponse.class);
 
     }
 

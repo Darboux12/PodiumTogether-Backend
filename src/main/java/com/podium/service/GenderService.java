@@ -1,9 +1,8 @@
 package com.podium.service;
 
-import com.podium.controller.dto.request.GenderAddRequest;
 import com.podium.dal.entity.Gender;
 import com.podium.dal.repository.GenderRepository;
-import com.podium.service.dto.GenderAddServiceDto;
+import com.podium.service.dto.request.GenderAddServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import com.podium.dal.entity.Contact;
 import com.podium.dal.entity.Subject;
 import com.podium.dal.repository.ContactRepository;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import com.podium.service.dto.ContactAddServiceDto;
+import com.podium.service.dto.request.ContactAddServiceDto;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
