@@ -1,5 +1,6 @@
 package com.podium.controller.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.podium.constant.PodiumLimits;
 import com.podium.controller.validation.annotation.*;
 import com.podium.controller.dto.other.LocalizationControllerDto;
@@ -24,10 +25,13 @@ public class PlaceAddControllerRequest {
     @PodiumLength(min = PodiumLimits.minDisciplineLength, max = PodiumLimits.maxDisciplineLength)
     private String discipline;
     @PodiumCollectionTextNotEmpty
+    @JsonProperty("localization")
     private LocalizationControllerDto localizationControllerDto;
     @PodiumCollectionLength(min = 7, max = 7)
+    @JsonProperty("businessDays")
     private List<BusinessDayControllerDto> businessDayControllerDtos;
     @PodiumNumberDouble(min = PodiumLimits.minCost, max = PodiumLimits.maxCost)
+    @PodiumNotNull
     private double cost;
     @PodiumNumberDouble(min = PodiumLimits.minUsageTimeHours, max = PodiumLimits.maxUsageTimeHours)
     private double usageTime;

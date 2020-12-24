@@ -11,7 +11,7 @@ import com.podium.service.BusinessDayService;
 import com.podium.service.PlaceService;
 import com.podium.service.dto.other.BusinessDayServiceDto;
 import com.podium.service.dto.other.LocalizationServiceDto;
-import com.podium.service.dto.request.PlaceAddServiceDto;
+import com.podium.service.dto.request.PlaceAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
@@ -40,8 +40,6 @@ public class PlaceController {
 
         this.placeService.addPlace(this.convertAddRequestToServiceDto(requestDto,images,documents));
 
-
-
         return ResponseEntity.ok().build();
 
     }
@@ -51,7 +49,7 @@ public class PlaceController {
 
         var place = this.placeService.findPlaceByName(name);
 
-        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceToResponseDto(place));
+        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
     }
 
     @GetMapping(PodiumEndpoint.findAllPlaces)
@@ -63,7 +61,7 @@ public class PlaceController {
                 .ok()
                 .body(ControllerConverter.
                         getInstance()
-                        .convertPlaceIterableToResponseDto(places));
+                        .convertPlaceServiceIterableToResponseDto(places));
 
 
     }
@@ -76,7 +74,7 @@ public class PlaceController {
         return ResponseEntity.ok().body("Place successfully deleted");
     }
 
-    private PlaceAddServiceDto convertAddRequestToServiceDto(PlaceAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
+    private PlaceAddServiceRequest convertAddRequestToServiceDto(PlaceAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
 
         LocalizationServiceDto localizationServiceDto =
 
@@ -99,7 +97,7 @@ public class PlaceController {
                 day.getOpeningTimeTo()
         )));
 
-        return new PlaceAddServiceDto(
+        return new PlaceAddServiceRequest(
                 addRequest.getName(),
                 addRequest.getDiscipline(),
                 localizationServiceDto,

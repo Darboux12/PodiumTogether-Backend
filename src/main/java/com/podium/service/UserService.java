@@ -9,7 +9,7 @@ import com.podium.controller.dto.other.FileControllerDto;
 import com.podium.dal.repository.CountryRepository;
 import com.podium.dal.repository.RoleRepository;
 import com.podium.dal.repository.UserRepository;
-import com.podium.service.dto.request.SignUpServiceDto;
+import com.podium.service.dto.request.SignUpServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +39,7 @@ public class UserService {
     }
 
     @Transactional
-    public void addUser(SignUpServiceDto requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public void addUser(SignUpServiceRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
 
         if(this.userRepository.existsByUsername(requestDto.getUsername()))
             throw new PodiumEntityAlreadyExistException("User with given username");
@@ -177,7 +177,7 @@ public class UserService {
 
     }
 
-    private User convertServiceAddDtoToEntity(SignUpServiceDto serviceDto) throws PodiumEntityNotFoundException {
+    private User convertServiceAddDtoToEntity(SignUpServiceRequest serviceDto) throws PodiumEntityNotFoundException {
 
         Country country = this.countryService.getEntity(serviceDto.getCountry());
 

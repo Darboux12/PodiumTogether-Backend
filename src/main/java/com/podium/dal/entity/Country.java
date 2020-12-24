@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Country {
     @Column(name = "country_id", columnDefinition = "char")
     private String countryId;
 
-    @NotNull
+    @NotEmpty
     @Column(name = "name")
     private String name;
 

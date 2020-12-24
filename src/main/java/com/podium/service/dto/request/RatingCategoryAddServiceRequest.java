@@ -2,11 +2,13 @@ package com.podium.service.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class CityAddServiceDto {
-    private String city;
+@NoArgsConstructor
+public class RatingCategoryAddServiceRequest {
+    private String category;
 }

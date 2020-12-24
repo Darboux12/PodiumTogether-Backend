@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class NewsAddServiceDto {
+public class NewsAddServiceRequest {
     private String title;
     private String shortText;
     private String linkText;

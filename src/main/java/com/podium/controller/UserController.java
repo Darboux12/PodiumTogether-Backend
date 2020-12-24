@@ -11,7 +11,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.User;
 import com.podium.service.UserService;
-import com.podium.service.dto.request.SignUpServiceDto;
+import com.podium.service.dto.request.SignUpServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -80,8 +80,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    private SignUpServiceDto convertAddRequestToServiceDto(SignUpControllerRequest request){
-        return new SignUpServiceDto(
+    private SignUpServiceRequest convertAddRequestToServiceDto(SignUpControllerRequest request){
+        return new SignUpServiceRequest(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword(),

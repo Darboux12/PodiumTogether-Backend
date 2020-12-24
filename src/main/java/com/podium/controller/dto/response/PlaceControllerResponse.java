@@ -1,5 +1,6 @@
 package com.podium.controller.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.podium.controller.dto.other.BusinessDayControllerDto;
 import com.podium.controller.dto.other.LocalizationControllerDto;
 import com.podium.controller.dto.other.FileControllerDto;
@@ -19,12 +20,15 @@ public class PlaceControllerResponse {
     private int id;
     private String name;
     private String discipline;
+    @JsonProperty("localization")
     private LocalizationControllerDto localizationControllerDto;
-    private List<BusinessDayControllerDto> businessDayControllerDtos;
+    @JsonProperty("businessDays")
+    private Set<BusinessDayControllerDto> businessDayControllerDtos;
     private double cost;
     private double usageTime;
     private int minAge;
     private int maxAge;
-    private List<FileControllerDto> images;
+    private Set<FileControllerDto> images;
+    private Set<FileControllerDto> documents;
     Set<ReviewControllerResponse> reviews;
 }

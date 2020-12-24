@@ -15,7 +15,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "EVENT")
-@SecondaryTable(name = "EVENT_DETAILS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "event_details_id"))
+@SecondaryTable(name = "EVENT_DETAILS",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "event_details_id"))
 @NoArgsConstructor
 public class Event {
 

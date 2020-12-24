@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.City;
 import com.podium.service.CityService;
-import com.podium.service.dto.request.CityAddServiceDto;
+import com.podium.service.dto.request.CityAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -65,8 +65,8 @@ public class CityController{
         return ResponseEntity.ok().body("City successfully deleted");
     }
 
-    private CityAddServiceDto convertAddRequestToServiceDto(CityAddControllerRequest request){
-        return new CityAddServiceDto(request.getCity());
+    private CityAddServiceRequest convertAddRequestToServiceDto(CityAddControllerRequest request){
+        return new CityAddServiceRequest(request.getCity());
     }
 
     private CityControllerResponse convertEntityToResponseDto(City city){

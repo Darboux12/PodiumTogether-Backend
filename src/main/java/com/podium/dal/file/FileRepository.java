@@ -1,6 +1,6 @@
-package com.podium.dal.files;
+package com.podium.dal.file;
 
-import com.podium.dal.files.exception.*;
+import com.podium.dal.file.exception.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -79,7 +79,6 @@ public class FileRepository {
         File f = new File(path);
         return f.exists() && !f.isDirectory();
     }
-
 
     private String findDocumentPathByName(String documentName){
         return this.findFilePath(documentName,this.getDocumentsDirectoryPath());
@@ -184,7 +183,7 @@ public class FileRepository {
     }
 
     private String getDocumentsDirectoryPath(){
-        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/files";
+        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/file";
     }
 
 

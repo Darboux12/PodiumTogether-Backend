@@ -3,7 +3,7 @@ package com.podium.service;
 import com.podium.controller.dto.request.CountryAddControllerRequest;
 import com.podium.dal.entity.Country;
 import com.podium.dal.repository.CountryRepository;
-import com.podium.service.dto.request.CountryAddServiceDto;
+import com.podium.service.dto.request.CountryAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -66,7 +66,7 @@ public class CountryService {
         );
     }
 
-    private Country convertServiceAddDtoToEntity(CountryAddServiceDto addServiceDto){
+    private Country convertServiceAddDtoToEntity(CountryAddServiceRequest addServiceDto){
 
         return new Country(
                 addServiceDto.getCountryId(),

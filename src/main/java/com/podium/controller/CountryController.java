@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Country;
 import com.podium.service.CountryService;
-import com.podium.service.dto.request.CountryAddServiceDto;
+import com.podium.service.dto.request.CountryAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -60,9 +60,9 @@ public class CountryController {
         return ResponseEntity.ok().body("Country successfully deleted");
     }
 
-    private CountryAddServiceDto convertAddRequestToServiceDto(CountryAddControllerRequest request ){
+    private CountryAddServiceRequest convertAddRequestToServiceDto(CountryAddControllerRequest request ){
 
-        return new CountryAddServiceDto(request.getCountryId(),
+        return new CountryAddServiceRequest(request.getCountryId(),
                 request.getName(),
                 request.getPrintableName(),
                 request.getIso3(),

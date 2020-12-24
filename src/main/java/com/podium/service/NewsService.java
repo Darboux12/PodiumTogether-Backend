@@ -3,7 +3,7 @@ package com.podium.service;
 import com.podium.dal.entity.News;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.repository.NewsRepository;
-import com.podium.service.dto.request.NewsAddServiceDto;
+import com.podium.service.dto.request.NewsAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,12 +25,12 @@ public class NewsService {
     }
 
     @Transactional
-    public void addNews(NewsAddServiceDto newsAddServiceDto) throws PodiumEntityAlreadyExistException {
+    public void addNews(NewsAddServiceRequest newsAddServiceRequest) throws PodiumEntityAlreadyExistException {
 
-        if(this.newsRepository.existsByTitle(newsAddServiceDto.getTitle()))
+        if(this.newsRepository.existsByTitle(newsAddServiceRequest.getTitle()))
             throw new PodiumEntityAlreadyExistException("News with given title");
 
-        this.newsRepository.save(this.convertServiceAddDtoToEntity(newsAddServiceDto));
+        this.newsRepository.save(this.convertServiceAddDtoToEntity(newsAddServiceRequest));
     }
 
     @Transactional
@@ -61,16 +61,16 @@ public class NewsService {
                 new PodiumEntityNotFoundException("News with given title"));
     }
 
-    private News convertServiceAddDtoToEntity(NewsAddServiceDto newsAddServiceDto){
+    private News convertServiceAddDtoToEntity(NewsAddServiceRequest newsAddServiceRequest){
 
         Set<PodiumResource> resources = this.resourceService
-                        .createPodiumImageResources(newsAddServiceDto.getImages());
+                        .createPodiumImageResources(newsAddServiceRequest.getImages());
 
         return new News(
-                newsAddServiceDto.getTitle(),
-                newsAddServiceDto.getShortText(),
-                newsAddServiceDto.getText(),
-                newsAddServiceDto.getLinkText(),
+                newsAddServiceRequest.getTitle(),
+                newsAddServiceRequest.getShortText(),
+                newsAddServiceRequest.getText(),
+                newsAddServiceRequest.getLinkText(),
                 new Date(),
                 resources
         );

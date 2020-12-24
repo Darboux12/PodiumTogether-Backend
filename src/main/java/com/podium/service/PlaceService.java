@@ -2,9 +2,11 @@ package com.podium.service;
 
 import com.podium.dal.entity.*;
 import com.podium.dal.repository.PlaceRepository;
+import com.podium.service.dto.converter.ServiceConverter;
 import com.podium.service.dto.other.BusinessDayServiceDto;
 import com.podium.service.dto.other.LocalizationServiceDto;
-import com.podium.service.dto.request.PlaceAddServiceDto;
+import com.podium.service.dto.request.PlaceAddServiceRequest;
+import com.podium.service.dto.response.PlaceServiceResponse;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
@@ -33,7 +35,7 @@ public class PlaceService {
     }
 
     @Transactional
-    public void addPlace(PlaceAddServiceDto addServiceDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
+    public void addPlace(PlaceAddServiceRequest addServiceDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
         if(this.placeRepository.existsByName(addServiceDto.getName()))
             throw new PodiumEntityAlreadyExistException("Place with given name");
@@ -63,7 +65,7 @@ public class PlaceService {
 
         this.placeRepository.deleteById(id);
 
-        this.resourceService.deleteResources(place.getPlaceImages());
+        this.resourceService.deleteResources(place.getPlaceResources());
 
         this.localizationService
                 .deleteLocalizationById(place.getPlaceLocalization().getId());
@@ -73,15 +75,29 @@ public class PlaceService {
 
     }
 
-    public Iterable<Place> findAllPlace(){
-        return this.placeRepository.findAll();
+    public Iterable<PlaceServiceResponse> findAllPlace(){
+
+        return ServiceConverter
+                .getInstance()
+                .convertPlaceIterableToResponseDto(this.placeRepository.findAll());
+
     }
 
     public boolean existByName(String name){
         return this.placeRepository.existsByName(name);
     }
 
-    public Place findPlaceByName(String placeName) throws PodiumEntityNotFoundException {
+    public PlaceServiceResponse findPlaceByName(String placeName) throws PodiumEntityNotFoundException {
+
+        return ServiceConverter
+                .getInstance()
+                .convertPlaceToResponseDto( this.placeRepository
+                        .findByName(placeName)
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given name")));
+
+    }
+
+    public Place findPlaceEntityByName(String placeName) throws PodiumEntityNotFoundException {
 
         return this.placeRepository
                 .findByName(placeName)
@@ -89,7 +105,7 @@ public class PlaceService {
 
     }
 
-    private Place convertServiceAddDtoToEntity(PlaceAddServiceDto requestDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
+    private Place convertServiceAddDtoToEntity(PlaceAddServiceRequest requestDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
         Discipline discipline = this.getPlaceDiscipline(requestDto.getDiscipline());
 
@@ -152,7 +168,7 @@ public class PlaceService {
                 );
     }
 
-    public Place getEntity(String placeName) throws PodiumEntityNotFoundException {
+    Place getEntity(String placeName) throws PodiumEntityNotFoundException {
 
        return this.placeRepository
                .findByName(placeName)

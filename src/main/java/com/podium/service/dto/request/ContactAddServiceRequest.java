@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class GenderAddServiceDto {
-    private String gender;
+public class ContactAddServiceRequest {
+    private String userEmail;
+    private String subject;
+    private String message;
 }

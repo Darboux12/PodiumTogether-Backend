@@ -9,7 +9,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.News;
 import com.podium.service.NewsService;
-import com.podium.service.dto.request.NewsAddServiceDto;
+import com.podium.service.dto.request.NewsAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +88,8 @@ public class NewsController {
 
     }
 
-    private NewsAddServiceDto convertAddRequestToServiceDto(NewsAddControllerRequest request, List<MultipartFile> images){
-        return new NewsAddServiceDto(
+    private NewsAddServiceRequest convertAddRequestToServiceDto(NewsAddControllerRequest request, List<MultipartFile> images){
+        return new NewsAddServiceRequest(
                 request.getTitle(),
                 request.getShortText(),
                 request.getLinkText(),

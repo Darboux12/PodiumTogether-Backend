@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CountryAddServiceDto {
+public class CountryAddServiceRequest {
     private String countryId;
     private String name;
     private String printableName;

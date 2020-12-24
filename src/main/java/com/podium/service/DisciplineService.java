@@ -4,7 +4,7 @@ import com.podium.dal.entity.Discipline;
 import com.podium.dal.repository.DisciplineRepository;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import com.podium.service.dto.request.DisciplineAddServiceDto;
+import com.podium.service.dto.request.DisciplineAddServiceRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +19,7 @@ public class DisciplineService {
     }
 
     @Transactional
-    public void addDiscipline(DisciplineAddServiceDto addServiceDto) throws PodiumEntityAlreadyExistException {
+    public void addDiscipline(DisciplineAddServiceRequest addServiceDto) throws PodiumEntityAlreadyExistException {
 
         if(this.disciplineRepository.existsByDiscipline(addServiceDto.getDiscipline()))
             throw new PodiumEntityAlreadyExistException("Discipline");
@@ -51,7 +51,7 @@ public class DisciplineService {
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Discipline"));
     }
 
-    private Discipline convertServiceAddDtoToEntity(DisciplineAddServiceDto addServiceDto){
+    private Discipline convertServiceAddDtoToEntity(DisciplineAddServiceRequest addServiceDto){
         return new Discipline(addServiceDto.getDiscipline());
     }
 

@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.dal.entity.Gender;
 import com.podium.dal.repository.GenderRepository;
-import com.podium.service.dto.request.GenderAddServiceDto;
+import com.podium.service.dto.request.GenderAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class GenderService {
     }
 
     @Transactional
-    public void addGender(GenderAddServiceDto requestDto) throws PodiumEntityAlreadyExistException {
+    public void addGender(GenderAddServiceRequest requestDto) throws PodiumEntityAlreadyExistException {
 
         if(this.genderRepository.existsByGender(requestDto.getGender()))
             throw new PodiumEntityAlreadyExistException("Gender");
@@ -51,7 +51,7 @@ public class GenderService {
         return this.genderRepository.findAll();
     }
 
-    private Gender convertServiceAddDtoToEntity(GenderAddServiceDto addServiceDto){
+    private Gender convertServiceAddDtoToEntity(GenderAddServiceRequest addServiceDto){
         return new Gender(addServiceDto.getGender());
     }
 

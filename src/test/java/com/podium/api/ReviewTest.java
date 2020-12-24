@@ -109,15 +109,15 @@ public class ReviewTest {
 
     private static Stream<ReviewAddControllerRequest> provideEmptyReviewsForTests() {
 
-        var ratings = new HashSet<RatingControllerDto>();
+        var ratings = new HashSet<StarRatingControllerDto>();
 
-        ratings.add(new RatingControllerDto("Service",2));
-        ratings.add(new RatingControllerDto("Equipment",4));
-        ratings.add(new RatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Service",2));
+        ratings.add(new StarRatingControllerDto("Equipment",4));
+        ratings.add(new StarRatingControllerDto("Price",5));
 
         var fileList = new ArrayList<FileControllerDto>();
 
-        var emptySet = new HashSet<RatingControllerDto>();
+        var emptySet = new HashSet<StarRatingControllerDto>();
 
 
         return Stream.of(
@@ -133,13 +133,13 @@ public class ReviewTest {
 
     private static Stream<ReviewAddControllerRequest> provideTooLongAndTooShortReviewsForTests() {
 
-        var ratings = new HashSet<RatingControllerDto>();
+        var ratings = new HashSet<StarRatingControllerDto>();
 
-        ratings.add(new RatingControllerDto("Service",2));
-        ratings.add(new RatingControllerDto("Equipment",4));
-        ratings.add(new RatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Service",2));
+        ratings.add(new StarRatingControllerDto("Equipment",4));
+        ratings.add(new StarRatingControllerDto("Price",5));
 
-        var emptySet = new HashSet<RatingControllerDto>();
+        var emptySet = new HashSet<StarRatingControllerDto>();
 
         return Stream.of(
 
@@ -157,11 +157,11 @@ public class ReviewTest {
 
     private static Stream<ReviewAddControllerRequest> provideRequestNotExistingPlaceAndUser() {
 
-        var ratings = new HashSet<RatingControllerDto>();
+        var ratings = new HashSet<StarRatingControllerDto>();
 
-        ratings.add(new RatingControllerDto("Service",2));
-        ratings.add(new RatingControllerDto("Equipment",4));
-        ratings.add(new RatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Service",2));
+        ratings.add(new StarRatingControllerDto("Equipment",4));
+        ratings.add(new StarRatingControllerDto("Price",5));
 
         return Stream.of(
 
@@ -182,11 +182,11 @@ public class ReviewTest {
 
     private static Stream<ReviewAddControllerRequest> provideValidRequest() {
 
-        var ratings = new HashSet<RatingControllerDto>();
+        var ratings = new HashSet<StarRatingControllerDto>();
 
-        ratings.add(new RatingControllerDto("Service",2));
-        ratings.add(new RatingControllerDto("Equipment",4));
-        ratings.add(new RatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Service",2));
+        ratings.add(new StarRatingControllerDto("Equipment",4));
+        ratings.add(new StarRatingControllerDto("Price",5));
 
         return Stream.of(
 

@@ -3,6 +3,7 @@ package com.podium.service.dto.response;
 import com.podium.service.dto.other.BusinessDayServiceDto;
 import com.podium.service.dto.other.FileServiceDto;
 import com.podium.service.dto.other.LocalizationServiceDto;
+import com.podium.service.dto.other.ReviewServiceDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +21,12 @@ public class PlaceServiceResponse {
     private String name;
     private String discipline;
     private LocalizationServiceDto localizationDto;
-    private List<BusinessDayServiceDto> businessDayDtos;
+    private Set<BusinessDayServiceDto> businessDayDtos;
     private double cost;
     private double usageTime;
     private int minAge;
     private int maxAge;
-    private List<FileServiceDto> images;
-    private Set<ReviewServiceResponse> reviews;
+    private Set<FileServiceDto> images;
+    private Set<FileServiceDto> documents;
+    private Set<ReviewServiceDto> reviews;
 }

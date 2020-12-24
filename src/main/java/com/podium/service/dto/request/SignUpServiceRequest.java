@@ -9,12 +9,10 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProfileUpdateServiceDto {
-    private int id;
+public class SignUpServiceRequest {
     private String username;
     private String email;
     private String password;
     private String country;
     private Date birthday;
-    private String description;
 }

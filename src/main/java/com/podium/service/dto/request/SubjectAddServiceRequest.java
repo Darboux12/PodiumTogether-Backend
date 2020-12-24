@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class JwtServiceDto {
-    private String username;
-    private String password;
+public class SubjectAddServiceRequest {
+    private String subject;
+
 }

@@ -1,4 +1,4 @@
-package com.podium.dal.files.exception;
+package com.podium.dal.file.exception;
 
 public class PodiumMoreThanOneFileException extends RuntimeException {
 

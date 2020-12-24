@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Subject;
 import com.podium.service.SubjectService;
-import com.podium.service.dto.request.SubjectAddServiceDto;
+import com.podium.service.dto.request.SubjectAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -61,8 +61,8 @@ public class SubjectController {
         return ResponseEntity.ok().body(this.subjectService.existSubjectByName(name));
     }
 
-    private SubjectAddServiceDto convertAddRequestToServiceDto(SubjectAddControllerRequest request){
-        return new SubjectAddServiceDto(request.getSubject());
+    private SubjectAddServiceRequest convertAddRequestToServiceDto(SubjectAddControllerRequest request){
+        return new SubjectAddServiceRequest(request.getSubject());
     }
 
     private SubjectControllerResponse convertEntityToResponseDto(Subject subject){

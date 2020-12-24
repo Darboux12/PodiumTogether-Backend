@@ -4,7 +4,7 @@ import com.podium.dal.entity.Contact;
 import com.podium.dal.entity.Subject;
 import com.podium.dal.repository.ContactRepository;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import com.podium.service.dto.request.ContactAddServiceDto;
+import com.podium.service.dto.request.ContactAddServiceRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,7 +22,7 @@ public class ContactService {
     }
 
     @Transactional
-    public void addContact(ContactAddServiceDto addServiceDto) throws PodiumEntityNotFoundException {
+    public void addContact(ContactAddServiceRequest addServiceDto) throws PodiumEntityNotFoundException {
         this.contactRepository
                 .save(this.convertServiceAddDtoToEntity(addServiceDto));
     }
@@ -56,7 +56,7 @@ public class ContactService {
         return this.contactRepository.existsById(id);
     }
 
-    private Contact convertServiceAddDtoToEntity(ContactAddServiceDto addDto) throws PodiumEntityNotFoundException {
+    private Contact convertServiceAddDtoToEntity(ContactAddServiceRequest addDto) throws PodiumEntityNotFoundException {
 
         Subject subject = this.subjectService.findSubjectByName(addDto.getSubject());
 

@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ContactAddServiceDto {
-    private String userEmail;
-    private String subject;
-    private String message;
+public class JwtServiceRequest {
+    private String username;
+    private String password;
 }

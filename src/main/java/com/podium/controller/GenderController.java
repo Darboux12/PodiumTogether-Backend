@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Gender;
 import com.podium.service.GenderService;
-import com.podium.service.dto.request.GenderAddServiceDto;
+import com.podium.service.dto.request.GenderAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -71,8 +71,8 @@ public class GenderController {
         return ResponseEntity.ok().body("Gender successfully deleted");
     }
 
-    private GenderAddServiceDto convertAddRequestToServiceDto(GenderAddControllerRequest request){
-        return new GenderAddServiceDto(request.getGender());
+    private GenderAddServiceRequest convertAddRequestToServiceDto(GenderAddControllerRequest request){
+        return new GenderAddServiceRequest(request.getGender());
     }
 
     private GenderControllerResponse convertEntityToResponseDto(Gender gender){

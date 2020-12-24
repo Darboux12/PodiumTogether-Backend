@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewAddServiceDto {
+public class ReviewAddServiceRequest {
     private String author;
     private String place;
     private Set<StarRatingServiceDto> starRatings;

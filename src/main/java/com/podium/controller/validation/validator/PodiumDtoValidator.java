@@ -113,11 +113,16 @@ public class PodiumDtoValidator {
         // Else if object is not collection
         else{
 
+            System.out.println(object.toString());
+
             // Get object class
             Class requestClass = object.getClass();
 
             // Iterate through object fields
             for(Field field : requestClass.getDeclaredFields()){
+
+                System.out.println(field.getName());
+
 
                 // Get access to private fields
                 field.setAccessible(true);

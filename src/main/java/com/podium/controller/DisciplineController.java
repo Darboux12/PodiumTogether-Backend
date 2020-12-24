@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Discipline;
 import com.podium.service.DisciplineService;
-import com.podium.service.dto.request.DisciplineAddServiceDto;
+import com.podium.service.dto.request.DisciplineAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -74,8 +74,8 @@ public class DisciplineController {
         return disciplineResponses;
     }
 
-    private DisciplineAddServiceDto convertAddRequestToServiceModel(DisciplineAddControllerRequest requestDto){
-        return new DisciplineAddServiceDto(requestDto.getDiscipline());
+    private DisciplineAddServiceRequest convertAddRequestToServiceModel(DisciplineAddControllerRequest requestDto){
+        return new DisciplineAddServiceRequest(requestDto.getDiscipline());
     }
 
 }

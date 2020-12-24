@@ -2,7 +2,9 @@ package com.podium.service;
 
 import com.podium.dal.entity.*;
 import com.podium.dal.repository.ReviewRepository;
-import com.podium.service.dto.request.ReviewAddServiceDto;
+import com.podium.service.dto.converter.ServiceConverter;
+import com.podium.service.dto.other.ReviewServiceDto;
+import com.podium.service.dto.request.ReviewAddServiceRequest;
 import com.podium.service.dto.other.StarRatingServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
@@ -36,9 +38,9 @@ public class ReviewService {
     }
 
     @Transactional
-    public void addReview(ReviewAddServiceDto addServiceDto) throws PodiumEntityNotFoundException, PodiumEntityAlreadyExistException, PodiumEntityNotSameQuantity {
+    public void addReview(ReviewAddServiceRequest addServiceDto) throws PodiumEntityNotFoundException, PodiumEntityAlreadyExistException, PodiumEntityNotSameQuantity {
 
-        Place place = this.placeService.findPlaceByName(addServiceDto.getPlace());
+        Place place = this.placeService.findPlaceEntityByName(addServiceDto.getPlace());
 
         User author = this.userService.findUserByUsername(addServiceDto.getAuthor());
 
@@ -64,11 +66,14 @@ public class ReviewService {
 
     }
 
-    public Iterable<Review> findAllReviewsByAuthor(String userName) throws PodiumEntityNotFoundException {
+    public Iterable<ReviewServiceDto> findAllReviewsByAuthor(String userName) throws PodiumEntityNotFoundException {
 
         User author = this.userService.findUserByUsername(userName);
 
-        return this.reviewRepository.findByAuthor(author);
+        return ServiceConverter
+                .getInstance()
+                .convertReviewIterableToDto(this.reviewRepository.findByAuthor(author));
+
     }
 
     @Transactional
@@ -91,7 +96,7 @@ public class ReviewService {
 
     }
 
-    private Review convertServiceAddDtoToEntity(ReviewAddServiceDto dto) throws PodiumEntityNotFoundException {
+    private Review convertServiceAddDtoToEntity(ReviewAddServiceRequest dto) throws PodiumEntityNotFoundException {
 
         var starRatings = new HashSet<StarRating>();
 
@@ -101,7 +106,7 @@ public class ReviewService {
 
         User author = this.userService.getEntity(dto.getAuthor());
 
-        Place place = this.placeService.findPlaceByName(dto.getPlace());
+        Place place = this.placeService.findPlaceEntityByName(dto.getPlace());
 
         Set<PodiumResource> resources = this.resourceService
                 .createPodiumImageResources(dto.getImages());

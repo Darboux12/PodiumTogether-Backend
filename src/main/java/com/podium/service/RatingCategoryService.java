@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.dal.entity.RatingCategory;
 import com.podium.dal.repository.RatingCategoryRepository;
-import com.podium.service.dto.request.RatingCategoryAddServiceDto;
+import com.podium.service.dto.request.RatingCategoryAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,12 +19,12 @@ public class RatingCategoryService {
     }
 
     @Transactional
-    public void addCategory(RatingCategoryAddServiceDto ratingCategoryAddServiceDto) throws PodiumEntityAlreadyExistException {
+    public void addCategory(RatingCategoryAddServiceRequest ratingCategoryAddServiceRequest) throws PodiumEntityAlreadyExistException {
 
-        if(this.ratingCategoryRepository.existsByCategory(ratingCategoryAddServiceDto.getCategory()))
+        if(this.ratingCategoryRepository.existsByCategory(ratingCategoryAddServiceRequest.getCategory()))
             throw new PodiumEntityAlreadyExistException("RatingDto Category");
 
-        this.ratingCategoryRepository.save(this.convertServiceAddDtoToEntity(ratingCategoryAddServiceDto));
+        this.ratingCategoryRepository.save(this.convertServiceAddDtoToEntity(ratingCategoryAddServiceRequest));
     }
 
     @Transactional
@@ -57,8 +57,8 @@ public class RatingCategoryService {
 
     }
 
-    private RatingCategory convertServiceAddDtoToEntity(RatingCategoryAddServiceDto ratingCategoryAddServiceDto){
-        return new RatingCategory(ratingCategoryAddServiceDto.getCategory());
+    private RatingCategory convertServiceAddDtoToEntity(RatingCategoryAddServiceRequest ratingCategoryAddServiceRequest){
+        return new RatingCategory(ratingCategoryAddServiceRequest.getCategory());
     }
 
     public RatingCategory getEntity(String ratingCategoryName) throws PodiumEntityNotFoundException {

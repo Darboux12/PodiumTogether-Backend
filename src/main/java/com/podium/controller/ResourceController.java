@@ -65,12 +65,12 @@ public class ResourceController {
     @PostMapping(PodiumEndpoint.uploadEventFiles)
     public ResponseEntity uploadEventFiles(
             @RequestParam("title") String title,
-            @RequestParam("files") List<MultipartFile> files) throws IOException {
+            @RequestParam("file") List<MultipartFile> file) throws IOException {
 
         System.out.println("Jesten");
 
         this.resourceService.uploadEventFiles(
-                this.createUploadRequestDto(title,files));
+                this.createUploadRequestDto(title,file));
 
         return ResponseEntity.ok().build();
 

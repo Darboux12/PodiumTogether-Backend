@@ -2,7 +2,7 @@ package com.podium.service;
 
 import com.podium.dal.entity.Subject;
 import com.podium.dal.repository.SubjectRepository;
-import com.podium.service.dto.request.SubjectAddServiceDto;
+import com.podium.service.dto.request.SubjectAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,13 @@ public class SubjectService {
     }
 
     @Transactional
-    public void addSubject(SubjectAddServiceDto subjectAddServiceDto) throws PodiumEntityAlreadyExistException {
+    public void addSubject(SubjectAddServiceRequest subjectAddServiceRequest) throws PodiumEntityAlreadyExistException {
 
-        if(this.subjectRepository.existsBySubject(subjectAddServiceDto.getSubject()))
+        if(this.subjectRepository.existsBySubject(subjectAddServiceRequest.getSubject()))
             throw new PodiumEntityAlreadyExistException("Subject");
 
         this.subjectRepository.save(
-                this.convertServiceAddDtoToEntity(subjectAddServiceDto)
+                this.convertServiceAddDtoToEntity(subjectAddServiceRequest)
         );
 
     }
@@ -54,8 +54,8 @@ public class SubjectService {
         return this.subjectRepository.existsBySubject(subjectName);
     }
 
-    private Subject convertServiceAddDtoToEntity(SubjectAddServiceDto subjectAddServiceDto){
-        return new Subject(subjectAddServiceDto.getSubject());
+    private Subject convertServiceAddDtoToEntity(SubjectAddServiceRequest subjectAddServiceRequest){
+        return new Subject(subjectAddServiceRequest.getSubject());
     }
 
 }

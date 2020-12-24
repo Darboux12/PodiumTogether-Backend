@@ -83,7 +83,7 @@ public class PodiumLimits {
     public static final int maxEventPeopleLength = 20;
 
     /** EVENT MIN AGE */
-    public static final int minEventMinAge = 3;
+    public static final int minEventMinAge = 0;
     public static final int maxEventMinAge = 100;
 
     /** EVENT MAX AGE */
@@ -91,7 +91,7 @@ public class PodiumLimits {
     public static final int maxEventMaxAge = 100;
 
     /** Place MIN AGE */
-    public static final int minPlaceMinAge = 3;
+    public static final int minPlaceMinAge = 0;
     public static final int maxPlaceMinAge = 100;
 
     /** Place MAX AGE */
@@ -99,7 +99,7 @@ public class PodiumLimits {
     public static final int maxPlaceMaxAge = 100;
 
     /** COST */
-    public static final int minCost = 3;
+    public static final int minCost = 0;
     public static final int maxCost = 1000000;
 
     /** EVENT DESCRIPTION */
@@ -126,7 +126,7 @@ public class PodiumLimits {
     public static final int maxRatingCategoryLength = 130;
 
     /** PLACE USAGE TIME */
-    public static final int minUsageTimeHours = 13;
+    public static final int minUsageTimeHours = 0;
     public static final int maxUsageTimeHours = 500;
 
     /** PLACE RATING */

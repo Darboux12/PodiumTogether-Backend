@@ -1,7 +1,7 @@
 package com.podium.controller.dto.request;
 
 import com.podium.constant.PodiumLimits;
-import com.podium.controller.dto.other.RatingControllerDto;
+import com.podium.controller.dto.other.StarRatingControllerDto;
 import com.podium.controller.validation.annotation.PodiumCollectionTextNotEmpty;
 import com.podium.controller.validation.annotation.PodiumLength;
 import com.podium.controller.validation.annotation.PodiumTextNotEmpty;
@@ -25,7 +25,7 @@ public class ReviewAddControllerRequest {
     @PodiumLength(min = PodiumLimits.minPlaceNameLength, max = PodiumLimits.maxPlaceNameLength)
     private String place;
     @PodiumCollectionTextNotEmpty
-    private Set<RatingControllerDto> starRatings;
+    private Set<StarRatingControllerDto> starRatings;
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minPlaceReviewOpinion, max = PodiumLimits.maxPlaceReviewOpinion)
     private String opinion;

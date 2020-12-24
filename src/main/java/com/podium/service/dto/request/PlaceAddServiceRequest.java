@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PlaceAddServiceDto {
+public class PlaceAddServiceRequest {
     private String name;
     private String discipline;
     private LocalizationServiceDto localizationDto;

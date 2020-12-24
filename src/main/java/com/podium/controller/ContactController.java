@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Contact;
 import com.podium.service.ContactService;
-import com.podium.service.dto.request.ContactAddServiceDto;
+import com.podium.service.dto.request.ContactAddServiceRequest;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -67,9 +67,9 @@ public class ContactController {
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
     }
 
-    private ContactAddServiceDto convertAddRequestToServiceDto(ContactAddControllerRequest request ){
+    private ContactAddServiceRequest convertAddRequestToServiceDto(ContactAddControllerRequest request ){
 
-        return new ContactAddServiceDto(
+        return new ContactAddServiceRequest(
                 request.getUserEmail(),
                 request.getSubject(),
                 request.getMessage()

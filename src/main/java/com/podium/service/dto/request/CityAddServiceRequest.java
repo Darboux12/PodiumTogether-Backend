@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DisciplineAddServiceDto {
-    private String discipline;
+public class CityAddServiceRequest {
+    private String city;
 }

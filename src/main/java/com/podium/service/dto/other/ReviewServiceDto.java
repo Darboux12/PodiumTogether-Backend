@@ -1,26 +1,23 @@
-package com.podium.service.dto.response;
+package com.podium.service.dto.other;
 
-import com.podium.controller.dto.other.FileControllerDto;
-import com.podium.controller.dto.other.RatingControllerDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewServiceResponse {
+public class ReviewServiceDto {
     private int id;
-    private Set<RatingControllerDto> starRatings;
+    private Set<StarRatingServiceDto> starRatings;
     private String opinion;
     private String author;
     private String place;
-    List<FileControllerDto> images;
+    private Set<FileServiceDto> images;
     private int likes;
     private int dislikes;
 }

@@ -2,7 +2,6 @@ package com.podium.controller.advice;
 
 import com.podium.controller.status.PodiumResponse;
 import com.podium.controller.validation.exception.*;
-import com.podium.dal.files.exception.PodiumFileNotExistException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;

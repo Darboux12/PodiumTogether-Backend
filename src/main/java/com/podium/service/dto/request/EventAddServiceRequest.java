@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class EventAddServiceDto {
+public class EventAddServiceRequest {
     private String title;
     private Date dateFrom;
     private Date dateTo;

@@ -1,17 +1,13 @@
 package com.podium.service;
 
 import com.podium.dal.entity.PodiumResource;
-import com.podium.dal.files.FileRepository;
-import com.podium.dal.files.exception.PodiumFileNotExistException;
-import com.podium.dal.files.exception.PodiumMoreThanOneFileException;
-import com.podium.dal.files.exception.PodiumNotSupportedImageType;
+import com.podium.dal.file.FileRepository;
 import com.podium.dal.repository.ResourceRepository;
 import com.podium.service.exception.PodiumFileUploadFailException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,7 +83,7 @@ public class ResourceService {
     private void deleteResourcesFromServer(Set<PodiumResource> resources){
 
         resources.forEach(resource -> {
-            
+
             if(!this.fileRepository.existFileByPath(resource.getPath()))
                 try {
                     throw new PodiumFileUploadFailException();

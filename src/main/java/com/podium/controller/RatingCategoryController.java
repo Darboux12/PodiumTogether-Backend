@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidVariable
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.RatingCategory;
 import com.podium.service.RatingCategoryService;
-import com.podium.service.dto.request.RatingCategoryAddServiceDto;
+import com.podium.service.dto.request.RatingCategoryAddServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +60,8 @@ public class RatingCategoryController {
         return ResponseEntity.ok().body("RatingDto category successfully deleted");
     }
 
-    private RatingCategoryAddServiceDto convertAddRequestToServiceDto(RatingCategoryAddControllerRequest request){
-        return new RatingCategoryAddServiceDto(request.getCategory());
+    private RatingCategoryAddServiceRequest convertAddRequestToServiceDto(RatingCategoryAddControllerRequest request){
+        return new RatingCategoryAddServiceRequest(request.getCategory());
     }
 
     private RatingCategoryControllerResponse convertEntityToResponseDto(RatingCategory ratingCategory){

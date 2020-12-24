@@ -4,7 +4,7 @@ import com.podium.dal.entity.City;
 import com.podium.dal.repository.CityRepository;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
-import com.podium.service.dto.request.CityAddServiceDto;
+import com.podium.service.dto.request.CityAddServiceRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,13 +19,13 @@ public class CityService {
     }
 
     @Transactional
-    public void addCity(CityAddServiceDto cityAddServiceDto)
+    public void addCity(CityAddServiceRequest cityAddServiceRequest)
             throws PodiumEntityAlreadyExistException {
 
-        if(this.cityRepository.existsByCity(cityAddServiceDto.getCity()))
+        if(this.cityRepository.existsByCity(cityAddServiceRequest.getCity()))
             throw new PodiumEntityAlreadyExistException("City");
 
-        this.cityRepository.save(this.convertServiceDtoToEntity(cityAddServiceDto));
+        this.cityRepository.save(this.convertServiceDtoToEntity(cityAddServiceRequest));
     }
 
 
@@ -62,8 +62,8 @@ public class CityService {
         return this.cityRepository.findAll();
     }
 
-    private City convertServiceDtoToEntity(CityAddServiceDto cityAddServiceDto){
-        return new City(cityAddServiceDto.getCity());
+    private City convertServiceDtoToEntity(CityAddServiceRequest cityAddServiceRequest){
+        return new City(cityAddServiceRequest.getCity());
     }
 
     public City getEntity(String cityName){

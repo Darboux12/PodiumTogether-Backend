@@ -8,7 +8,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.dal.entity.Review;
 import com.podium.service.ReviewService;
-import com.podium.service.dto.request.ReviewAddServiceDto;
+import com.podium.service.dto.request.ReviewAddServiceRequest;
 import com.podium.service.dto.other.StarRatingServiceDto;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
@@ -57,7 +57,11 @@ public class ReviewController {
 
         var reviews = this.reviewService.findAllReviewsByAuthor(username);
 
-        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(reviews));
+        return ResponseEntity
+                .ok()
+                .body(ControllerConverter.
+                        getInstance()
+                        .convertReviewServiceIterableToResponseDto(reviews));
 
     }
 
@@ -81,7 +85,7 @@ public class ReviewController {
 
     }
 
-    private ReviewAddServiceDto convertAddRequestToServiceDto(ReviewAddControllerRequest addRequest, List<MultipartFile> images){
+    private ReviewAddServiceRequest convertAddRequestToServiceDto(ReviewAddControllerRequest addRequest, List<MultipartFile> images){
 
         var ratingDtos = new HashSet<StarRatingServiceDto>();
 
@@ -90,7 +94,7 @@ public class ReviewController {
         )));
 
 
-        return new ReviewAddServiceDto(
+        return new ReviewAddServiceRequest(
                 addRequest.getAuthor(),
                 addRequest.getPlace(),
                 ratingDtos,
@@ -101,16 +105,6 @@ public class ReviewController {
 
     }
 
-    private Iterable<ReviewControllerResponse> convertEntityIterableToResponseDto(Iterable<Review> reviews){
 
-        var reviewResponses = new ArrayList<ReviewControllerResponse>();
-
-        reviews.forEach(x -> reviewResponses
-                .add(ControllerConverter.
-                        getInstance().convertReviewToResponseDto(x))
-        );
-
-        return reviewResponses;
-    }
 
 }

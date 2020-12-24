@@ -1,7 +1,7 @@
 package com.podium.controller.dto.response;
 
 import com.podium.controller.dto.other.FileControllerDto;
-import com.podium.controller.dto.other.RatingControllerDto;
+import com.podium.controller.dto.other.StarRatingControllerDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +16,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class ReviewControllerResponse {
     private int id;
-    private Set<RatingControllerDto> starRatings;
+    private Set<StarRatingControllerDto> starRatings;
     private String opinion;
     private String author;
     private String place;
-    List<FileControllerDto> images;
+    Set<FileControllerDto> images;
     private int likes;
     private int dislikes;
 
