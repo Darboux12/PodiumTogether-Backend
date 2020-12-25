@@ -183,7 +183,7 @@ public class FileRepository {
     }
 
     private String getDocumentsDirectoryPath(){
-        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/file";
+        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/files";
     }
 
 

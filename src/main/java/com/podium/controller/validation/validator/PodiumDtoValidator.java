@@ -113,8 +113,6 @@ public class PodiumDtoValidator {
         // Else if object is not collection
         else{
 
-            System.out.println(object.toString());
-
             // Get object class
             Class requestClass = object.getClass();
 
