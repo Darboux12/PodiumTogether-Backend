@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Repository
 public class FileRepository {
@@ -78,6 +81,24 @@ public class FileRepository {
     public boolean existFileByPath(String path){
         File f = new File(path);
         return f.exists() && !f.isDirectory();
+    }
+
+    public Set<String> findAllFilePaths(){
+
+        var filePaths = new HashSet<String>();
+
+        File imageDirectory = new File(this.getImagesDirectoryPath());
+
+        for(File file : Objects.requireNonNull(imageDirectory.listFiles()))
+            filePaths.add(file.getPath());
+
+        File documentDirectory = new File(this.getDocumentsDirectoryPath());
+
+        for(File file : Objects.requireNonNull(documentDirectory.listFiles()))
+            filePaths.add(file.getPath());
+
+        return filePaths;
+
     }
 
     private String findDocumentPathByName(String documentName){
@@ -185,6 +206,7 @@ public class FileRepository {
     private String getDocumentsDirectoryPath(){
         return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/files";
     }
+
 
 
 }

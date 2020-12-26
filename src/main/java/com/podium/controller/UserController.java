@@ -11,6 +11,7 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.User;
 import com.podium.service.UserService;
+import com.podium.service.dto.request.ProfileUpdateServiceRequest;
 import com.podium.service.dto.request.SignUpServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
@@ -18,11 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -75,9 +78,28 @@ public class UserController {
     }
 
     @PostMapping(PodiumEndpoint.updateUserProfile)
-    public ResponseEntity updateUserProfile(@RequestBody ProfileUpdateControllerRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
-        this.userService.updateUser(request);
+    public ResponseEntity updateUserProfile(@RequestPart(name = "request") @PodiumValidBody ProfileUpdateControllerRequest request,
+                                            @RequestPart(name = "image",required = false) MultipartFile image) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+
+        this.userService.updateUser(this.convertUpdateRequestToServiceRequest(request,image));
+
         return ResponseEntity.ok().build();
+    }
+
+
+    private ProfileUpdateServiceRequest convertUpdateRequestToServiceRequest(ProfileUpdateControllerRequest request,MultipartFile image){
+
+        return new ProfileUpdateServiceRequest(
+                request.getId(),
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getCountry(),
+                request.getBirthday(),
+                request.getDescription(),
+                image
+        );
+
     }
 
     private SignUpServiceRequest convertAddRequestToServiceDto(SignUpControllerRequest request){

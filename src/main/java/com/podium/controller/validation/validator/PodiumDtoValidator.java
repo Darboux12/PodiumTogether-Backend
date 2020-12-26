@@ -119,9 +119,6 @@ public class PodiumDtoValidator {
             // Iterate through object fields
             for(Field field : requestClass.getDeclaredFields()){
 
-                System.out.println(field.getName());
-
-
                 // Get access to private fields
                 field.setAccessible(true);
 

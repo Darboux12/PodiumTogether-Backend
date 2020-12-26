@@ -1,6 +1,5 @@
 package com.podium.service;
 
-import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
 import com.podium.dal.entity.Country;
 import com.podium.dal.entity.PodiumResource;
 import com.podium.dal.entity.Role;
@@ -9,6 +8,7 @@ import com.podium.controller.dto.other.FileControllerDto;
 import com.podium.dal.repository.CountryRepository;
 import com.podium.dal.repository.RoleRepository;
 import com.podium.dal.repository.UserRepository;
+import com.podium.service.dto.request.ProfileUpdateServiceRequest;
 import com.podium.service.dto.request.SignUpServiceRequest;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
@@ -28,14 +28,16 @@ public class UserService {
 
     private RoleService roleService;
     private CountryService countryService;
+    private ResourceService resourceService;
 
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, RoleService roleService, CountryRepository countryRepository, CountryService countryService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, RoleService roleService, CountryRepository countryRepository, CountryService countryService, ResourceService resourceService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.countryService = countryService;
+        this.resourceService = resourceService;
     }
 
     @Transactional
@@ -51,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(ProfileUpdateControllerRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public void updateUser(ProfileUpdateServiceRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
 
         if(!this.isUpdateDataConsistent(requestDto))
             throw new PodiumEntityAlreadyExistException("User with given username or email");
@@ -110,7 +112,7 @@ public class UserService {
         return this.userRepository.existsByEmail(email);
     }
 
-    private boolean isUpdateDataConsistent(ProfileUpdateControllerRequest requestDto){
+    private boolean isUpdateDataConsistent(ProfileUpdateServiceRequest requestDto){
 
         User userById = this.userRepository.findById(requestDto.getId()).orElse(null);
 
@@ -138,23 +140,41 @@ public class UserService {
 
     }
 
-    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateControllerRequest requestDto) throws PodiumEntityNotFoundException {
+    private User convertProfileUpdateRequestDtoToEntity(ProfileUpdateServiceRequest requestDto) throws PodiumEntityNotFoundException {
 
         User user = this.userRepository
                 .findById(requestDto.getId())
                 .orElseThrow(() -> new PodiumEntityNotFoundException("User with given id"));
 
-        Country country = this.countryService.getEntity(requestDto.getCountry());
+        PodiumResource imageResource = this.resourceService.createPodiumImageResource(requestDto.getImage());
 
-        user.setCountry(country);
+        user.setCountry(this.countryService.getEntity(requestDto.getCountry()));
         user.setUsername(requestDto.getUsername());
         user.setEmail(requestDto.getEmail());
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setPassword(this.getUpdatedPassword(user.getPassword(),requestDto.getPassword()));
         user.setBirthday(requestDto.getBirthday());
         user.setDescription(requestDto.getDescription());
+        user.setProfileImage(imageResource);
 
         return user;
     }
+
+    private String getUpdatedPassword(String currentPassword,String requestPassword){
+
+        if(passwordEncoder
+                .encode(requestPassword)
+                .equals(currentPassword))
+            System.out.println("ROWNA SIE");
+
+        System.out.println("REQUEST: " + requestPassword);
+        System.out.println("CURRENT : " + currentPassword);
+
+
+        return requestPassword.equals(currentPassword)
+                ? currentPassword
+                : passwordEncoder.encode(requestPassword);
+    }
+
 
     private FileControllerDto loadProfileImage(User user){
 

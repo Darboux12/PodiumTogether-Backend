@@ -3,6 +3,7 @@ package com.podium.service.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -17,4 +18,5 @@ public class ProfileUpdateServiceRequest {
     private String country;
     private Date birthday;
     private String description;
+    private MultipartFile image;
 }

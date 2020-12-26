@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class ResourceService {
@@ -20,6 +21,32 @@ public class ResourceService {
     public ResourceService(FileRepository fileRepository, ResourceRepository resourceRepository) {
         this.fileRepository = fileRepository;
         this.resourceRepository = resourceRepository;
+    }
+
+    public PodiumResource createPodiumImageResource(MultipartFile image){
+
+        if(!image.isEmpty()) {
+
+            PodiumResource resource = new PodiumResource();
+
+
+            if (this.fileRepository.isAcceptedImagesType(image.getContentType())) {
+
+                resource.setName(image.getOriginalFilename());
+                resource.setType(image.getContentType());
+
+                String path = this.fileRepository.saveImageAndGetPath(image);
+
+                resource.setPath(path);
+
+            }
+
+            return resource;
+
+        }
+
+        return null;
+
     }
 
     public Set<PodiumResource> createPodiumImageResources(Set<MultipartFile> images){
@@ -73,6 +100,31 @@ public class ResourceService {
     }
 
     @Transactional
+    public void synchronizeResourcesWithSystemFiles(){
+
+        Set<String> resourcePaths = new HashSet<>();
+
+        Set<String> filesToDelete = new HashSet<>();
+
+        for(PodiumResource resource : this.resourceRepository.findAll())
+            resourcePaths.add(resource.getPath());
+
+       this.fileRepository
+               .findAllFilePaths()
+               .forEach(filePath -> {
+
+                   boolean isPresent = resourcePaths.contains(filePath);
+
+                   if(!isPresent)
+                       filesToDelete.add(filePath);
+
+               });
+
+       this.deleteFilesFromServer(filesToDelete);
+
+    }
+
+    @Transactional
     public void deleteResources(Set<PodiumResource> resources){
 
         this.deleteResourcesFromServer(resources);
@@ -95,5 +147,28 @@ public class ResourceService {
 
         });
     }
+
+    private void deleteFilesFromServer(Set<String> paths){
+
+        paths.forEach(path -> {
+
+            if(!this.fileRepository.existFileByPath(path))
+                try {
+                    throw new PodiumFileUploadFailException();
+                } catch (PodiumFileUploadFailException e) {
+                    e.printStackTrace();
+                }
+
+            this.fileRepository.deleteFile(path);
+
+        });
+
+
+
+
+    }
+
+
+
 
 }

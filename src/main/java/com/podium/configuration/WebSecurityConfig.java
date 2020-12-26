@@ -317,6 +317,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllPlaces)
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers("/resources/synchronize")
+                .permitAll()
+
 
 
 
