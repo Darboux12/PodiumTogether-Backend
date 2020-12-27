@@ -52,6 +52,14 @@ public class PlaceController {
         return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
     }
 
+    @GetMapping(PodiumEndpoint.findPlaceById)
+    public ResponseEntity<PlaceControllerResponse> findPlaceById(@PathVariable @PodiumValidVariable int id) throws PodiumEntityNotFoundException {
+
+        var place = this.placeService.findPlaceById(id);
+
+        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
+    }
+
     @GetMapping(PodiumEndpoint.findAllPlaces)
     public ResponseEntity<Iterable<PlaceControllerResponse>> findAllPlaces() throws PodiumEntityNotFoundException {
 

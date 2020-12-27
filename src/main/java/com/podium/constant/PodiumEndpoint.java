@@ -228,6 +228,8 @@ public class PodiumEndpoint {
 
     public static final String findAllPlaces = "/place/find/all";
 
+    public static final String findPlaceById = "/place/find/id/{id}";
+
     public static final String deletePlaceById = "/place/delete/id/{id}";
 
     public static final String deleteEvent = "/event/delete/{title}";

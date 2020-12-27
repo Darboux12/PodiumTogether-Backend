@@ -97,6 +97,16 @@ public class PlaceService {
 
     }
 
+    public PlaceServiceResponse findPlaceById(int id) throws PodiumEntityNotFoundException {
+
+        return ServiceConverter
+                .getInstance()
+                .convertPlaceToResponseDto( this.placeRepository
+                        .findById(id)
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given id")));
+
+    }
+
     public Place findPlaceEntityByName(String placeName) throws PodiumEntityNotFoundException {
 
         return this.placeRepository
