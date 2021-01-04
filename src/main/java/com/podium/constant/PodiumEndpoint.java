@@ -1,5 +1,12 @@
 package com.podium.constant;
 
+import com.podium.controller.dto.response.EndpointControllerResponse;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+
 public class PodiumEndpoint {
 
     // CITY
@@ -143,32 +150,13 @@ public class PodiumEndpoint {
     /** GET | Find rating category by category | Category path variable required */
     public static final String findRatingCategory = "/rating/category/find/{category}";
 
+    public static final String findServerAddress = "/server/address";
 
-
-
-
-
-
+    public static final String findServerEndpoints = "/server/endpoints";
 
     public static final String updateUserProfile = "/user/update/profile";
 
-
-
-
-
-
-
-
-
-
-
-
     public static final String uploadUserProfileImage = "/image/upload/profile";
-
-
-
-
-
 
     /** GET | Find all news */
     public static final String findAllNews = "/news/find/all";
@@ -188,37 +176,12 @@ public class PodiumEndpoint {
     /** POST | Add news image | Title and images params required */
     public static final String addNewsImage = "/image/upload/news";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /** GET */
     public static final String findAllCountry = "/country/find/all";
     public static final String addCountry = "/country/add";
     public static final String existCountryByName = "/country/exist/{name}";
     public static final String deleteCountryByName = "/country/delete/{name}";
     public static final String findCountryByName= "/country/find/name/{name}";
-
-
-
-
 
     public static final String addEvent= "/event/add";
 
@@ -234,7 +197,6 @@ public class PodiumEndpoint {
 
     public static final String deleteEvent = "/event/delete/{title}";
 
-
     public static final String addReview = "/place/review/add";
 
     public static final String deleteReviewById = "/place/review/delete/id/{id}";
@@ -245,47 +207,20 @@ public class PodiumEndpoint {
 
     public static final String incrementReviewDislikes = "/place/review/increment/dislikes/{id}";
 
-
-
     public static final String uploadEventImages= "/image/upload/event";
 
     public static final String uploadEventFiles = "/file/upload/event";
 
+    public static List<EndpointControllerResponse> getAllEndpoints(){
+
+        return List.of(
+                new EndpointControllerResponse("findAllSubject",findAllSubject,false)
+
+        );
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 

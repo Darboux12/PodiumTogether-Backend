@@ -61,8 +61,11 @@ public class JwtTokenUtil implements Serializable
     // 2. Sign the JWT using the HS512 algorithm and secret key.
     // 3. According to JWS Compact
     // compaction of the JWT to a URL-safe string
+
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject)
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();

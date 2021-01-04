@@ -71,258 +71,48 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .frameOptions()
                 .deny()
                 .and()
-                // dont authenticate this particular requests
-                .authorizeRequests().antMatchers("/authenticate")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/news/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/{username}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/find/role")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/test")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/find/username/{username}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/contact/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/contact/delete/{id}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/subject/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/subject/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/news/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/{username}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/contact/find")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/subject/find/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/country/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/subject/delete/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/exist/username/{username}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/exist/email/{email}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/discipline/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/discipline/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/discipline/exist/{discipline}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/news/find/id/{id}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/event/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/image/upload/news")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/news/find/title/{title}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/news/delete/{id}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/discipline/delete/{discipline}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/country/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/country/exist/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/country/delete/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/gender/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/gender/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/gender/exist/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/gender/delete/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/gender/find/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/event/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/city/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/city/find/name/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/city/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/city/exist/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/city/delete/{name}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/event/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/user/delete/{username}")
-                .permitAll()
-
-
-                             .and().authorizeRequests().antMatchers("/event/delete/{title}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/contact/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/contact/find/all/subject/{subject}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/contact/find/all/email/{email}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/subject/exist/{name}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/discipline/find/{discipline}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/authenticate/check")
-                .permitAll()
-
-
-
-                .and().authorizeRequests().antMatchers("/user/update/profile")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/token/find/username")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/token/find/expiration")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/image/upload/profile")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/image/upload/event")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/file/upload/event")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/place/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/weekday/find/all")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/rating/category/find/all")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/rating/category/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/rating/category/exist/{category}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/rating/category/delete/{category}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/rating/category/find/{category}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/test/num")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers("/country/find/name/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/test/dto")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/place/find/name/{name}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers("/place/delete/id/{id}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers( "/place/review/add")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers( "/place/review/delete/id/{id}")
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers( "/place/review/find/author/{username}")
-                .permitAll()
-
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewLikes)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewDislikes)
-                .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllPlaces)
+                .authorizeRequests().antMatchers(PodiumEndpoint.authenticate)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/resources/synchronize")
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findPlaceById)
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllPlaces)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllDiscipline)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllRatingCategories)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllSubject)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.addUser)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.addContact)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllNews)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers("/country/find/all")
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerAddress)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerEndpoints)
+                .permitAll()
 
 
 
