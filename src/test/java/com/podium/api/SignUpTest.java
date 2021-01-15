@@ -41,7 +41,7 @@ import java.util.Date;
                 "TEST USERNAME_TWO",
                 "TEST_MAIL_TWO@gmail.com",
                 "TEST PASSWORD TWO",
-                "POLAND",
+                "GERMANY",
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 

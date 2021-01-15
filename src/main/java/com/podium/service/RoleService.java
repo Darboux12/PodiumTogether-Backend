@@ -19,6 +19,12 @@ public class RoleService {
         return this.roleRepository.existsByRole(roleName);
     }
 
+    public Role findRoleByName(String roleName) throws PodiumEntityNotFoundException {
+        return this.roleRepository
+                .findByRole(roleName)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Role"));
+    }
+
     public Role getEntity(String roleName) throws PodiumEntityNotFoundException {
 
         return this.roleRepository

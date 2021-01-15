@@ -13,22 +13,27 @@ import javax.transaction.Transactional;
 public class CityService {
 
     private CityRepository cityRepository;
+    private UserService userService;
 
-    public CityService(CityRepository cityRepository) {
+    public CityService(CityRepository cityRepository, UserService userService) {
         this.cityRepository = cityRepository;
+        this.userService = userService;
     }
 
     @Transactional
     public void addCity(CityAddServiceRequest cityAddServiceRequest)
             throws PodiumEntityAlreadyExistException {
 
+
+
+
+
+
         if(this.cityRepository.existsByCity(cityAddServiceRequest.getCity()))
             throw new PodiumEntityAlreadyExistException("City");
 
         this.cityRepository.save(this.convertServiceDtoToEntity(cityAddServiceRequest));
     }
-
-
 
     @Transactional
     public void deleteCityByName(String cityName) throws PodiumEntityNotFoundException {

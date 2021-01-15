@@ -102,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllNews)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers("/country/find/all")
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllCountry)
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
@@ -113,6 +113,49 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerEndpoints)
                 .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.authenticateNoToken)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerEndpointsCompatibility)
+                .permitAll()
+
+                // ***********************
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.addPlace)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.deletePlaceById)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.deleteUser)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.addReview)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findPlaceByName)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findReviewsByAuthor)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findReviewsByAuthor)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewLikes)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewDislikes)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.deleteReviewById)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.grantUserRole)
+                .permitAll()
+
+
 
 
 

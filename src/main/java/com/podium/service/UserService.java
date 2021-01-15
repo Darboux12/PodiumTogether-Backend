@@ -175,7 +175,6 @@ public class UserService {
                 : passwordEncoder.encode(requestPassword);
     }
 
-
     private FileControllerDto loadProfileImage(User user){
 
         if(user.getProfileImage() != null) {

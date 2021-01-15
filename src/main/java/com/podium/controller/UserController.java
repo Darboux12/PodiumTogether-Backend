@@ -86,7 +86,6 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
     private ProfileUpdateServiceRequest convertUpdateRequestToServiceRequest(ProfileUpdateControllerRequest request,MultipartFile image){
 
         return new ProfileUpdateServiceRequest(

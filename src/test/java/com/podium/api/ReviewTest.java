@@ -2,6 +2,7 @@ package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
 import com.podium.controller.dto.other.*;
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.controller.dto.request.PlaceAddControllerRequest;
 import com.podium.controller.dto.request.ReviewAddControllerRequest;
 import com.podium.controller.dto.request.SignUpControllerRequest;
@@ -31,7 +32,12 @@ public class ReviewTest {
     private static String usernameOne = "TEST USERNAME_ONE";
     private static String usernameTwo = "TEST USERNAME_TWO";
 
+    private static String passwordOne = "TEST PASSWORD ONE";
+    private static String passwordTwo = "TEST PASSWORD TWO";
+
     private static String placeName = "TEST PLACE NAME";
+
+    private static String token = "";
 
     @BeforeAll
     static void beforeClass(){
@@ -45,7 +51,7 @@ public class ReviewTest {
                  new SignUpControllerRequest(
                          usernameOne ,
                         "TEST_MAIL_ONE@gmail.com",
-                        "TEST PASSWORD ONE",
+                         passwordOne,
                         "POLAND",
                         new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
                 ),
@@ -53,7 +59,7 @@ public class ReviewTest {
                  new SignUpControllerRequest(
                          usernameTwo,
                         "TEST_MAIL_TWO@gmail.com",
-                        "TEST PASSWORD TWO",
+                         passwordTwo,
                         "POLAND",
                         new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
                 )
@@ -187,6 +193,7 @@ public class ReviewTest {
         ratings.add(new StarRatingControllerDto("Service",2));
         ratings.add(new StarRatingControllerDto("Equipment",4));
         ratings.add(new StarRatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Opening Hours",5));
 
         return Stream.of(
 
@@ -206,6 +213,20 @@ public class ReviewTest {
         UserValidator
                 .getInstance()
                 .signUp(signUpControllerRequest, HttpStatus.OK);
+
+    }
+
+    @Test
+    void T02_Sign_In_User_Get_Token_SignUpControllerRequest(){
+
+        token =
+
+        UserValidator
+                .getInstance()
+                .signIn(new JwtControllerRequest(usernameOne,passwordOne), HttpStatus.OK)
+                .getToken();
+
+        System.out.println(token);
 
     }
 
@@ -307,8 +328,6 @@ public class ReviewTest {
 
     }
 
-
-
     @ParameterizedTest
     @MethodSource("provideValidRequest")
     void T09_Delete_All_Reviews_By_Id_Status_OK_Delete_Reviews(ReviewAddControllerRequest requestDto){
@@ -325,12 +344,6 @@ public class ReviewTest {
 
     }
 
-
-
-
-
-
-
     @ParameterizedTest
     @MethodSource("providePlaceForTests")
     void T41_Delete_Created_Place(PlaceAddControllerRequest requestDto){
@@ -345,10 +358,6 @@ public class ReviewTest {
 
     }
 
-
-
-
-
     @ParameterizedTest
     @MethodSource("provideTwoUsersSignUpRequestsForTests")
     void T45_Delete_Created_Users(SignUpControllerRequest signUpControllerRequest){
@@ -358,9 +367,5 @@ public class ReviewTest {
                 .deleteUserByUsername(signUpControllerRequest.getUsername(),HttpStatus.OK);
 
     }
-
-
-
-
 
 }

@@ -3,24 +3,22 @@ package com.podium.controller.dto.converter;
 import com.podium.controller.dto.other.*;
 import com.podium.controller.dto.response.PlaceControllerResponse;
 import com.podium.controller.dto.response.ReviewControllerResponse;
-import com.podium.dal.entity.*;
 import com.podium.service.dto.other.*;
 import com.podium.service.dto.response.PlaceServiceResponse;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ControllerConverter {
+public class ControllerResponseConverter {
 
-    private static ControllerConverter instance;
+    private static ControllerResponseConverter instance;
 
-    private ControllerConverter() {}
+    private ControllerResponseConverter() {}
 
-    public static ControllerConverter getInstance() {
+    public static ControllerResponseConverter getInstance() {
         if(instance == null) {
-            instance = new ControllerConverter();
+            instance = new ControllerResponseConverter();
         }
         return instance;
     }
@@ -235,11 +233,5 @@ public class ControllerConverter {
     private boolean isAcceptedDocumentType(String documentType){
         return this.getAcceptedDocumentsTypes().contains(documentType);
     }
-
-
-
-
-
-
 
 }

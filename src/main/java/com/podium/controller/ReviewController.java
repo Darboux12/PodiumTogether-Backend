@@ -1,12 +1,11 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.converter.ControllerConverter;
+import com.podium.controller.dto.converter.ControllerResponseConverter;
 import com.podium.controller.dto.response.ReviewControllerResponse;
 import com.podium.controller.dto.request.ReviewAddControllerRequest;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
-import com.podium.dal.entity.Review;
 import com.podium.service.ReviewService;
 import com.podium.service.dto.request.ReviewAddServiceRequest;
 import com.podium.service.dto.other.StarRatingServiceDto;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -59,7 +57,7 @@ public class ReviewController {
 
         return ResponseEntity
                 .ok()
-                .body(ControllerConverter.
+                .body(ControllerResponseConverter.
                         getInstance()
                         .convertReviewServiceIterableToResponseDto(reviews));
 

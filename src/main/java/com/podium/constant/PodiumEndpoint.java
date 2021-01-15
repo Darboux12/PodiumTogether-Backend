@@ -1,10 +1,11 @@
 package com.podium.constant;
 
-import com.podium.controller.dto.response.EndpointControllerResponse;
+import com.podium.controller.dto.other.PodiumCompatibilityEndpoint;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PodiumEndpoint {
@@ -128,6 +129,9 @@ public class PodiumEndpoint {
     /** GET | Exist user by email | Email path variable required */
     public static final String existUserByEmail = "/user/exist/email/{email}";
 
+    public static final String grantUserRole = "/user/grant/role";
+
+
     // WEEK DAY
 
     /** GET | Find all week day */
@@ -153,6 +157,8 @@ public class PodiumEndpoint {
     public static final String findServerAddress = "/server/address";
 
     public static final String findServerEndpoints = "/server/endpoints";
+
+    public static final String findServerEndpointsCompatibility = "/server/endpoints/compatibility";
 
     public static final String updateUserProfile = "/user/update/profile";
 
@@ -211,17 +217,24 @@ public class PodiumEndpoint {
 
     public static final String uploadEventFiles = "/file/upload/event";
 
-    public static List<EndpointControllerResponse> getAllEndpoints(){
+    public static List<PodiumCompatibilityEndpoint> getAllEndpoints(){
 
-        return List.of(
-                new EndpointControllerResponse("findAllSubject",findAllSubject,false)
+        var endpointsList = new ArrayList<PodiumCompatibilityEndpoint>();
 
-        );
+        Field[] fields = PodiumEndpoint.class.getDeclaredFields();
 
+        Arrays.asList(fields).forEach(field -> {
 
+            try {
+                endpointsList.add(new PodiumCompatibilityEndpoint(field.getName(),(String)field.get(PodiumEndpoint.class.getDeclaredConstructor().newInstance())));
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        return endpointsList;
 
     }
-
-
 
 }

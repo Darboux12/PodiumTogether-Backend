@@ -3,6 +3,7 @@ package com.podium.validator;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
 import com.podium.controller.dto.request.ProfileUpdateControllerRequest;
+import com.podium.controller.dto.response.JwtControllerResponse;
 import com.podium.controller.dto.response.UserControllerResponse;
 import com.podium.specification.TestSpecification;
 import com.podium.controller.dto.request.JwtControllerRequest;
@@ -43,7 +44,9 @@ public class UserValidator {
 
     }
 
-    public void signIn(JwtControllerRequest requestDto, HttpStatus status){
+    public JwtControllerResponse signIn(JwtControllerRequest requestDto, HttpStatus status){
+
+        return
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
@@ -53,7 +56,8 @@ public class UserValidator {
                 .post(PodiumPath.server + PodiumEndpoint.authenticate)
                 .then().assertThat()
                 .statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(JwtControllerResponse.class);
 
     }
 

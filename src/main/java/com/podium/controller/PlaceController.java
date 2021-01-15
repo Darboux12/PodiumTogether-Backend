@@ -1,7 +1,7 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
-import com.podium.controller.dto.converter.ControllerConverter;
+import com.podium.controller.dto.converter.ControllerResponseConverter;
 import com.podium.controller.dto.request.PlaceAddControllerRequest;
 import com.podium.controller.dto.response.PlaceControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
@@ -49,7 +49,7 @@ public class PlaceController {
 
         var place = this.placeService.findPlaceByName(name);
 
-        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
     }
 
     @GetMapping(PodiumEndpoint.findPlaceById)
@@ -57,7 +57,7 @@ public class PlaceController {
 
         var place = this.placeService.findPlaceById(id);
 
-        return ResponseEntity.ok().body(ControllerConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertPlaceServiceDtoToControllerResponseDto(place));
     }
 
     @GetMapping(PodiumEndpoint.findAllPlaces)
@@ -67,7 +67,7 @@ public class PlaceController {
 
         return ResponseEntity
                 .ok()
-                .body(ControllerConverter.
+                .body(ControllerResponseConverter.
                         getInstance()
                         .convertPlaceServiceIterableToResponseDto(places));
 

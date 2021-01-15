@@ -44,7 +44,7 @@ public class CityController{
     }
 
     @PostMapping(PodiumEndpoint.addCity)
-    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
+    public ResponseEntity addCity(@RequestBody @PodiumValidBody CityAddControllerRequest requestDto, @RequestHeader("authorization") String token) throws PodiumEntityAlreadyExistException {
 
         this.cityService.addCity(this.convertAddRequestToServiceDto(requestDto));
 

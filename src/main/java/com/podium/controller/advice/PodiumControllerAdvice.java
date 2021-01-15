@@ -2,10 +2,7 @@ package com.podium.controller.advice;
 
 import com.podium.controller.status.PodiumResponse;
 import com.podium.controller.validation.exception.*;
-import com.podium.service.exception.PodiumEntityAlreadyExistException;
-import com.podium.service.exception.PodiumEntityNotFoundException;
-import com.podium.service.exception.PodiumEntityTimeConsistencyError;
-import com.podium.service.exception.PodiumFileUploadFailException;
+import com.podium.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -235,6 +232,16 @@ public class PodiumControllerAdvice {
 
         return new ResponseEntity<>(
                 this.createResponseMessage("Time Consistency Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumEntityNotSameQuantity.class)
+    public ResponseEntity<PodiumResponse> handlePodiumEntityNotSameQuantity(PodiumEntityNotSameQuantity e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium Quantity Error", HttpStatus.CONFLICT,
                         e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
         );
 

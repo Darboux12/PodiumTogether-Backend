@@ -50,6 +50,8 @@ class CitiesTest {
 
     }
 
+
+
     @BeforeAll
     static void beforeClass(){
         TestLogger.setUp();
