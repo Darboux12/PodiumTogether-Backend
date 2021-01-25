@@ -28,11 +28,12 @@ public class SubjectValidator {
         return instance;
     }
 
-    public void add(SubjectAddControllerRequest requestDto, HttpStatus status){
+    public void add(SubjectAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(requestDto)
                 .when()
                 .post(PodiumPath.server + PodiumEndpoint.addSubject)
@@ -87,12 +88,13 @@ public class SubjectValidator {
 
     }
 
-    public void deleteCityByName(String cityName, HttpStatus status){
+    public void deleteSubjectByName(String subjectName,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
-                .pathParam("name",cityName)
-                .delete(PodiumPath.server + PodiumEndpoint.deleteCityByName)
+                .pathParam("name",subjectName)
+                .header("Authorization", "Bearer " + token)
+                .delete(PodiumPath.server + PodiumEndpoint.deleteSubject)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 

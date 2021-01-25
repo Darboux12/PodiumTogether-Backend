@@ -1,7 +1,9 @@
 package com.podium.service;
 
 import com.podium.dal.entity.Discipline;
+import com.podium.dal.entity.User;
 import com.podium.dal.repository.DisciplineRepository;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.dto.request.DisciplineAddServiceRequest;
@@ -14,12 +16,20 @@ public class DisciplineService {
 
     private DisciplineRepository disciplineRepository;
 
-    public DisciplineService(DisciplineRepository disciplineRepository) {
+    private UserService userService;
+    private SecurityService securityService;
+
+    public DisciplineService(DisciplineRepository disciplineRepository, UserService userService, SecurityService securityService) {
         this.disciplineRepository = disciplineRepository;
+        this.userService = userService;
+        this.securityService = securityService;
     }
 
     @Transactional
-    public void addDiscipline(DisciplineAddServiceRequest addServiceDto) throws PodiumEntityAlreadyExistException {
+    public void addDiscipline(DisciplineAddServiceRequest addServiceDto, String adminUsername) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(this.disciplineRepository.existsByDiscipline(addServiceDto.getDiscipline()))
             throw new PodiumEntityAlreadyExistException("Discipline");
@@ -28,7 +38,10 @@ public class DisciplineService {
     }
 
     @Transactional
-    public void deleteDisciplineByName(String discipline) throws PodiumEntityNotFoundException {
+    public void deleteDisciplineByName(String discipline, String adminUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(!this.disciplineRepository.existsByDiscipline(discipline))
             throw new PodiumEntityNotFoundException("Discipline");

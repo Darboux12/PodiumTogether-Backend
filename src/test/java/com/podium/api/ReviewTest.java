@@ -35,82 +35,14 @@ public class ReviewTest {
     private static String passwordOne = "TEST PASSWORD ONE";
     private static String passwordTwo = "TEST PASSWORD TWO";
 
-    private static String placeName = "TEST PLACE NAME";
+    private static String placeName = "Test Place Name";
 
-    private static String token = "";
+    private static String adminToken = "";
+    private static String subscriberToken = "";
 
     @BeforeAll
     static void beforeClass(){
         TestLogger.setUp();
-    }
-
-    private static Stream<SignUpControllerRequest> provideTwoUsersSignUpRequestsForTests() throws ParseException {
-
-        return Stream.of(
-
-                 new SignUpControllerRequest(
-                         usernameOne ,
-                        "TEST_MAIL_ONE@gmail.com",
-                         passwordOne,
-                        "POLAND",
-                        new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
-                ),
-
-                 new SignUpControllerRequest(
-                         usernameTwo,
-                        "TEST_MAIL_TWO@gmail.com",
-                         passwordTwo,
-                        "POLAND",
-                        new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
-                )
-        );
-
-    }
-
-    private static Stream<PlaceAddControllerRequest> providePlaceForTests(){
-
-        LocalizationControllerDto localizationControllerDto = new LocalizationControllerDto(
-                placeName,
-                "PlaceTestStreetName",
-                123,
-                "24-060",
-                "Place test localization remarks"
-        );
-
-        List<BusinessDayControllerDto> businessDayControllerDtos = new LinkedList<>();
-
-        LocalTime timeFrom = LocalTime.parse("10:33:22");
-        LocalTime timeTo = LocalTime.parse("17:00");
-
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Monday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Tuesday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Wednesday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Thursday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Friday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Saturday",true,
-                timeFrom,timeTo));
-        businessDayControllerDtos.add(new BusinessDayControllerDto("Sunday",true,
-                timeFrom,timeTo));
-
-
-        return Stream.of(
-                   new PlaceAddControllerRequest(
-                            placeName,
-                            "Football",
-                           localizationControllerDto,
-                           businessDayControllerDtos,
-                            50,
-                            PodiumLimits.minUsageTimeHours + 1,
-                            10,
-                            20
-                    )
-        );
-
     }
 
     private static Stream<ReviewAddControllerRequest> provideEmptyReviewsForTests() {
@@ -120,6 +52,7 @@ public class ReviewTest {
         ratings.add(new StarRatingControllerDto("Service",2));
         ratings.add(new StarRatingControllerDto("Equipment",4));
         ratings.add(new StarRatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Opening Hours",1));
 
         var fileList = new ArrayList<FileControllerDto>();
 
@@ -144,6 +77,7 @@ public class ReviewTest {
         ratings.add(new StarRatingControllerDto("Service",2));
         ratings.add(new StarRatingControllerDto("Equipment",4));
         ratings.add(new StarRatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Opening Hours",1));
 
         var emptySet = new HashSet<StarRatingControllerDto>();
 
@@ -168,6 +102,7 @@ public class ReviewTest {
         ratings.add(new StarRatingControllerDto("Service",2));
         ratings.add(new StarRatingControllerDto("Equipment",4));
         ratings.add(new StarRatingControllerDto("Price",5));
+        ratings.add(new StarRatingControllerDto("Opening Hours",1));
 
         return Stream.of(
 
@@ -206,37 +141,27 @@ public class ReviewTest {
 
     }
 
-    @ParameterizedTest
-    @MethodSource("provideTwoUsersSignUpRequestsForTests")
-    void T01_Sign_Up_Users_Who_Add_Review(SignUpControllerRequest signUpControllerRequest){
+    @Test
+    void T01_Sign_In_As_Admin_User_Get_Token(){
 
-        UserValidator
-                .getInstance()
-                .signUp(signUpControllerRequest, HttpStatus.OK);
+        adminToken =
+
+                UserValidator
+                        .getInstance()
+                        .signIn(new JwtControllerRequest("admin","adminadmin"),HttpStatus.OK)
+                        .getToken();
 
     }
 
     @Test
-    void T02_Sign_In_User_Get_Token_SignUpControllerRequest(){
+    void T02_Sign_In_As_Subscriber_User_Get_Token(){
 
-        token =
+        subscriberToken =
 
-        UserValidator
-                .getInstance()
-                .signIn(new JwtControllerRequest(usernameOne,passwordOne), HttpStatus.OK)
-                .getToken();
-
-        System.out.println(token);
-
-    }
-
-    @ParameterizedTest
-    @MethodSource("providePlaceForTests")
-    void T02_Add_Place_That_Is_Reviewed(PlaceAddControllerRequest requestDto){
-
-        PlaceValidator
-                .getInstance()
-                .add(requestDto, HttpStatus.OK);
+                UserValidator
+                        .getInstance()
+                        .signIn(new JwtControllerRequest("TEST USERNAME_ONE","TEST PASSWORD ONE"),HttpStatus.OK)
+                        .getToken();
 
     }
 
@@ -244,7 +169,7 @@ public class ReviewTest {
     @MethodSource("provideEmptyReviewsForTests")
     void T03_Add_Review_Empty_Values_Status_CONFLICT(ReviewAddControllerRequest requestDto){
 
-        ReviewValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
+        ReviewValidator.getInstance().add(requestDto,subscriberToken,HttpStatus.CONFLICT);
 
     }
 
@@ -252,7 +177,7 @@ public class ReviewTest {
     @MethodSource("provideTooLongAndTooShortReviewsForTests")
     void T04_Add_Review_TooLong_TooShort_Values_Status_CONFLICT(ReviewAddControllerRequest requestDto){
 
-        ReviewValidator.getInstance().add(requestDto,HttpStatus.CONFLICT);
+        ReviewValidator.getInstance().add(requestDto,subscriberToken,HttpStatus.CONFLICT);
 
     }
 
@@ -260,7 +185,7 @@ public class ReviewTest {
     @MethodSource("provideRequestNotExistingPlaceAndUser")
     void T05_Add_Review_Not_Existing_User_And_Place_Status_NOT_FOUND(ReviewAddControllerRequest requestDto){
 
-        ReviewValidator.getInstance().add(requestDto,HttpStatus.NOT_FOUND);
+        ReviewValidator.getInstance().add(requestDto,subscriberToken,HttpStatus.NOT_FOUND);
 
     }
 
@@ -268,19 +193,19 @@ public class ReviewTest {
     @MethodSource("provideValidRequest")
     void T06_Add_Valid_Review_Status_OK_Add_Entity(ReviewAddControllerRequest requestDto){
 
-       ReviewValidator.getInstance().add(requestDto,HttpStatus.OK);
+       ReviewValidator.getInstance().add(requestDto,subscriberToken,HttpStatus.OK);
 
     }
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T06_Find_All_Reviews_By_Author_Status_OK_Correct_PlaceName(ReviewAddControllerRequest requestDto){
+    void T07_Find_All_Reviews_By_Author_Status_OK_Correct_PlaceName(ReviewAddControllerRequest requestDto){
 
         List<String> actualPlaceNames = new ArrayList<>();
 
         ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(),HttpStatus.OK)
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK)
                 .stream().map(ReviewControllerResponse::getPlace)
                 .forEach(actualPlaceNames::add);
 
@@ -290,19 +215,19 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T07_Increment_Review_Likes_Status_OK(ReviewAddControllerRequest requestDto){
+    void T08_Increment_Review_Likes_Status_OK(ReviewAddControllerRequest requestDto){
 
         List<ReviewControllerResponse> responses = new ArrayList<>(ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK));
 
         responses.forEach(x -> ReviewValidator
                 .getInstance()
-                .incrementReviewLikesById(x.getId(),HttpStatus.OK));
+                .incrementReviewLikesById(x.getId(),subscriberToken,HttpStatus.OK));
 
         List<ReviewControllerResponse> responsesAgain = new ArrayList<>(ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK));
 
         responsesAgain.forEach(x -> Assertions.assertEquals(1,x.getLikes()));
 
@@ -310,19 +235,19 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T08_Increment_Review_Dislikes_Status_OK(ReviewAddControllerRequest requestDto){
+    void T09_Increment_Review_Dislikes_Status_OK(ReviewAddControllerRequest requestDto){
 
         List<ReviewControllerResponse> responses = new ArrayList<>(ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK));
 
         responses.forEach(x -> ReviewValidator
                 .getInstance()
-                .incrementReviewDislikesById(x.getId(),HttpStatus.OK));
+                .incrementReviewDislikesById(x.getId(),subscriberToken,HttpStatus.OK));
 
         List<ReviewControllerResponse> responsesAgain = new ArrayList<>(ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(), HttpStatus.OK));
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK));
 
         responsesAgain.forEach(x -> Assertions.assertEquals(1,x.getDislikes()));
 
@@ -330,41 +255,33 @@ public class ReviewTest {
 
     @ParameterizedTest
     @MethodSource("provideValidRequest")
-    void T09_Delete_All_Reviews_By_Id_Status_OK_Delete_Reviews(ReviewAddControllerRequest requestDto){
+    void T10_Delete_All_Reviews_As_Subscriber_Status_UNAUTHORIZED(ReviewAddControllerRequest requestDto){
 
         List<Integer> ids = new ArrayList<>();
 
         ReviewValidator
                 .getInstance()
-                .findAllReviewsByAuthor(requestDto.getAuthor(),HttpStatus.OK)
+                .findAllReviewsByAuthor(requestDto.getAuthor(),subscriberToken,HttpStatus.OK)
                 .stream().map(ReviewControllerResponse::getId)
                 .forEach(ids::add);
 
-        ids.forEach(x -> ReviewValidator.getInstance().deleteReviewById(x,HttpStatus.OK));
+        ids.forEach(x -> ReviewValidator.getInstance().deleteReviewById(x,subscriberToken,HttpStatus.UNAUTHORIZED));
 
     }
 
     @ParameterizedTest
-    @MethodSource("providePlaceForTests")
-    void T41_Delete_Created_Place(PlaceAddControllerRequest requestDto){
+    @MethodSource("provideValidRequest")
+    void T11_Delete_All_Reviews_By_Id_Status_OK_Delete_Reviews(ReviewAddControllerRequest requestDto){
 
-        int id = PlaceValidator
+        List<Integer> ids = new ArrayList<>();
 
+        ReviewValidator
                 .getInstance()
-                .findByName(requestDto.getName(),HttpStatus.OK)
-                .getId();
+                .findAllReviewsByAuthor(requestDto.getAuthor(),adminToken,HttpStatus.OK)
+                .stream().map(ReviewControllerResponse::getId)
+                .forEach(ids::add);
 
-        PlaceValidator.getInstance().deletePlaceById(id,HttpStatus.OK);
-
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideTwoUsersSignUpRequestsForTests")
-    void T45_Delete_Created_Users(SignUpControllerRequest signUpControllerRequest){
-
-        UserValidator
-                .getInstance()
-                .deleteUserByUsername(signUpControllerRequest.getUsername(),HttpStatus.OK);
+        ids.forEach(x -> ReviewValidator.getInstance().deleteReviewById(x,adminToken,HttpStatus.OK));
 
     }
 

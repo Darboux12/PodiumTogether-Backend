@@ -131,6 +131,13 @@ public class PodiumEndpoint {
 
     public static final String grantUserRole = "/user/grant/role";
 
+    public static final String degradeUserRole = "/user/degrade/role";
+
+    public static final String synchronizeResources = "/resources/synchronize";
+
+
+
+
 
     // WEEK DAY
 

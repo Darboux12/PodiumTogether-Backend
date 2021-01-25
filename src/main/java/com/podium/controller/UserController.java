@@ -13,10 +13,12 @@ import com.podium.dal.entity.User;
 import com.podium.service.UserService;
 import com.podium.service.dto.request.ProfileUpdateServiceRequest;
 import com.podium.service.dto.request.SignUpServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,35 +40,35 @@ public class UserController {
         this.userService = userService;
     }
 
+    // ALL
     @PostMapping(PodiumEndpoint.addUser)
     public ResponseEntity addUser(@RequestBody @PodiumValidBody SignUpControllerRequest request) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
         this.userService.addUser(this.convertAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("User successfully signed up");
     }
 
+    // ADMIN | MODERATOR | USER
     @GetMapping(PodiumEndpoint.findUserByUsername)
-    public ResponseEntity<UserControllerResponse> findUser(@PathVariable String username) throws PodiumEntityNotFoundException {
-
-        var user = this.userService.findUserByUsername(username);
-
+    public ResponseEntity<UserControllerResponse> findUser(@PathVariable String username, Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+        var user = this.userService.findUserByUsername(username,authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(this.convertEntityToResponseDto(user));
     }
 
+    // ADMIN
     @GetMapping(PodiumEndpoint.findAllUsers)
-    public ResponseEntity<Iterable<UserControllerResponse>> findAllUsers(){
-
-        var users = this.userService.findAllUsers();
-
+    public ResponseEntity<Iterable<UserControllerResponse>> findAllUsers(Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        var users = this.userService.findAllUsers(authentication.getName());
         return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(users));
-
     }
 
+    // ADMIN
     @DeleteMapping(PodiumEndpoint.deleteUser)
-    public ResponseEntity deleteUser(@PathVariable @PodiumValidVariable String username) throws PodiumEntityNotFoundException {
-            this.userService.deleteUserByUsername(username);
+    public ResponseEntity deleteUser(@PathVariable @PodiumValidVariable String username, Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+            this.userService.deleteUserByUsername(username,authentication.getName());
             return ResponseEntity.ok().body("User successfully deleted");
     }
 
+    // ALL
     @GetMapping(PodiumEndpoint.existUserByUsername)
     public ResponseEntity existUserByUsername(@PathVariable @PodiumValidVariable String username){
             return ResponseEntity.ok().body(this.userService.existUserByUsername(username));
@@ -77,12 +79,11 @@ public class UserController {
             return ResponseEntity.ok().body(this.userService.existUserByEmail(email));
     }
 
+    // USER
     @PostMapping(PodiumEndpoint.updateUserProfile)
     public ResponseEntity updateUserProfile(@RequestPart(name = "request") @PodiumValidBody ProfileUpdateControllerRequest request,
-                                            @RequestPart(name = "image",required = false) MultipartFile image) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
-
-        this.userService.updateUser(this.convertUpdateRequestToServiceRequest(request,image));
-
+                                            @RequestPart(name = "image",required = false) MultipartFile image, Authentication authentication) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumAuthorityException {
+        this.userService.updateUser(this.convertUpdateRequestToServiceRequest(request,image),authentication.getName());
         return ResponseEntity.ok().build();
     }
 

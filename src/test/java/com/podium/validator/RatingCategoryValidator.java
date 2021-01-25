@@ -27,11 +27,12 @@ public class RatingCategoryValidator {
         return instance;
     }
 
-    public void add(RatingCategoryAddControllerRequest requestDto, HttpStatus status){
+    public void add(RatingCategoryAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(requestDto)
                 .when()
                 .post(PodiumPath.server + PodiumEndpoint.addRatingCategory)
@@ -41,13 +42,14 @@ public class RatingCategoryValidator {
 
     }
 
-    public List<RatingCategoryControllerResponse> findAll(HttpStatus status){
+    public List<RatingCategoryControllerResponse> findAll(String token,HttpStatus status){
 
         RatingCategoryControllerResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
+                        .header("Authorization", "Bearer " + token)
                         .when().get(PodiumPath.server + PodiumEndpoint.findAllRatingCategories)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
@@ -58,13 +60,14 @@ public class RatingCategoryValidator {
 
     }
 
-    public RatingCategoryControllerResponse findByCategory(String category, HttpStatus status){
+    public RatingCategoryControllerResponse findByCategory(String category,String token, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
             return  given()
                     .spec(TestSpecification.buildRequestSpec())
                     .pathParam("category",category)
+                    .header("Authorization", "Bearer " + token)
                     .when()
                     .get(PodiumPath.server + PodiumEndpoint.findRatingCategory)
                     .then().assertThat()
@@ -75,6 +78,7 @@ public class RatingCategoryValidator {
         else given()
                 .spec(TestSpecification.buildRequestSpec())
                 .pathParam("category",category)
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .get(PodiumPath.server + PodiumEndpoint.findRatingCategory)
                 .then().assertThat()
@@ -85,13 +89,14 @@ public class RatingCategoryValidator {
 
     }
 
-    public boolean existCategory(String category, HttpStatus status){
+    public boolean existCategory(String category,String token, HttpStatus status){
 
         return
 
         given().spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
                 .pathParam("category",category)
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .get(PodiumPath.server + PodiumEndpoint.existRatingCategory)
                 .then().assertThat().statusCode(status.value())
@@ -101,11 +106,12 @@ public class RatingCategoryValidator {
 
     }
 
-    public void deleteCategory(String category, HttpStatus status){
+    public void deleteCategory(String category,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("category",category)
+                .header("Authorization", "Bearer " + token)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteRatingCategory)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());

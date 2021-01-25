@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class SignInTest {
 
-    private static String validPassword = "johndoe123";
-    private static String validUsername = "johndoe";
+    private static String validUsername = "TEST USERNAME_ONE";
+    private static String validPassword = "TEST PASSWORD ONE";
 
     private static Stream<String> provideEmptyValuesForTests(){
         return Stream.of("", " ", "  ", "       ");
@@ -55,7 +55,8 @@ import java.util.stream.Stream;
     private static Stream<JwtControllerRequest> provideValidSIgnInRequests(){
 
         return Stream.of(
-                new JwtControllerRequest("johndoe","johndoe123")
+                new JwtControllerRequest("TEST USERNAME_ONE","TEST PASSWORD ONE"),
+                new JwtControllerRequest("TEST USERNAME_TWO","TEST PASSWORD TWO")
 
         );
 

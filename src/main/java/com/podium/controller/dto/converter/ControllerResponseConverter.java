@@ -1,11 +1,15 @@
 package com.podium.controller.dto.converter;
 
 import com.podium.controller.dto.other.*;
-import com.podium.controller.dto.response.PlaceControllerResponse;
-import com.podium.controller.dto.response.ReviewControllerResponse;
+import com.podium.controller.dto.response.*;
+import com.podium.dal.entity.*;
 import com.podium.service.dto.other.*;
 import com.podium.service.dto.response.PlaceServiceResponse;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +83,166 @@ public class ControllerResponseConverter {
                 review.getDislikes()
 
         );
+    }
+
+    public CityControllerResponse convertCityEntityToResponseDto(City city){
+        return new CityControllerResponse(city.getCity());
+    }
+
+    public Iterable<CityControllerResponse> convertCityEntityIterableToResponseDto(Iterable<City> cities){
+
+        var cityResponses = new ArrayList<CityControllerResponse>();
+
+        cities.forEach(x -> cityResponses.add(this.convertCityEntityToResponseDto(x)));
+
+        return cityResponses;
+    }
+
+    public ContactControllerResponse convertContactEntityToResponseDto(Contact contact){
+
+        return new ContactControllerResponse(
+                contact.getId(),
+                contact.getUserEmail(),
+                contact.getMessage(),
+                contact.getSubject().getSubject()
+        );
+
+    }
+
+    public Iterable<ContactControllerResponse> convertContactEntityIterableToResponseDto(Iterable<Contact> contacts){
+
+        var contactResponses = new ArrayList<ContactControllerResponse>();
+
+        contacts.forEach(x -> contactResponses.add(this.convertContactEntityToResponseDto(x)));
+
+        return contactResponses;
+    }
+
+    public CountryControllerResponse convertCountryEntityToResponseDto(Country country){
+
+        return new CountryControllerResponse(
+                country.getCountryId(),
+                country.getName(),
+                country.getPrintableName(),
+                country.getIso3(),
+                country.getNumCode()
+        );
+
+    }
+
+    public Iterable<CountryControllerResponse> convertCountryEntityIterableToResponseDto(Iterable<Country> countries){
+
+        var countryResponses = new ArrayList<CountryControllerResponse>();
+
+        countries.forEach(x -> countryResponses.add(this.convertCountryEntityToResponseDto(x)));
+
+        return countryResponses;
+    }
+
+    public DisciplineControllerResponse convertDisciplineEntityToResponseDto(Discipline discipline){
+        return new DisciplineControllerResponse(discipline.getDiscipline());
+    }
+
+    public Iterable<DisciplineControllerResponse> convertDisciplineEntityIterableToResponseDto(Iterable<Discipline> disciplines){
+
+        var disciplineResponses = new ArrayList<DisciplineControllerResponse>();
+
+        disciplines.forEach(x -> disciplineResponses.add(this.convertDisciplineEntityToResponseDto(x)));
+
+        return disciplineResponses;
+    }
+
+    public GenderControllerResponse convertGenderEntityToResponseDto(Gender gender){
+        return new GenderControllerResponse(gender.getGender());
+    }
+
+    public Iterable<GenderControllerResponse> convertGenderEntityIterableToResponseDto(Iterable<Gender> genders){
+
+        var genderResponses = new ArrayList<GenderControllerResponse>();
+
+        genders.forEach(x -> genderResponses.add(this.convertGenderEntityToResponseDto(x)));
+
+        return genderResponses;
+    }
+
+    public NewsControllerResponse convertNewsEntityToResponseDto(News news){
+
+        return new NewsControllerResponse(
+                news.getId(),
+                news.getTitle(),
+                news.getShortText(),
+                news.getText(),
+                news.getLinkText(),
+                news.getDate(),
+                this.findNewsFiles(news)
+        );
+
+    }
+
+    public Iterable<NewsControllerResponse> convertNewsEntityIterableToResponseDto(Iterable<News> contacts){
+
+        var newsResponses = new ArrayList<NewsControllerResponse>();
+
+        contacts.forEach(x -> newsResponses.add(this.convertNewsEntityToResponseDto(x)));
+
+        return newsResponses;
+    }
+
+    public RatingCategoryControllerResponse convertRatingCategoryEntityToResponseDto(RatingCategory ratingCategory){
+        return new RatingCategoryControllerResponse(ratingCategory.getCategory());
+    }
+
+    public Iterable<RatingCategoryControllerResponse> convertRatingCategoryEntityIterableToResponseDto(Iterable<RatingCategory> ratingCategories){
+
+        var categoryResponses = new ArrayList<RatingCategoryControllerResponse>();
+
+        ratingCategories.forEach(x -> categoryResponses.add(this.convertRatingCategoryEntityToResponseDto(x)));
+
+        return categoryResponses;
+    }
+
+    public SubjectControllerResponse convertSubjectEntityToResponseDto(Subject subject){
+
+        return new SubjectControllerResponse(subject.getSubject());
+
+    }
+
+    public Iterable<SubjectControllerResponse> convertSubjectEntityIterableToResponseDto(Iterable<Subject> subjects){
+
+        var subjectResponses = new ArrayList<SubjectControllerResponse>();
+
+        subjects.forEach(x -> subjectResponses.add(this.convertSubjectEntityToResponseDto(x)));
+
+        return subjectResponses;
+    }
+
+
+
+
+
+
+    private List<FileControllerDto> findNewsFiles(News news){
+
+        List<FileControllerDto> fileControllerDtos = new ArrayList<>();
+
+        news
+                .getNewsResources()
+                .forEach(x -> {
+
+                    try {
+                        fileControllerDtos.add(new FileControllerDto(
+                                x.getName(),
+                                x.getType(),
+                                FileCopyUtils.copyToByteArray(new File(x.getPath()))
+                        ));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+        return fileControllerDtos;
+
     }
 
     private Set<StarRatingControllerDto> convertStarRatingsToRatingDtos(Set<StarRatingServiceDto> starRatings){

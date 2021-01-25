@@ -1,6 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
+import com.podium.controller.dto.converter.ControllerRequestConverter;
+import com.podium.controller.dto.converter.ControllerResponseConverter;
 import com.podium.controller.dto.request.ContactAddControllerRequest;
 import com.podium.controller.dto.response.ContactControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
@@ -9,8 +11,10 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.Contact;
 import com.podium.service.ContactService;
 import com.podium.service.dto.request.ContactAddServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,72 +32,37 @@ public class ContactController {
 
     @PostMapping(PodiumEndpoint.addContact)
     public ResponseEntity addContact(@RequestBody @PodiumValidBody ContactAddControllerRequest request) throws PodiumEntityNotFoundException {
-
-        this.contactService.addContact(convertAddRequestToServiceDto(request));
-
+        this.contactService.addContact(ControllerRequestConverter.getInstance().convertContactAddRequestToServiceDto(request));
         return ResponseEntity.ok().body("Contact request successfully sent");
     }
 
+    // ADMIN
     @DeleteMapping(PodiumEndpoint.deleteContact)
-    public ResponseEntity deleteContact(@PathVariable @PodiumValidVariable int id) throws PodiumEntityNotFoundException {
-
-        this.contactService.deleteContact(id);
-
+    public ResponseEntity deleteContact(@PathVariable @PodiumValidVariable int id, Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+        this.contactService.deleteContact(id,authentication.getName());
         return ResponseEntity.ok().body("Contact successfully deleted");
     }
 
+    // ADMIN
     @GetMapping(PodiumEndpoint.findAllContactByEmail)
     public ResponseEntity<Iterable<ContactControllerResponse>>
-    findAllContactByEmail(@PathVariable @PodiumValidVariable String email){
-
-        var contacts = this.contactService.findAllContactByEmail(email);
-
-        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
+    findAllContactByEmail(@PathVariable @PodiumValidVariable String email,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        var contacts = this.contactService.findAllContactByEmail(email,authentication.getName());
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertContactEntityIterableToResponseDto(contacts));
     }
 
+    // ADMIN
     @GetMapping(PodiumEndpoint.findAllContactBySubject)
-    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject) throws PodiumEntityNotFoundException {
-
-        var contacts = this.contactService.findAllContactBySubject(subject);
-
-        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
+    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContactBySubject(@PathVariable @PodiumValidVariable String subject,Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+        var contacts = this.contactService.findAllContactBySubject(subject,authentication.getName());
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertContactEntityIterableToResponseDto(contacts));
     }
 
+    // ADMIN
     @GetMapping(PodiumEndpoint.findAllContact)
-    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContact(){
-
-        var contacts = this.contactService.findAllContact();
-
-        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(contacts));
-    }
-
-    private ContactAddServiceRequest convertAddRequestToServiceDto(ContactAddControllerRequest request ){
-
-        return new ContactAddServiceRequest(
-                request.getUserEmail(),
-                request.getSubject(),
-                request.getMessage()
-        );
-    }
-
-    private ContactControllerResponse convertEntityToResponseDto(Contact contact){
-
-        return new ContactControllerResponse(
-                contact.getId(),
-                contact.getUserEmail(),
-                contact.getMessage(),
-                contact.getSubject().getSubject()
-        );
-
-    }
-
-    private Iterable<ContactControllerResponse> convertEntityIterableToResponseDto(Iterable<Contact> contacts){
-
-        var contactResponses = new ArrayList<ContactControllerResponse>();
-
-        contacts.forEach(x -> contactResponses.add(this.convertEntityToResponseDto(x)));
-
-        return contactResponses;
+    public ResponseEntity<Iterable<ContactControllerResponse>> findAllContact(Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        var contacts = this.contactService.findAllContact(authentication.getName());
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertContactEntityIterableToResponseDto(contacts));
     }
 
 }

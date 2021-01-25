@@ -24,14 +24,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer
 {
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
+    private final UserDetailsService jwtUserDetailsService;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private final JwtRequestFilter jwtRequestFilter;
+
+    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService jwtUserDetailsService, JwtRequestFilter jwtRequestFilter) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -70,94 +73,97 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .headers()
                 .frameOptions()
                 .deny()
-                .and()
 
-                .authorizeRequests().antMatchers(PodiumEndpoint.authenticate)
+                // ********* HERE **************
+
+                // AUTHENTICATE
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.authenticate)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findPlaceById)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllPlaces)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllDiscipline)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllRatingCategories)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllSubject)
-                .permitAll()
-
+                // SIGN UP
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.addUser)
                 .permitAll()
 
+                // CITY
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllCity)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findCityByName)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existCityByName)
+                .permitAll()
+
+                // CONTACT
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.addContact)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllNews)
-                .permitAll()
-
+                // COUNTRY
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllCountry)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findCountryByName)
                 .permitAll()
 
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existCountryByName)
+                .permitAll()
+
+                // DISCIPLINE
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllDiscipline)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findByDisciplineName)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existDisciplineByName)
+                .permitAll()
+
+                // GENDER
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllGender)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findGenderByName)
+                .permitAll()
+
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existGenderByName)
+                .permitAll()
+
+                // INFORMATION
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerAddress)
                 .permitAll()
 
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerEndpoints)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.authenticateNoToken)
-                .permitAll()
-
                 .and().authorizeRequests().antMatchers(PodiumEndpoint.findServerEndpointsCompatibility)
                 .permitAll()
 
-                // ***********************
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.addPlace)
+                // NEWS
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllNews)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.deletePlaceById)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findNewsById)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.deleteUser)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findNewsByTitle)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.addReview)
+                // SUBJECT
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findAllSubject)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findPlaceByName)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.findSubjectByName)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findReviewsByAuthor)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existSubjectByName)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.findReviewsByAuthor)
+                // USER
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByUsername)
                 .permitAll()
 
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewLikes)
+                .and().authorizeRequests().antMatchers(PodiumEndpoint.existUserByEmail)
                 .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.incrementReviewDislikes)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.deleteReviewById)
-                .permitAll()
-
-                .and().authorizeRequests().antMatchers(PodiumEndpoint.grantUserRole)
-                .permitAll()
-
-
-
-
 
 
 
@@ -165,7 +171,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
 
                 // all other requests need to be authenticated
-                        .anyRequest().authenticated().and().
+                .anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
                         exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

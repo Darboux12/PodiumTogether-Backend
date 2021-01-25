@@ -1,6 +1,8 @@
 package com.podium.controller;
 
 import com.podium.constant.PodiumEndpoint;
+import com.podium.controller.dto.converter.ControllerRequestConverter;
+import com.podium.controller.dto.converter.ControllerResponseConverter;
 import com.podium.controller.dto.request.RatingCategoryAddControllerRequest;
 import com.podium.controller.dto.response.RatingCategoryControllerResponse;
 import com.podium.controller.validation.validator.annotation.PodiumValidBody;
@@ -9,9 +11,11 @@ import com.podium.controller.validation.validator.annotation.PodiumValidateContr
 import com.podium.dal.entity.RatingCategory;
 import com.podium.service.RatingCategoryService;
 import com.podium.service.dto.request.RatingCategoryAddServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -27,54 +31,41 @@ public class RatingCategoryController {
         this.ratingCategoryService = ratingCategoryService;
     }
 
+    // ADMIN
     @PostMapping(PodiumEndpoint.addRatingCategory)
-    public ResponseEntity addRatingCategory(@RequestBody @PodiumValidBody RatingCategoryAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
-        this.ratingCategoryService.addCategory(this.convertAddRequestToServiceDto(requestDto));
+    public ResponseEntity addRatingCategory(@RequestBody @PodiumValidBody RatingCategoryAddControllerRequest requestDto, Authentication authentication) throws PodiumEntityAlreadyExistException, PodiumAuthorityException, PodiumEntityNotFoundException {
+        this.ratingCategoryService.addCategory(ControllerRequestConverter.getInstance().convertRatingCategoryAddRequestToServiceDto(requestDto),authentication.getName());
         return ResponseEntity.ok().body("RatingDto category successfully added");
     }
 
+    // SUBSCRIBER
     @GetMapping(PodiumEndpoint.findAllRatingCategories)
-    public ResponseEntity<Iterable<RatingCategoryControllerResponse>> findAll(){
-
-        var categories = this.ratingCategoryService.findAllCategory();
-
-        return ResponseEntity.ok().body(this.convertEntityIterableToResponseDto(categories));
+    public ResponseEntity<Iterable<RatingCategoryControllerResponse>> findAll(Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        var categories = this.ratingCategoryService.findAllCategory(authentication.getName());
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertRatingCategoryEntityIterableToResponseDto(categories));
     }
 
+    // SUBSCRIBER
     @GetMapping(PodiumEndpoint.findRatingCategory)
-    public ResponseEntity<RatingCategoryControllerResponse> findCategory(@PathVariable @PodiumValidVariable String category) throws PodiumEntityNotFoundException {
-
-           var categoryEntity = this.ratingCategoryService.findCategoryByCategory(category);
-
-           return ResponseEntity.ok().body(this.convertEntityToResponseDto(categoryEntity));
+    public ResponseEntity<RatingCategoryControllerResponse> findCategory(@PathVariable @PodiumValidVariable String category,Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+           var categoryEntity = this.ratingCategoryService.findCategoryByCategory(category,authentication.getName());
+           return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertRatingCategoryEntityToResponseDto(categoryEntity));
     }
 
+    // SUBSCRIBER
     @GetMapping(PodiumEndpoint.existRatingCategory)
-    public ResponseEntity existRatingCategory(@PathVariable @PodiumValidVariable String category){
-            return ResponseEntity.ok().body(this.ratingCategoryService.existCategoryByCategory(category));
+    public ResponseEntity existRatingCategory(@PathVariable @PodiumValidVariable String category,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+            return ResponseEntity.ok().body(this.ratingCategoryService.existCategoryByCategory(category,authentication.getName()));
     }
 
+    // ADMIN
     @DeleteMapping(PodiumEndpoint.deleteRatingCategory)
-    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String category) throws PodiumEntityNotFoundException {
-        this.ratingCategoryService.deleteRatingCategoryByCategory(category);
+    public ResponseEntity deleteCityByName(@PathVariable @PodiumValidVariable String category,Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+        this.ratingCategoryService.deleteRatingCategoryByCategory(category,authentication.getName());
         return ResponseEntity.ok().body("RatingDto category successfully deleted");
     }
 
-    private RatingCategoryAddServiceRequest convertAddRequestToServiceDto(RatingCategoryAddControllerRequest request){
-        return new RatingCategoryAddServiceRequest(request.getCategory());
-    }
 
-    private RatingCategoryControllerResponse convertEntityToResponseDto(RatingCategory ratingCategory){
-        return new RatingCategoryControllerResponse(ratingCategory.getCategory());
-    }
 
-    private Iterable<RatingCategoryControllerResponse> convertEntityIterableToResponseDto(Iterable<RatingCategory> ratingCategories){
-
-        var categoryResponses = new ArrayList<RatingCategoryControllerResponse>();
-
-        ratingCategories.forEach(x -> categoryResponses.add(this.convertEntityToResponseDto(x)));
-
-        return categoryResponses;
-    }
 
 }

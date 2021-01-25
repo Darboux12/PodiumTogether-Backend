@@ -247,6 +247,66 @@ public class PodiumControllerAdvice {
 
     }
 
+    @ExceptionHandler(PodiumUserRoleException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumUserRoleException(PodiumUserRoleException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Role Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumUserDefaultRoleException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumUserDefaultRoleException(PodiumUserDefaultRoleException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Role Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler( PodiumAuthorityException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumAuthorityException(PodiumAuthorityException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Authority Error", HttpStatus.UNAUTHORIZED,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.UNAUTHORIZED
+        );
+
+    }
+
+    @ExceptionHandler(PodiumUserRoleAlreadyGivenException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumUserRoleAlreadyGivenException(PodiumUserRoleAlreadyGivenException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Authority Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumSelfPromotionError.class)
+    public ResponseEntity<PodiumResponse> handlePodiumSelfPromotionError(PodiumSelfPromotionError e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Authority Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
+    @ExceptionHandler(PodiumSelfDegradationException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumSelfDegradationException(PodiumSelfDegradationException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Authority Error", HttpStatus.CONFLICT,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.CONFLICT
+        );
+
+    }
+
     private PodiumResponse createResponseMessage(String title, HttpStatus status,String message, String description) {
 
         return new PodiumResponse(

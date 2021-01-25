@@ -27,20 +27,7 @@ public class CountryValidator {
         return instance;
     }
 
-    public void add(CountryAddControllerRequest requestDto, HttpStatus status){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(PodiumPath.server + PodiumEndpoint.addCountry)
-                .then().assertThat()
-                .statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    public List<CountryControllerResponse> findAll(){
+    public List<CountryControllerResponse> findAll(HttpStatus status){
 
         CountryControllerResponse[] dtos =
 
@@ -49,7 +36,7 @@ public class CountryValidator {
                         .contentType(ContentType.JSON)
                         .when().get(PodiumPath.server + PodiumEndpoint.findAllCountry)
                         .then().assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) CountryControllerResponse[].class);
 
@@ -57,32 +44,36 @@ public class CountryValidator {
 
     }
 
-    public void existCityByName(String cityName, HttpStatus status){
+    public boolean existCountryByName(String countryName,HttpStatus status){
 
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",cityName)
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.existCityByName)
-                .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());
+        return
 
-    }
-
-    public void delete(String countryName, HttpStatus status){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
+        given()
+                .spec(TestSpecification.buildRequestSpec())
                 .pathParam("name",countryName)
-                .delete(PodiumPath.server + PodiumEndpoint.deleteCountryByName)
-                .then().assertThat().statusCode(status.value())
-                .spec(TestSpecification.buildResponseSpec());;
+                .when().get(PodiumPath.server + PodiumEndpoint.existCountryByName)
+                .then().assertThat()
+                .statusCode(status.value())
+                .spec(TestSpecification.buildResponseSpec())
+                .extract().as(boolean.class);
+
+
 
     }
 
+    public CountryControllerResponse findCountryByName(String countryName,HttpStatus status){
 
+        return
 
+                given()
+                        .spec(TestSpecification.buildRequestSpec())
+                        .pathParam("name",countryName)
+                        .when().get(PodiumPath.server + PodiumEndpoint.findCountryByName)
+                        .then().assertThat()
+                        .statusCode(status.value())
+                        .spec(TestSpecification.buildResponseSpec())
+                        .extract().as(CountryControllerResponse.class);
 
-
+    }
 
 }

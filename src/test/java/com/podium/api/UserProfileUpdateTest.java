@@ -18,6 +18,8 @@ import java.util.Date;
     private static SignUpControllerRequest signUpControllerRequestOne;
     private static ProfileUpdateControllerRequest updateRequestDto;
 
+    /*
+
     @BeforeAll
     static void beforeClass() throws ParseException {
         TestLogger.setUp();
@@ -179,5 +181,5 @@ import java.util.Date;
                 .deleteUserByUsername(updateRequestDto.getUsername(),HttpStatus.OK);
 
     }
-
+*/
 }

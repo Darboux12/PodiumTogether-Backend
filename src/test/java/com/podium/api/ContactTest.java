@@ -1,10 +1,12 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.ContactAddControllerRequest;
 import com.podium.controller.dto.response.ContactControllerResponse;
 import com.podium.validator.ContactValidator;
+import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +21,8 @@ import java.util.stream.Stream;
 class ContactTest {
 
     private static int idHolder;
+
+    private static String token = "";
 
     @BeforeAll
     static void beforeClass(){
@@ -127,9 +131,21 @@ class ContactTest {
 
     }
 
+    @Test
+    void T01_Sign_In_As_Admin_User_Get_Token(){
+
+        token =
+
+                UserValidator
+                        .getInstance()
+                        .signIn(new JwtControllerRequest("admin","adminadmin"),HttpStatus.OK)
+                        .getToken();
+
+    }
+
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T01_Add_Valid_Contacts_Return_Status_OK(ContactAddControllerRequest requestDto){
+    void T02_Add_Valid_Contacts_Return_Status_OK(ContactAddControllerRequest requestDto){
 
         ContactValidator
                 .getInstance()
@@ -138,11 +154,11 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T02_Find_Contacts_By_Email_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddControllerRequest requestDto){
+    void T03_Find_Contacts_By_Email_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddControllerRequest requestDto){
 
         boolean isPresent = ContactValidator
                 .getInstance()
-                .findByEmail(requestDto.getUserEmail(),HttpStatus.OK)
+                .findByEmail(requestDto.getUserEmail(),token,HttpStatus.OK)
                 .stream()
                 .map(ContactControllerResponse::getEmail)
                 .anyMatch(requestDto.getUserEmail()::equals);
@@ -153,13 +169,13 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T03_Find_Contacts_By_Subject_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddControllerRequest requestDto){
+    void T04_Find_Contacts_By_Subject_Return_Status_OK_Iterable_Containing_Added_DTO(ContactAddControllerRequest requestDto){
 
         boolean isPresent =
 
                 ContactValidator
                 .getInstance()
-                .findBySubject(requestDto.getSubject(),HttpStatus.OK)
+                .findBySubject(requestDto.getSubject(),token,HttpStatus.OK)
                 .stream()
                 .map(ContactControllerResponse::getEmail)
                 .anyMatch(requestDto.getUserEmail()::equals);
@@ -169,14 +185,14 @@ class ContactTest {
     }
 
     @Test
-    void T04_Find_All_Contact_Return_Status_OK_Iterable_Containing_Added_DTO(){
+    void T05_Find_All_Contact_Return_Status_OK_Iterable_Containing_Added_DTO(){
 
         List<String> expectedEmails = provideContactsForTests()
                 .map(ContactAddControllerRequest::getUserEmail).collect(Collectors.toList());
 
         List<String> actualEmails = ContactValidator
                 .getInstance()
-                .findAll()
+                .findAll(token)
                 .stream()
                 .map(ContactControllerResponse::getEmail)
                 .collect(Collectors.toList());
@@ -186,11 +202,11 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideContactsForTests")
-    void T05_Delete_Contacts_Should_Return_Status_OK(ContactAddControllerRequest requestDto){
+    void T06_Delete_Contacts_Should_Return_Status_OK(ContactAddControllerRequest requestDto){
 
         ContactControllerResponse contact = ContactValidator.getInstance()
                 .findByEmail
-                        (requestDto.getUserEmail(),HttpStatus.OK)
+                        (requestDto.getUserEmail(),token,HttpStatus.OK)
                 .stream()
                 .filter(x -> x.getEmail()
                         .equals(requestDto.getUserEmail()))
@@ -201,22 +217,22 @@ class ContactTest {
 
             ContactValidator
                     .getInstance()
-                    .deleteContactById(contact.getId(),HttpStatus.OK);
+                    .deleteContactById(contact.getId(),token,HttpStatus.OK);
         }
 
     }
 
     @Test
-    void T06_Delete_Contact_Again_Should_Return_Status_NOT_FOUND(){
+    void T07_Delete_Contact_Again_Should_Return_Status_NOT_FOUND(){
 
         ContactValidator
                 .getInstance()
-                .deleteContactById(idHolder,HttpStatus.NOT_FOUND);
+                .deleteContactById(idHolder,token,HttpStatus.NOT_FOUND);
     }
 
     @ParameterizedTest
     @MethodSource("provideEmptyContactsNamesForTests")
-    void T07_Add_Contact_Empty_Field_Should_Return_Status_CONFLICT(ContactAddControllerRequest requestDto){
+    void T08_Add_Contact_Empty_Field_Should_Return_Status_CONFLICT(ContactAddControllerRequest requestDto){
 
         ContactValidator
                 .getInstance()
@@ -226,7 +242,7 @@ class ContactTest {
 
     @ParameterizedTest
     @MethodSource("provideTooLongAndTooShortContactsValuesForTests")
-    void T08_Add_Contact_Too_Long_Too_Short_Values_Should_Return_Status_CONFLICT(ContactAddControllerRequest requestDto){
+    void T09_Add_Contact_Too_Long_Too_Short_Values_Should_Return_Status_CONFLICT(ContactAddControllerRequest requestDto){
 
         ContactValidator
                 .getInstance()

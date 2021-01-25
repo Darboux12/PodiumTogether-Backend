@@ -7,6 +7,7 @@ import com.podium.service.dto.other.BusinessDayServiceDto;
 import com.podium.service.dto.other.LocalizationServiceDto;
 import com.podium.service.dto.request.PlaceAddServiceRequest;
 import com.podium.service.dto.response.PlaceServiceResponse;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.exception.PodiumEntityTimeConsistencyError;
@@ -25,17 +26,24 @@ public class PlaceService {
     private LocalizationService localizationService;
     private BusinessDayService businessDayService;
     private ResourceService resourceService;
+    private UserService userService;
+    private SecurityService securityService;
 
-    public PlaceService(PlaceRepository placeRepository, DisciplineService disciplineService, LocalizationService localizationService, BusinessDayService businessDayService, ResourceService resourceService) {
+    public PlaceService(PlaceRepository placeRepository, DisciplineService disciplineService, LocalizationService localizationService, BusinessDayService businessDayService, ResourceService resourceService, UserService userService, SecurityService securityService) {
         this.placeRepository = placeRepository;
         this.disciplineService = disciplineService;
         this.localizationService = localizationService;
         this.businessDayService = businessDayService;
         this.resourceService = resourceService;
+        this.userService = userService;
+        this.securityService = securityService;
     }
 
     @Transactional
-    public void addPlace(PlaceAddServiceRequest addServiceDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
+    public void addPlace(PlaceAddServiceRequest addServiceDto, String username) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError, PodiumAuthorityException {
+
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
         if(this.placeRepository.existsByName(addServiceDto.getName()))
             throw new PodiumEntityAlreadyExistException("Place with given name");
@@ -58,7 +66,10 @@ public class PlaceService {
     }
 
     @Transactional
-    public void deletePlaceById(int id) throws PodiumEntityNotFoundException {
+    public void deletePlaceById(int id, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User user = userService.getEntity(username);
+        this.securityService.validateUserAdminAuthority(user);
 
         Place place = this.placeRepository.findById(id)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Place with given id"));
@@ -75,7 +86,10 @@ public class PlaceService {
 
     }
 
-    public Iterable<PlaceServiceResponse> findAllPlace(){
+    public Iterable<PlaceServiceResponse> findAllPlace(String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
         return ServiceConverter
                 .getInstance()
@@ -83,11 +97,10 @@ public class PlaceService {
 
     }
 
-    public boolean existByName(String name){
-        return this.placeRepository.existsByName(name);
-    }
+    public PlaceServiceResponse findPlaceByName(String placeName, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-    public PlaceServiceResponse findPlaceByName(String placeName) throws PodiumEntityNotFoundException {
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
         return ServiceConverter
                 .getInstance()
@@ -97,7 +110,10 @@ public class PlaceService {
 
     }
 
-    public PlaceServiceResponse findPlaceById(int id) throws PodiumEntityNotFoundException {
+    public PlaceServiceResponse findPlaceById(int id, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
         return ServiceConverter
                 .getInstance()

@@ -1,8 +1,10 @@
 package com.podium.service;
 
 import com.podium.dal.entity.Subject;
+import com.podium.dal.entity.User;
 import com.podium.dal.repository.SubjectRepository;
 import com.podium.service.dto.request.SubjectAddServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,20 @@ public class SubjectService {
 
     private SubjectRepository subjectRepository;
 
-    public SubjectService(SubjectRepository subjectRepository) {
+    private UserService userService;
+    private SecurityService securityService;
+
+    public SubjectService(SubjectRepository subjectRepository, UserService userService, SecurityService securityService) {
         this.subjectRepository = subjectRepository;
+        this.userService = userService;
+        this.securityService = securityService;
     }
 
     @Transactional
-    public void addSubject(SubjectAddServiceRequest subjectAddServiceRequest) throws PodiumEntityAlreadyExistException {
+    public void addSubject(SubjectAddServiceRequest subjectAddServiceRequest, String adminUsername) throws PodiumEntityAlreadyExistException, PodiumAuthorityException, PodiumEntityNotFoundException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(this.subjectRepository.existsBySubject(subjectAddServiceRequest.getSubject()))
             throw new PodiumEntityAlreadyExistException("Subject");
@@ -31,7 +41,10 @@ public class SubjectService {
     }
 
     @Transactional
-    public void deleteSubjectByName(String name) throws PodiumEntityNotFoundException {
+    public void deleteSubjectByName(String name,String adminUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(!this.subjectRepository.existsBySubject(name))
             throw new PodiumEntityNotFoundException("Subject");

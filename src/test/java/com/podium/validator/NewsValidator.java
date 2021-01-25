@@ -31,11 +31,12 @@ public class NewsValidator {
         return instance;
     }
 
-    public void add(NewsAddControllerRequest requestDto, HttpStatus status){
+    public void add(NewsAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header("Authorization", "Bearer " + token)
 
                 .multiPart(new MultiPartSpecBuilder(requestDto, ObjectMapperType.JACKSON_2)
                     .fileName("request.json")
@@ -104,11 +105,12 @@ public class NewsValidator {
 
     }
 
-    public void deleteNewsById(int id, HttpStatus status){
+    public void deleteNewsById(int id,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .pathParam("id", id)
                 .when().delete(PodiumPath.server + PodiumEndpoint.deleteNewsById)
                 .then().assertThat()

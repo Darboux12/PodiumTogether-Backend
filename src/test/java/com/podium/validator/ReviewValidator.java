@@ -29,11 +29,12 @@ public class ReviewValidator {
         return instance;
     }
 
-    public void add(ReviewAddControllerRequest requestDto, HttpStatus status){
+    public void add(ReviewAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header("Authorization", "Bearer " + token)
 
                 .multiPart(new MultiPartSpecBuilder(requestDto, ObjectMapperType.JACKSON_2)
                         .fileName("request.json")
@@ -53,13 +54,14 @@ public class ReviewValidator {
 
     }
 
-    public List<ReviewControllerResponse> findAllReviewsByAuthor(String userName, HttpStatus status){
+    public List<ReviewControllerResponse> findAllReviewsByAuthor(String userName,String token, HttpStatus status){
 
         ReviewControllerResponse[] responses =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .pathParam("username",userName)
+                        .header("Authorization", "Bearer " + token)
                         .when()
                         .get(PodiumPath.server + PodiumEndpoint.findReviewsByAuthor)
                         .then().assertThat()
@@ -71,33 +73,36 @@ public class ReviewValidator {
 
     }
 
-    public void deleteReviewById(int id, HttpStatus status){
+    public void deleteReviewById(int id,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("id",id)
+                .header("Authorization", "Bearer " + token)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteReviewById)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public void incrementReviewLikesById(int id, HttpStatus status){
+    public void incrementReviewLikesById(int id,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("id",id)
+                .header("Authorization", "Bearer " + token)
                 .patch(PodiumPath.server + PodiumEndpoint.incrementReviewLikes)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());
 
     }
 
-    public void incrementReviewDislikesById(int id, HttpStatus status){
+    public void incrementReviewDislikesById(int id,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("id",id)
+                .header("Authorization", "Bearer " + token)
                 .patch(PodiumPath.server + PodiumEndpoint.incrementReviewDislikes)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());

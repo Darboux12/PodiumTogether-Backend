@@ -10,7 +10,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 public class PodiumResponse {
-
     private String title;
     private int statusCode;
     private Date timestamp;

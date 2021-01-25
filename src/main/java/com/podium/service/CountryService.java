@@ -1,9 +1,10 @@
 package com.podium.service;
 
-import com.podium.controller.dto.request.CountryAddControllerRequest;
 import com.podium.dal.entity.Country;
+import com.podium.dal.entity.User;
 import com.podium.dal.repository.CountryRepository;
 import com.podium.service.dto.request.CountryAddServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,25 +18,6 @@ public class CountryService {
 
     public CountryService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
-    }
-
-    @Transactional
-    public void addCountry(CountryAddControllerRequest requestDto) throws PodiumEntityAlreadyExistException {
-
-        if(this.countryRepository.existsByName(requestDto.getName()))
-            throw new PodiumEntityAlreadyExistException("Country");
-
-        this.countryRepository.save(this.convertRequestDtoToEntity(requestDto));
-    }
-
-    @Transactional
-    public void deleteCountryByName(String name)
-            throws PodiumEntityNotFoundException {
-
-        if(!this.countryRepository.existsByName(name))
-            throw new PodiumEntityNotFoundException("Country");
-
-        this.countryRepository.deleteByName(name);
     }
 
     public boolean existCountryByName(String countryName){
@@ -55,28 +37,6 @@ public class CountryService {
 
     }
 
-    private Country convertRequestDtoToEntity(CountryAddControllerRequest requestDto){
-
-        return new Country(
-                requestDto.getCountryId(),
-                requestDto.getName(),
-                requestDto.getPrintableName(),
-                requestDto.getIso3(),
-                requestDto.getNumCode()
-        );
-    }
-
-    private Country convertServiceAddDtoToEntity(CountryAddServiceRequest addServiceDto){
-
-        return new Country(
-                addServiceDto.getCountryId(),
-                addServiceDto.getName(),
-                addServiceDto.getPrintableName(),
-                addServiceDto.getIso3(),
-                addServiceDto.getNumCode()
-        );
-    }
-
     public Country getEntity(String countryName) throws PodiumEntityNotFoundException {
 
         return this.countryRepository
@@ -84,7 +44,6 @@ public class CountryService {
                 .orElseThrow(() -> new PodiumEntityNotFoundException("Country"));
 
     }
-
 
 }
 

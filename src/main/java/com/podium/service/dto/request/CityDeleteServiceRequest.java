@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserRoleUpdateServiceRequest {
-    private String adminUserName;
-    private String username;
-    private String role;
+public class CityDeleteServiceRequest {
+    private String city;
 }

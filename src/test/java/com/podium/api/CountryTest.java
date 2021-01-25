@@ -1,9 +1,11 @@
 package com.podium.api;
 
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.CountryAddControllerRequest;
 import com.podium.controller.dto.response.CountryControllerResponse;
 import com.podium.validator.CountryValidator;
+import com.podium.validator.UserValidator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,137 +20,42 @@ class CountryTest {
 
     @BeforeAll
     static void beforeClass(){
-
         TestLogger.setUp();
-
     }
 
-    private static Stream<CountryAddControllerRequest> provideCountriesForTests(){
+    @Test
+    void T01_Find_All_Country_Containing_Countries(){
 
-        return Stream.of(
-
-               new CountryAddControllerRequest("QQ",
-                       "COUNTRY_ONE",
-                       "COUNTRY_ONE_PRINTABLE",
-                       "QQQ",
-                       0
-               ),
-
-                new CountryAddControllerRequest("YY",
-                        "COUNTRY_TWO",
-                        "COUNTRY_TWO_PRINTABLE",
-                        "YYY",
-                        1
-                ),
-
-                new CountryAddControllerRequest("XX",
-                        "COUNTRY_THREE",
-                        "COUNTRY_THREE_PRINTABLE",
-                        "XXX",
-                        2
-                )
-
-        );
-
-    }
-
-    private static Stream<CountryAddControllerRequest> provideCountriesEmptyValuesForTests(){
-
-        return Stream.of(
-
-                new CountryAddControllerRequest("",
-                        "COUNTRY_ONE",
-                        "COUNTRY_ONE_PRINTABLE",
-                        "QQQ",
-                        0
-                ),
-
-                new CountryAddControllerRequest("YY",
-                        "",
-                        "COUNTRY_TWO_PRINTABLE",
-                        "YYY",
-                        1
-                ),
-
-                new CountryAddControllerRequest("XX",
-                        "COUNTRY_THREE",
-                        "",
-                        "XXX",
-                        2
-                ),
-
-                new CountryAddControllerRequest("XX",
-                        "COUNTRY_THREE",
-                        "COUNTRY_TWO_PRINTABLE",
-                        "",
-                        2
-                ),
-
-                new CountryAddControllerRequest("",
-                        "",
-                        "",
-                        "",
-                        0
-                )
-
-        );
-
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideCountriesForTests")
-    void T01_Add_Valid_Countries_Should_Return_Status_OK(CountryAddControllerRequest requestDto){
+        int countriesNumber =
 
         CountryValidator
                 .getInstance()
-                .add(requestDto,HttpStatus.OK);
+                .findAll(HttpStatus.OK).size();
+
+        Assertions.assertEquals(239,countriesNumber);
 
     }
 
     @Test
-    void T02_Find_All_Country_Should_Return_Status_OK_Iterable_Containing_Added_Countries(){
+    void T02_Exist_Country_By_Name_GERMANY(){
 
-        List<String> actualCountries = CountryValidator
-                .getInstance()
-                .findAll()
-                .stream()
-                .map(CountryControllerResponse::getName)
-                .collect(Collectors.toList());
+        boolean isPresent =
+        CountryValidator.getInstance().existCountryByName("GERMANY",HttpStatus.OK);
 
-        List<String> expectedCountries = provideCountriesForTests()
-                .map(CountryAddControllerRequest::getName).collect(Collectors.toList());
-
-        Assertions.assertTrue(actualCountries.containsAll(expectedCountries));
+        Assertions.assertTrue(isPresent);
 
     }
 
-    @ParameterizedTest
-    @MethodSource("provideCountriesForTests")
-    void T03_Delete_Created_Countries_ShouldReturnStatus_OK(CountryAddControllerRequest requestDto){
+    @Test
+    void T03_Find_Country_By_Name_GERMANY(){
 
-        CountryValidator
-                .getInstance()
-                .delete(requestDto.getName(),HttpStatus.OK);
+        String name =
+                CountryValidator
+                        .getInstance()
+                        .findCountryByName("GERMANY",HttpStatus.OK)
+                .getName();
 
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideCountriesForTests")
-    void T04_Delete_Created_Countries_Again_ShouldReturnStatus_NOTFOUND(CountryAddControllerRequest requestDto){
-
-        CountryValidator
-                .getInstance()
-                .delete(requestDto.getName(),HttpStatus.NOT_FOUND);
-
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideCountriesEmptyValuesForTests")
-    void T05_Add_Country_Empty_Name_ShouldReturnStatus_CONFLICT(CountryAddControllerRequest requestDto){
-
-        CountryValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+        Assertions.assertEquals("GERMANY",name);
 
     }
 

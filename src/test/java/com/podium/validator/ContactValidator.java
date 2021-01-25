@@ -40,13 +40,14 @@ public class ContactValidator {
 
     }
 
-    public List<ContactControllerResponse> findAll(){
+    public List<ContactControllerResponse> findAll(String token){
 
         ContactControllerResponse[] dtos =
 
                 given()
                         .spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
+                        .header("Authorization", "Bearer " + token)
                         .when().get(PodiumPath.server + PodiumEndpoint.findAllContact)
                         .then().assertThat()
                         .statusCode(HttpStatus.OK.value())
@@ -57,12 +58,13 @@ public class ContactValidator {
 
     }
 
-    public List<ContactControllerResponse> findByEmail(String email, HttpStatus status){
+    public List<ContactControllerResponse> findByEmail(String email,String token, HttpStatus status){
 
         ContactControllerResponse[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
+                        .header("Authorization", "Bearer " + token)
                         .pathParam("email",email)
                         .when()
                         .get(PodiumPath.server + PodiumEndpoint.findAllContactByEmail)
@@ -74,12 +76,13 @@ public class ContactValidator {
 
     }
 
-    public List<ContactControllerResponse> findBySubject(String subject, HttpStatus status){
+    public List<ContactControllerResponse> findBySubject(String subject,String token, HttpStatus status){
 
         ContactControllerResponse[] dtos =
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
+                        .header("Authorization", "Bearer " + token)
                         .pathParam("subject",subject)
                         .when()
                         .get(PodiumPath.server + PodiumEndpoint.findAllContactBySubject)
@@ -91,9 +94,10 @@ public class ContactValidator {
 
     }
 
-    public void deleteContactById(int id, HttpStatus status){
+    public void deleteContactById(int id,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .pathParam("id",id)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteContact)
@@ -101,15 +105,5 @@ public class ContactValidator {
                 .spec(TestSpecification.buildResponseSpec());
 
     }
-
-
-
-
-
-
-
-
-
-
 
 }

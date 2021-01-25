@@ -24,7 +24,7 @@ public class StarRatingService {
     public void deleteRating(StarRating rating) throws PodiumEntityNotFoundException {
 
         RatingCategory category =
-                this.ratingCategoryService.findCategoryByCategory(rating.getCategory().getCategory());
+                this.ratingCategoryService.getEntity(rating.getCategory().getCategory());
 
         if(!this.ratingRepository.existsByCategoryAndRating(category,rating.getRating()))
             throw new PodiumEntityNotFoundException("Rating");
@@ -37,7 +37,7 @@ public class StarRatingService {
     public StarRating getEntity(String categoryName, int rating) throws PodiumEntityNotFoundException {
 
         RatingCategory category =
-                this.ratingCategoryService.findCategoryByCategory(categoryName);
+                this.ratingCategoryService.getEntity(categoryName);
 
         return this.ratingRepository.findByCategoryAndRating(category,rating)
                 .orElse(new StarRating(category,rating));

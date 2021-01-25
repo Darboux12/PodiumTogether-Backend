@@ -1,14 +1,19 @@
 package com.podium.controller;
 
+import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
+import com.podium.controller.dto.converter.ControllerRequestConverter;
 import com.podium.controller.dto.request.UserRoleUpdateControllerRequest;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.service.AdminService;
-import com.podium.service.ResourceService;
-import com.podium.service.dto.request.UserRoleUpdateServiceRequest;
-import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -21,24 +26,25 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @GetMapping("/resources/synchronize")
-    public ResponseEntity synchronizeResources(){
-        this.adminService.synchronizeResourcesWithSystemFiles();
+    // ADMIN
+    @GetMapping(PodiumEndpoint.synchronizeResources)
+    public ResponseEntity synchronizeResources(Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        this.adminService.synchronizeResourcesWithSystemFiles(authentication.getName());
         return ResponseEntity.ok().build();
     }
 
+    // ADMIN
     @PatchMapping(PodiumEndpoint.grantUserRole)
-    public ResponseEntity grantUserRole(@RequestBody UserRoleUpdateControllerRequest request) throws PodiumEntityNotFoundException {
-        this.adminService.grantUserRole(this.convertGrantRoleRequestToServiceRequest(request));
+    public ResponseEntity grantUserRole(@RequestBody UserRoleUpdateControllerRequest request, Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException, PodiumUserRoleAlreadyGivenException, PodiumSelfPromotionError {
+        this.adminService.grantUserRole(ControllerRequestConverter.getInstance().convertGrantRoleRequestToServiceRequest(request,authentication.getName()));
         return ResponseEntity.ok().body("User role was successfully granted!");
     }
 
-    private UserRoleUpdateServiceRequest convertGrantRoleRequestToServiceRequest(UserRoleUpdateControllerRequest request){
-        return new UserRoleUpdateServiceRequest(
-                request.getUsername(),
-                request.getRole()
-        );
+    // ADMIN
+    @PatchMapping(PodiumEndpoint.degradeUserRole)
+    public ResponseEntity degradeUserRole(@RequestBody UserRoleUpdateControllerRequest request, Authentication authentication) throws PodiumEntityNotFoundException, PodiumUserRoleException, PodiumUserDefaultRoleException, PodiumAuthorityException, PodiumSelfDegradationException {
+        this.adminService.degradeUserRole(ControllerRequestConverter.getInstance().convertGrantRoleRequestToServiceRequest(request,authentication.getName()));
+        return ResponseEntity.ok().body("User role was successfully taken away!");
     }
-
 
 }

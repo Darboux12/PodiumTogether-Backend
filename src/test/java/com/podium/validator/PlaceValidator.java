@@ -11,6 +11,7 @@ import io.restassured.mapper.ObjectMapperType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
@@ -27,11 +28,12 @@ public class PlaceValidator {
         return instance;
     }
 
-    public void add(PlaceAddControllerRequest requestDto, HttpStatus status){
+    public void add(PlaceAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header("Authorization", "Bearer " + token)
 
                 .multiPart(new MultiPartSpecBuilder(requestDto, ObjectMapperType.JACKSON_2)
                         .fileName("request.json")
@@ -57,11 +59,12 @@ public class PlaceValidator {
 
     }
 
-    public void deletePlaceById(int id, HttpStatus status){
+    public void deletePlaceById(int id,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .pathParam("id", id)
                 .when().delete(PodiumPath.server + PodiumEndpoint.deletePlaceById)
                 .then().assertThat()
@@ -69,7 +72,7 @@ public class PlaceValidator {
                 .spec(TestSpecification.buildResponseSpec());
     }
 
-    public PlaceControllerResponse findByName(String name, HttpStatus status){
+    public PlaceControllerResponse findByName(String name,String token, HttpStatus status){
 
         if(status == HttpStatus.OK)
 
@@ -77,6 +80,7 @@ public class PlaceValidator {
 
                 given().spec(TestSpecification.buildRequestSpec())
                         .contentType(ContentType.JSON)
+                        .header("Authorization", "Bearer " + token)
                         .pathParam("name",name)
                         .when()
                         .get(PodiumPath.server + PodiumEndpoint.findPlaceByName)
@@ -88,6 +92,38 @@ public class PlaceValidator {
 
             given().spec(TestSpecification.buildRequestSpec())
                     .contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer " + token)
+                    .pathParam("name",name)
+                    .when()
+                    .get(PodiumPath.server + PodiumEndpoint.findPlaceByName)
+                    .then().assertThat().statusCode(status.value())
+                    .spec(TestSpecification.buildResponseSpec());
+
+
+        return null;
+
+    }
+
+    public List<PlaceControllerResponse> findAll(String name,String token, HttpStatus status){
+
+        if(status == HttpStatus.OK)
+
+            return
+
+                    given().spec(TestSpecification.buildRequestSpec())
+                            .contentType(ContentType.JSON)
+                            .header("Authorization", "Bearer " + token)
+                            .when()
+                            .get(PodiumPath.server + PodiumEndpoint.findAllPlaces)
+                            .then().assertThat().statusCode(status.value())
+                            .spec(TestSpecification.buildResponseSpec())
+                            .extract().as((Type) PlaceControllerResponse[].class);
+
+        else
+
+            given().spec(TestSpecification.buildRequestSpec())
+                    .contentType(ContentType.JSON)
+                    .header("Authorization", "Bearer " + token)
                     .pathParam("name",name)
                     .when()
                     .get(PodiumPath.server + PodiumEndpoint.findPlaceByName)

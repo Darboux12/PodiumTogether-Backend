@@ -17,4 +17,5 @@ public class UserRoleUpdateControllerRequest {
     private String username;
     @PodiumTextNotEmpty
     private String role;
+
 }

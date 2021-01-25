@@ -2,8 +2,10 @@ package com.podium.service;
 
 import com.podium.dal.entity.News;
 import com.podium.dal.entity.PodiumResource;
+import com.podium.dal.entity.User;
 import com.podium.dal.repository.NewsRepository;
 import com.podium.service.dto.request.NewsAddServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,21 @@ public class NewsService {
     private NewsRepository newsRepository;
 
     private ResourceService resourceService;
+    private UserService userService;
+    private SecurityService securityService;
 
-    public NewsService(NewsRepository newsRepository, ResourceService resourceService) {
+    public NewsService(NewsRepository newsRepository, ResourceService resourceService, UserService userService, SecurityService securityService) {
         this.newsRepository = newsRepository;
         this.resourceService = resourceService;
+        this.userService = userService;
+        this.securityService = securityService;
     }
 
     @Transactional
-    public void addNews(NewsAddServiceRequest newsAddServiceRequest) throws PodiumEntityAlreadyExistException {
+    public void addNews(NewsAddServiceRequest newsAddServiceRequest, String adminUsername) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(this.newsRepository.existsByTitle(newsAddServiceRequest.getTitle()))
             throw new PodiumEntityAlreadyExistException("News with given title");
@@ -34,7 +43,10 @@ public class NewsService {
     }
 
     @Transactional
-    public void deleteNewsById(int id) throws PodiumEntityNotFoundException {
+    public void deleteNewsById(int id, String adminUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         News news = this.newsRepository.findById(id)
                 .orElseThrow(() -> new PodiumEntityNotFoundException("News with given id"));

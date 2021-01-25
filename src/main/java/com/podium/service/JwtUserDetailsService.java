@@ -1,7 +1,6 @@
 package com.podium.service;
 
 import com.podium.dal.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +25,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         if (user != null)
         {
+
             return new User(user.getUsername(), user.getPassword(),
                     new ArrayList<>());
         } else {

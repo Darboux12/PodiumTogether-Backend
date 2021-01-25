@@ -1,10 +1,12 @@
 package com.podium.api;
 
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.DisciplineAddControllerRequest;
 import com.podium.controller.dto.response.DisciplineControllerResponse;
 import com.podium.constant.PodiumLimits;
 import com.podium.validator.DisciplineValidator;
+import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +19,8 @@ import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class DisciplineTest {
+
+    private static String token = "";
 
     private static Stream<String> provideDisciplinesForTests(){
 
@@ -57,47 +61,59 @@ class DisciplineTest {
         TestLogger.setUp();
     }
 
+    @Test
+    void T01_Sign_In_As_Admin_User_Get_Token(){
+
+        token =
+
+                UserValidator
+                        .getInstance()
+                        .signIn(new JwtControllerRequest("admin","adminadmin"),HttpStatus.OK)
+                        .getToken();
+
+    }
+
     @ParameterizedTest
     @MethodSource("provideDisciplinesForTests")
-    void T01_Add_Valid_Discipline_Should_Return_Status_OK(String discipline){
+    void T02_Add_Valid_Discipline_Should_Return_Status_OK(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineAddControllerRequest(discipline),HttpStatus.OK);
+                .add(new DisciplineAddControllerRequest(discipline),token,HttpStatus.OK);
 
     }
 
     @ParameterizedTest
     @MethodSource("provideEmptyValuesForTests")
-    void T02_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(String discipline){
+    void T03_Add_Discipline_Empty_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineAddControllerRequest(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddControllerRequest(discipline),token,HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
     @MethodSource("provideToShortDisciplinesForTests")
-    void T03_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(String discipline){
+    void T04_Add_Discipline_Too_Short_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineAddControllerRequest(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddControllerRequest(discipline),token,HttpStatus.CONFLICT);
 
     }
 
     @ParameterizedTest
     @MethodSource("provideToLongDisciplinesForTests")
-    void T04_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(String discipline){
+    void T05_Add_Discipline_Too_Long_Name_Should_Return_Status_CONFLICT(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .add(new DisciplineAddControllerRequest(discipline),HttpStatus.CONFLICT);
+                .add(new DisciplineAddControllerRequest(discipline),token,HttpStatus.CONFLICT);
 
     }
 
     @Test
-    void T05_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Disciplines(){
+    void T06_Find_All_Discipline_Should_Return_Status_OK_Containing_Added_Disciplines(){
 
         List<String> responseDisciplines = DisciplineValidator
                 .getInstance()
@@ -113,7 +129,7 @@ class DisciplineTest {
 
     @ParameterizedTest
     @MethodSource("provideDisciplinesForTests")
-    void T06_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(String discipline){
+    void T07_Find_Discipline_By_Name_ShouldReturn_Status_OK_Containing_Added_Discipline(String discipline){
 
         DisciplineControllerResponse responseDto =
 
@@ -126,7 +142,7 @@ class DisciplineTest {
     }
 
     @Test
-    void T07_Find_Discipline_By_Name_Not_Exist_ShouldReturn_Status_NOT_FOUND(){
+    void T08_Find_Discipline_By_Name_Not_Exist_ShouldReturn_Status_NOT_FOUND(){
 
         DisciplineValidator
                 .getInstance()
@@ -136,7 +152,7 @@ class DisciplineTest {
 
     @ParameterizedTest
     @MethodSource("provideDisciplinesForTests")
-    void T08_Exist_Discipline_By_Name_ShouldReturn_TRUE(String discipline){
+    void T09_Exist_Discipline_By_Name_ShouldReturn_TRUE(String discipline){
 
         boolean isPresent =
 
@@ -149,7 +165,7 @@ class DisciplineTest {
     }
 
     @Test
-    void T09_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_FALSE(){
+    void T10_Exist_Discipline_By_Name_Not_Exist_ShouldReturn_FALSE(){
 
         boolean isPresent =
 
@@ -163,21 +179,21 @@ class DisciplineTest {
 
     @ParameterizedTest
     @MethodSource("provideDisciplinesForTests")
-    void T10_deleteCreatedDiscipline_ShouldReturnStatus_OK(String discipline){
+    void T11_deleteCreatedDiscipline_ShouldReturnStatus_OK(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .deleteDisciplineByName(discipline,HttpStatus.OK);
+                .deleteDisciplineByName(discipline,token,HttpStatus.OK);
 
     }
 
     @ParameterizedTest
     @MethodSource("provideDisciplinesForTests")
-    void T11_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(String discipline){
+    void T12_deleteCreatedDisciplineAgain_ShouldReturnStatus_NOTFOUND(String discipline){
 
         DisciplineValidator
                 .getInstance()
-                .deleteDisciplineByName(discipline,HttpStatus.NOT_FOUND);
+                .deleteDisciplineByName(discipline,token,HttpStatus.NOT_FOUND);
 
     }
 

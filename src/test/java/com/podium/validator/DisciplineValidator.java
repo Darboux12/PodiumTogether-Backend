@@ -27,11 +27,12 @@ public class DisciplineValidator {
         return instance;
     }
 
-    public void add(DisciplineAddControllerRequest requestDto, HttpStatus status){
+    public void add(DisciplineAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(requestDto)
                 .when()
                 .post(PodiumPath.server + PodiumEndpoint.addDiscipline)
@@ -50,7 +51,7 @@ public class DisciplineValidator {
                         .contentType(ContentType.JSON)
                         .when().get(PodiumPath.server + PodiumEndpoint.findAllDiscipline)
                         .then().assertThat()
-                        .statusCode(HttpStatus.OK.value())
+                        .statusCode(status.value())
                         .spec(TestSpecification.buildResponseSpec())
                         .extract().as((Type) DisciplineControllerResponse[].class);
 
@@ -100,9 +101,10 @@ public class DisciplineValidator {
 
     }
 
-    public void deleteDisciplineByName(String disciplineName, HttpStatus status){
+    public void deleteDisciplineByName(String disciplineName,String token,HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .pathParam("discipline",disciplineName)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteDisciplineByName)

@@ -29,11 +29,12 @@ public class CityValidator {
         return instance;
     }
 
-    public void add(CityAddControllerRequest requestDto, HttpStatus status){
+    public void add(CityAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(requestDto)
                 .when().post(PodiumPath.server + PodiumEndpoint.addCity)
                 .then().assertThat()
@@ -108,9 +109,10 @@ public class CityValidator {
 
     }
 
-    public void deleteCityByName(String cityName, HttpStatus status){
+    public void deleteCityByName(String cityName,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
+                .header("Authorization", "Bearer " + token)
                 .when()
                 .pathParam("name",cityName)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteCityByName)

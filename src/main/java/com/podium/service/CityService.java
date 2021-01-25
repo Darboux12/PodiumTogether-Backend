@@ -1,7 +1,10 @@
 package com.podium.service;
 
 import com.podium.dal.entity.City;
+import com.podium.dal.entity.User;
 import com.podium.dal.repository.CityRepository;
+import com.podium.service.dto.request.CityDeleteServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import com.podium.service.dto.request.CityAddServiceRequest;
@@ -13,21 +16,21 @@ import javax.transaction.Transactional;
 public class CityService {
 
     private CityRepository cityRepository;
+    private SecurityService securityService;
     private UserService userService;
 
-    public CityService(CityRepository cityRepository, UserService userService) {
+    public CityService(CityRepository cityRepository, SecurityService securityService, UserService userService) {
         this.cityRepository = cityRepository;
+        this.securityService = securityService;
         this.userService = userService;
     }
 
     @Transactional
-    public void addCity(CityAddServiceRequest cityAddServiceRequest)
-            throws PodiumEntityAlreadyExistException {
+    public void addCity(CityAddServiceRequest cityAddServiceRequest, String adminUsername)
+            throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumAuthorityException {
 
-
-
-
-
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(this.cityRepository.existsByCity(cityAddServiceRequest.getCity()))
             throw new PodiumEntityAlreadyExistException("City");
@@ -36,9 +39,12 @@ public class CityService {
     }
 
     @Transactional
-    public void deleteCityByName(String cityName) throws PodiumEntityNotFoundException {
+    public void deleteCityByName(CityDeleteServiceRequest request, String adminUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-        City city = this.findCityByName(cityName);
+        User admin = userService.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
+
+        City city = this.findCityByName(request.getCity());
 
         this.cityRepository.delete(city);
 

@@ -27,11 +27,12 @@ public class GenderValidator {
         return instance;
     }
 
-    public void add(GenderAddControllerRequest requestDto, HttpStatus status){
+    public void add(GenderAddControllerRequest requestDto,String token, HttpStatus status){
 
         given()
                 .spec(TestSpecification.buildRequestSpec())
                 .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
                 .body(requestDto)
                 .when().post(PodiumPath.server + PodiumEndpoint.addGender)
                 .then().assertThat()
@@ -87,11 +88,12 @@ public class GenderValidator {
 
     }
 
-    public void deleteGenderByName(String genderName, HttpStatus status){
+    public void deleteGenderByName(String genderName,String token, HttpStatus status){
 
         given().spec(TestSpecification.buildRequestSpec())
                 .when()
                 .pathParam("name",genderName)
+                .header("Authorization", "Bearer " + token)
                 .delete(PodiumPath.server + PodiumEndpoint.deleteGenderByName)
                 .then().assertThat().statusCode(status.value())
                 .spec(TestSpecification.buildResponseSpec());

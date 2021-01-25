@@ -10,6 +10,7 @@ import com.podium.dal.repository.RoleRepository;
 import com.podium.dal.repository.UserRepository;
 import com.podium.service.dto.request.ProfileUpdateServiceRequest;
 import com.podium.service.dto.request.SignUpServiceRequest;
+import com.podium.service.exception.PodiumAuthorityException;
 import com.podium.service.exception.PodiumEntityAlreadyExistException;
 import com.podium.service.exception.PodiumEntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,15 +30,17 @@ public class UserService {
     private RoleService roleService;
     private CountryService countryService;
     private ResourceService resourceService;
+    private SecurityService securityService;
 
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, RoleService roleService, CountryRepository countryRepository, CountryService countryService, ResourceService resourceService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, RoleService roleService, CountryRepository countryRepository, CountryService countryService, ResourceService resourceService, SecurityService securityService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.countryService = countryService;
         this.resourceService = resourceService;
+        this.securityService = securityService;
     }
 
     @Transactional
@@ -53,7 +56,10 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(ProfileUpdateServiceRequest requestDto) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException {
+    public void updateUser(ProfileUpdateServiceRequest requestDto, String username) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User user = this.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
         if(!this.isUpdateDataConsistent(requestDto))
             throw new PodiumEntityAlreadyExistException("User with given username or email");
@@ -62,7 +68,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUserByUsername(String username) throws PodiumEntityNotFoundException {
+    public void deleteUserByUsername(String username,String adminUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = this.getEntity(adminUsername);
+        this.securityService.validateUserAdminAuthority(admin);
 
         if(!this.userRepository.existsByUsername(username))
             throw new PodiumEntityNotFoundException("User with given username");
@@ -70,23 +79,30 @@ public class UserService {
         this.userRepository.deleteByUsername(username);
     }
 
-    public User findUserByUsername(String username) throws PodiumEntityNotFoundException {
+    public User findUserByUsername(String usernameToFind, String authorUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-        return this.userRepository.findByUsername(username).orElseThrow(() ->
+        System.out.println(usernameToFind);
 
+        User user = this.userRepository.findByUsername(usernameToFind).orElseThrow(() ->
                 new PodiumEntityNotFoundException("User with given username"));
 
+        User author = this.userRepository.findByUsername(authorUsername).orElseThrow(() ->
+                new PodiumEntityNotFoundException("User with given username"));
+
+        if(!(this.securityService.isUserAdminOrModerator(author) || user.getUsername().equals(authorUsername)))
+            throw new PodiumAuthorityException("admin or moderator");
+
+        return user;
 
     }
 
-    public User findUserById(int id) throws PodiumEntityNotFoundException {
+    public Iterable<User> findAllUsers(String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-        return  this.userRepository.findById(id).orElseThrow(() ->
+        User user = this.getEntity(username);
 
-                new PodiumEntityNotFoundException("User with given id"));
-    }
+        if(!(this.securityService.isUserAdminOrModerator(user) || user.getUsername().equals(username)))
+            throw new PodiumAuthorityException("admin or moderator");
 
-    public Iterable<User> findAllUsers(){
         return this.userRepository.findAll();
     }
 

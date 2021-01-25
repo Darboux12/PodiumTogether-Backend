@@ -1,10 +1,12 @@
 package com.podium.api;
 
 import com.podium.constant.PodiumLimits;
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.CityAddControllerRequest;
 import com.podium.controller.dto.response.CityControllerResponse;
 import com.podium.validator.CityValidator;
+import com.podium.validator.UserValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,6 +21,8 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 class CitiesTest {
 
+    private static String token = "";
+
     private static Stream<String> provideCityNamesForTests(){
 
         return Stream.of(
@@ -28,13 +32,10 @@ class CitiesTest {
                 "TEST_CITY_NAME_FOUR",
                 "TEST_CITY_NAME_FIVE"
         );
-
     }
 
     private static Stream<String> provideEmptyCityNamesForTests(){
-
         return Stream.of("", " ", "  ", "       ");
-
     }
 
     private static Stream<String> provideTooLongAndTooShortCityNamesForTests(){
@@ -50,46 +51,56 @@ class CitiesTest {
 
     }
 
-
-
     @BeforeAll
     static void beforeClass(){
         TestLogger.setUp();
     }
 
+    @Test
+    void T01_Sign_In_As_Admin_User_Get_Token(){
+
+        token =
+
+                UserValidator
+                        .getInstance()
+                        .signIn(new JwtControllerRequest("admin","adminadmin"),HttpStatus.OK)
+                        .getToken();
+
+    }
+
     @ParameterizedTest
     @MethodSource("provideCityNamesForTests")
-    void T01_Add_Valid_City_Should_Return_Status_OK(String city){
+    void T02_Add_Valid_City_Should_Return_Status_OK(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityAddControllerRequest(city),HttpStatus.OK);
+                .add(new CityAddControllerRequest(city),token,HttpStatus.OK);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T02_Add_Same_City_Again_Should_Return_Status_CONFLICT(String city){
+    void T03_Add_Same_City_Again_Should_Return_Status_CONFLICT(String city){
         CityValidator
                 .getInstance()
-                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),token,HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
     @MethodSource("provideEmptyCityNamesForTests")
-    void T03_Add_Empty_City_Should_Return_Status_CONFLICT(String city){
+    void T04_Add_Empty_City_Should_Return_Status_CONFLICT(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),token,HttpStatus.CONFLICT);
     }
 
     @ParameterizedTest
     @MethodSource("provideTooLongAndTooShortCityNamesForTests")
-    void T04_Add_Too_Long_And_Too_Short_City_Should_Return_Status_CONFLICT(String city){
+    void T05_Add_Too_Long_And_Too_Short_City_Should_Return_Status_CONFLICT(String city){
 
         CityValidator
                 .getInstance()
-                .add(new CityAddControllerRequest(city),HttpStatus.CONFLICT);
+                .add(new CityAddControllerRequest(city),token,HttpStatus.CONFLICT);
     }
 
     @Test
@@ -125,7 +136,7 @@ class CitiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_NOT_EXISTING_CITY"})
-    void T10_Find_City_By_Name_Not_Exist_Should_Return_Status_NOT_FOUND(String city){
+    void T08_Find_City_By_Name_Not_Exist_Should_Return_Status_NOT_FOUND(String city){
 
         CityValidator
                 .getInstance()
@@ -135,7 +146,7 @@ class CitiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T11_Exist_City_By_Name_Should_Return_Status_OK(String city){
+    void T09_Exist_City_By_Name_Should_Return_Status_OK(String city){
 
         CityValidator
                 .getInstance()
@@ -145,17 +156,17 @@ class CitiesTest {
 
     @ParameterizedTest
     @MethodSource("provideCityNamesForTests")
-    void T12_Delete_City_Should_Return_Status_OK_Deleting_Added_Cities(String city){
+    void T10_Delete_City_Should_Return_Status_OK_Deleting_Added_Cities(String city){
 
         CityValidator
                 .getInstance()
-                .deleteCityByName(city,HttpStatus.OK);
+                .deleteCityByName(city,token,HttpStatus.OK);
 
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T13_Exist_Deleted_City_By_Name_Should_Return_FALSE(String city){
+    void T11_Exist_Deleted_City_By_Name_Should_Return_FALSE(String city){
 
         boolean isPresent =
 
@@ -169,11 +180,11 @@ class CitiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"TEST_CITY_NAME_ONE","TEST_CITY_NAME_TWO"})
-    void T14_Delete_Created_City_Again_Should_Return_Status_NOTFOUND(String city){
+    void T12_Delete_Created_City_Again_Should_Return_Status_NOTFOUND(String city){
 
         CityValidator
                 .getInstance()
-                .deleteCityByName(city,HttpStatus.NOT_FOUND);
+                .deleteCityByName(city,token,HttpStatus.NOT_FOUND);
     }
 
 }

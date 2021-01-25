@@ -1,5 +1,6 @@
 package com.podium.api;
 
+import com.podium.controller.dto.request.JwtControllerRequest;
 import com.podium.logger.TestLogger;
 import com.podium.controller.dto.request.SignUpControllerRequest;
 import com.podium.constant.PodiumLimits;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Stream;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class SignUpTest {
@@ -22,7 +24,9 @@ import java.util.Date;
     private static String initialEmailTwo;
     private static String valueHolder;
 
-     SignUpTest(){}
+    private static String adminToken = "";
+
+    SignUpTest(){}
 
     @BeforeAll
     static void beforeClass() throws ParseException {
@@ -30,16 +34,16 @@ import java.util.Date;
         TestLogger.setUp();
 
         signUpControllerRequestOne = new SignUpControllerRequest(
-                "TEST USERNAME_ONE",
-                "TEST_MAIL_ONE@gmail.com",
+                "JOHN_DOE_ONE",
+                "JOHN_DOE_ONE@gmail.com",
                 "TEST PASSWORD ONE",
                 "POLAND",
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
         );
 
         signUpControllerRequestTwo = new SignUpControllerRequest(
-                "TEST USERNAME_TWO",
-                "TEST_MAIL_TWO@gmail.com",
+                "JOHN_DOE_TWO",
+                "TJOHN_DOE_TWO@gmail.com",
                 "TEST PASSWORD TWO",
                 "GERMANY",
                 new SimpleDateFormat("yyyy-MM-dd").parse("1998-02-13")
@@ -59,24 +63,36 @@ import java.util.Date;
 
     }
 
+   @Test
+   void T02_Sign_In_As_Admin_User_Get_Token(){
+
+      adminToken =
+
+              UserValidator
+                      .getInstance()
+                      .signIn(new JwtControllerRequest("admin","adminadmin"),HttpStatus.OK)
+                      .getToken();
+
+   }
+
     @Test
-    void T02_Find_Signed_Up_User_By_Username_Should_Return_Status_OK_And_DTO(){
+    void T03_Find_Signed_Up_User_By_Username_Should_Return_Status_OK_And_DTO(){
 
         UserControllerResponse responseDto =
 
         UserValidator
                 .getInstance()
-                .findUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.OK);
+                .findUserByUsername(signUpControllerRequestOne.getUsername(),adminToken,HttpStatus.OK);
 
         Assertions.assertEquals(signUpControllerRequestOne.getUsername(),responseDto.getUsername());
     }
 
     @Test
-    void T03_Find_All_User_Should_Return_Status_OK_And_Iterable_DTO(){
+    void T04_Find_All_User_Should_Return_Status_OK_And_Iterable_DTO(){
 
         boolean isPresent = UserValidator
                 .getInstance()
-                .findAll()
+                .findAll(adminToken,HttpStatus.OK)
                 .stream()
                 .map(UserControllerResponse::getUsername)
                 .anyMatch(signUpControllerRequestOne.getUsername()::equals);
@@ -86,16 +102,7 @@ import java.util.Date;
     }
 
     @Test
-    void T04_Find_User_By_Username_Not_Exist_Should_Return_Status_NOTFOUND(){
-
-        UserValidator
-                .getInstance()
-                .findUserByUsername("NonExistentUsername",HttpStatus.NOT_FOUND);
-
-    }
-
-    @Test
-    void T05_Sign_Up_Same_User_Should_Return_Status_CONFLICT() throws ParseException {
+    void T06_Sign_Up_Same_User_Should_Return_Status_CONFLICT() throws ParseException {
 
         UserValidator
                 .getInstance()
@@ -104,7 +111,7 @@ import java.util.Date;
     }
 
     @Test
-    void T06_Sign_Up_User_With_Same_Username_Should_Return_Status_CONFLICT() throws ParseException {
+    void T07_Sign_Up_User_With_Same_Username_Should_Return_Status_CONFLICT() throws ParseException {
 
         signUpControllerRequestTwo.setUsername(signUpControllerRequestOne.getUsername());
 
@@ -117,7 +124,7 @@ import java.util.Date;
     }
 
     @Test
-    void T07_Sign_Up_User_Existing_Email_Should_Return_Status_CONFLICT() throws ParseException {
+    void T08_Sign_Up_User_Existing_Email_Should_Return_Status_CONFLICT() throws ParseException {
 
         signUpControllerRequestTwo.setEmail(signUpControllerRequestOne.getEmail());
 
@@ -129,7 +136,7 @@ import java.util.Date;
     }
 
     @Test
-    void T08_Sign_Up_User_Empty_Username_Should_Return_Status_CONFLICT() throws ParseException {
+    void T09_Sign_Up_User_Empty_Username_Should_Return_Status_CONFLICT() throws ParseException {
 
         valueHolder = signUpControllerRequestOne.getUsername();
         signUpControllerRequestOne.setUsername("");
@@ -142,7 +149,7 @@ import java.util.Date;
     }
 
     @Test
-    void T09_Sign_Up_ToShortUsername_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
+    void T10_Sign_Up_ToShortUsername_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minUsernameLength - 1);
 
@@ -157,7 +164,7 @@ import java.util.Date;
     }
 
     @Test
-    void T10_SignUpUserToLongUsername_Should_Return_Status_CONFLICT() throws ParseException {
+    void T11_SignUpUserToLongUsername_Should_Return_Status_CONFLICT() throws ParseException {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxUsernameLength + 1);
 
@@ -172,7 +179,7 @@ import java.util.Date;
     }
 
     @Test
-    void T11_signUpUserEmptyEmail_Should_Return_Status_CONFLICT() throws ParseException {
+    void T12_signUpUserEmptyEmail_Should_Return_Status_CONFLICT() throws ParseException {
 
 
         valueHolder = signUpControllerRequestOne.getEmail();
@@ -186,7 +193,7 @@ import java.util.Date;
     }
 
     @Test
-    void T12_signUpUserInvalidEmail_Should_Return_Status_CONFLICT() throws ParseException {
+    void T13_signUpUserInvalidEmail_Should_Return_Status_CONFLICT() throws ParseException {
 
         valueHolder = signUpControllerRequestOne.getEmail();
         signUpControllerRequestOne.setEmail("invalidEmail@");
@@ -199,7 +206,7 @@ import java.util.Date;
     }
 
     @Test
-    void T13_signUpUserToLongEmail_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
+    void T14_signUpUserToLongEmail_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxEmailLength + 1);
 
@@ -214,7 +221,7 @@ import java.util.Date;
     }
 
     @Test
-    void T14_signUpUserToShortPassword_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
+    void T15_signUpUserToShortPassword_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
 
         String toShort = StringUtils.repeat("*", PodiumLimits.minPasswordLength - 1);
 
@@ -229,7 +236,7 @@ import java.util.Date;
     }
 
     @Test
-    void T15_signUpUserToShortPassword_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
+    void T16_signUpUserToShortPassword_PodiumLimits_Should_Return_Status_CONFLICT() throws ParseException {
 
         String toLong = StringUtils.repeat("*", PodiumLimits.maxPasswordLength + 1);
 
@@ -244,7 +251,7 @@ import java.util.Date;
     }
 
     @Test
-    void T16_signUpUserEmptyCountry_Should_Return_Status_CONFLICT() throws ParseException {
+    void T17_signUpUserEmptyCountry_Should_Return_Status_CONFLICT() throws ParseException {
 
         valueHolder = signUpControllerRequestOne.getCountry();
         signUpControllerRequestOne.setCountry("");
@@ -257,7 +264,7 @@ import java.util.Date;
     }
 
     @Test
-    void T17_signUpUserBirthdayInFuture_Should_Return_Status_CONFLICT() throws ParseException {
+    void T18_signUpUserBirthdayInFuture_Should_Return_Status_CONFLICT() throws ParseException {
 
         Date tmpDate = signUpControllerRequestOne.getBirthday();
         signUpControllerRequestOne.setBirthday(new SimpleDateFormat("dd/MM/yyyy").parse("31/12/2100"));
@@ -270,20 +277,20 @@ import java.util.Date;
     }
 
     @Test
-    void T18_Delete_User_Should_Return_Status_OK() throws ParseException {
+    void T19_Delete_User_Should_Return_Status_OK() throws ParseException {
 
         UserValidator
                 .getInstance()
-                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.OK);
+                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),adminToken,HttpStatus.OK);
 
     }
 
     @Test
-    void T19_Delete_Same_User_Should_Return_Status_NOTFOUND() throws ParseException{
+    void T20_Delete_Same_User_Should_Return_Status_NOTFOUND() throws ParseException{
 
         UserValidator
                 .getInstance()
-                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),HttpStatus.NOT_FOUND);
+                .deleteUserByUsername(signUpControllerRequestOne.getUsername(),adminToken,HttpStatus.NOT_FOUND);
     }
 
 }
