@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,10 @@ public class Review {
     @NotNull
     @Column(name = "opinion")
     private String opinion;
+
+    @NotNull
+    @Column(name = "date")
+    private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -77,5 +82,6 @@ public class Review {
         this.images = images;
         this.likes = likes;
         this.dislikes = dislikes;
+        this.date = new Date();
     }
 }

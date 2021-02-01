@@ -2,6 +2,7 @@ package com.podium.validator;
 
 import com.podium.constant.PodiumEndpoint;
 import com.podium.constant.PodiumPath;
+import com.podium.controller.dto.request.BanUserControllerRequest;
 import com.podium.controller.dto.request.UserRoleUpdateControllerRequest;
 import com.podium.specification.TestSpecification;
 import io.restassured.http.ContentType;
@@ -65,5 +66,21 @@ public class AdminValidator {
                 .spec(TestSpecification.buildResponseSpec());
 
     }
+
+    public void banUser(BanUserControllerRequest request, String token, HttpStatus status){
+
+        given()
+                .spec(TestSpecification.buildRequestSpec())
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .when()
+                .patch(PodiumPath.server + PodiumEndpoint.banUser)
+                .then().assertThat()
+                .statusCode(status.value())
+                .spec(TestSpecification.buildResponseSpec());
+
+    }
+
 
 }

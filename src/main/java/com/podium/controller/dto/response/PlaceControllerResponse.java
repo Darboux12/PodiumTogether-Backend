@@ -28,6 +28,7 @@ public class PlaceControllerResponse {
     private double usageTime;
     private int minAge;
     private int maxAge;
+    private String author;
     private Set<FileControllerDto> images;
     private Set<FileControllerDto> documents;
     Set<ReviewControllerResponse> reviews;

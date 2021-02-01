@@ -81,6 +81,12 @@ public class User {
     @OneToMany(mappedBy="author")
     private Set<Review> reviews = new HashSet<>();
 
+    @OneToMany(mappedBy="placeLocalization")
+    private Set<Place> places = new HashSet<>();
+
+    @OneToMany(mappedBy="user")
+    private Set<Ban> bans = new HashSet<>();
+
     public User(String username, String email, String password,
                 Country country, Set<Role> roles, Date birthday,
                 PodiumResource profileImage, String description) {

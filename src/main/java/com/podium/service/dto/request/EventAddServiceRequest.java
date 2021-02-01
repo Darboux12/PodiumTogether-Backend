@@ -3,9 +3,11 @@ package com.podium.service.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,16 +16,13 @@ public class EventAddServiceRequest {
     private String title;
     private Date dateFrom;
     private Date dateTo;
-    private String city;
-    private int number;
-    private String street;
-    private String postal;
-    private String discipline;
     private int people;
-    private List<String> genders;
+    private Set<String> genders;
     private int minAge;
     private int maxAge;
-    private double cost;
     private String description;
     private String author;
+    private String placeName;
+    private Set<MultipartFile> images;
+    private Set<MultipartFile> documents;
 }

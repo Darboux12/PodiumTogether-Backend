@@ -2,6 +2,7 @@ package com.podium.service.dto.converter;
 
 import com.podium.dal.entity.*;
 import com.podium.service.dto.other.*;
+import com.podium.service.dto.response.EventServiceResponse;
 import com.podium.service.dto.response.PlaceServiceResponse;
 import org.springframework.util.FileCopyUtils;
 
@@ -36,9 +37,37 @@ public class ServiceConverter {
                 place.getUsageTime(),
                 place.getMinAge(),
                 place.getMaxAge(),
+                place.getAuthor().getUsername(),
                 this.convertImagesResourcesToFiles(place.getPlaceResources()),
                 this.convertDocumentsResourcesToFiles(place.getPlaceResources()),
                 this.convertReviewIterableToDto(place.getReviews())
+        );
+
+    }
+
+    public EventServiceResponse convertEventToResponseDto(Event event){
+
+        Set<String> users = new HashSet<>();
+
+        event.getUsersJoined().forEach(x -> users.add(x.getUsername()));
+
+        return new EventServiceResponse(
+                event.getId(),
+                event.getTitle(),
+                event.getDateFrom(),
+                event.getDateTo(),
+                event.getPeopleNumber(),
+                event.getMinAge(),
+                event.getMaxAge(),
+                event.getDescription(),
+                users,
+                event.getAuthor().getUsername(),
+                event.getDiscipline().getDiscipline(),
+                event.getViews(),
+                this.convertImagesResourcesToFiles(event.getEventResources()),
+                this.convertDocumentsResourcesToFiles(event.getEventResources()),
+                event.getCreationDate(),
+                event.getPlace().getName()
         );
 
     }
@@ -51,7 +80,6 @@ public class ServiceConverter {
 
         return responses;
     }
-
 
     public Set<ReviewServiceDto> convertReviewIterableToDto(Iterable<Review> reviews){
 
@@ -73,7 +101,8 @@ public class ServiceConverter {
                             review.getPlace().getName(),
                             this.convertImagesResourcesToFiles(review.getImages()),
                             review.getLikes(),
-                            review.getDislikes()
+                            review.getDislikes(),
+                            review.getDate()
                     ));
 
                 });

@@ -50,10 +50,6 @@ public class Event {
     private int maxAge;
 
     @NotNull
-    @Column(name = "cost", table = "EVENT_DETAILS")
-    private double cost;
-
-    @NotNull
     @Type(type = "text")
     @Column(name = "description", table = "EVENT_DETAILS")
     private String description;
@@ -68,14 +64,6 @@ public class Event {
             })
     @JoinColumn(name="user_id", nullable=false)
     private User author;
-
-    @ManyToOne(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinColumn(name="localization_id", nullable=false)
-    private Localization eventLocalization;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -112,4 +100,29 @@ public class Event {
     @Column(name = "creation_date")
     private Date creationDate;
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinColumn(name="place_id", nullable=false)
+    private Place place;
+
+
+    public Event(String title, Date dateFrom, Date dateTo, int peopleNumber, int minAge, int maxAge, String description, User author, Discipline discipline, int views, Set<PodiumResource> eventResources, Set<Gender> genders, Place place) {
+        this.title = title;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.peopleNumber = peopleNumber;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.description = description;
+        this.author = author;
+        this.discipline = discipline;
+        this.views = views;
+        this.eventResources = eventResources;
+        this.genders = genders;
+        this.place = place;
+        this.creationDate = new Date();
+    }
 }

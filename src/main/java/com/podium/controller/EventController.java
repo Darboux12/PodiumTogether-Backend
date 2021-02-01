@@ -1,66 +1,54 @@
 package com.podium.controller;
 
+import com.podium.constant.PodiumEndpoint;
+import com.podium.controller.dto.converter.ControllerRequestConverter;
+import com.podium.controller.dto.converter.ControllerResponseConverter;
+import com.podium.controller.dto.request.EventAddControllerRequest;
+import com.podium.controller.validation.validator.annotation.PodiumValidBody;
+import com.podium.controller.validation.validator.annotation.PodiumValidateController;
+import com.podium.service.EventService;
+import com.podium.service.exception.PodiumAuthorityException;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumEntityTimeConsistencyError;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@PodiumValidateController
 public class EventController {
 
-    /*
-
     private EventService eventService;
-    private DisciplineService disciplineService;
-    private GenderService genderService;
-    private UserService userService;
 
-    @Autowired
-    public EventController(EventService eventService, DisciplineService disciplineService, GenderService genderService, UserService userService) {
+    public EventController(EventService eventService) {
         this.eventService = eventService;
-        this.disciplineService = disciplineService;
-        this.genderService = genderService;
-        this.userService = userService;
     }
 
     @PostMapping(PodiumEndpoint.addEvent)
-    public ResponseEntity addEvent(@RequestBody EventAddRequestDto requestDto){
-
-        PodiumDtoValidator.getInstance().validateRequestBody(requestDto);
-
-        if(this.eventService.existEventByTitle(requestDto.getTitle()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Event with given title already exists");
-
-        if(!this.disciplineService.existByDisciplineName(requestDto.getDiscipline()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Given discipline is not available");
-
-        for(String gender : requestDto.getGenders())
-            if(!this.genderService.existByGenderName(gender))
-                throw new ResponseStatusException(
-                        HttpStatus.CONFLICT, "At least one of given genders is not available");
-
-        if(!this.userService.existUserByUsername(requestDto.getAuthor()))
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Given event author does not exist");
-
-        this.eventService.addEvent(requestDto);
-
+    public ResponseEntity addEvent(
+            @RequestPart("event") @PodiumValidBody EventAddControllerRequest requestDto,
+            @RequestPart("images") List<MultipartFile> images,
+            @RequestPart("documents") List<MultipartFile> documents,
+            Authentication authentication) throws PodiumEntityTimeConsistencyError, PodiumAuthorityException, PodiumEntityNotFoundException, PodiumEntityAlreadyExistException {
+        this.eventService.addEvent(ControllerRequestConverter.getInstance().convertEventAddRequestToServiceDto(requestDto,images,documents),authentication.getName());
         return ResponseEntity.ok().build();
-
     }
 
-    @DeleteMapping(PodiumEndpoint.deleteEvent)
-    public ResponseEntity deleteEventByTitle(@PathVariable String title){
+    @GetMapping(PodiumEndpoint.findEventByTitle)
+    public ResponseEntity findEventByTitle(@PathVariable String title,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertEventServiceDtoToControllerResponseDto(this.eventService.findEventByTitle(title,authentication.getName())));
+    }
 
-        if(this.eventService.existEventByTitle(title)){
-            this.eventService.deleteEventByTitle(title);
-            return ResponseEntity.ok().body("Event successfully deleted");
-        }
 
-        else
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Event not found");
-
-    } */
+    @DeleteMapping(PodiumEndpoint.deleteEventById)
+    public ResponseEntity deleteEventById(@PathVariable int id,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        this.eventService.deleteEventById(id,authentication.getName());
+        return ResponseEntity.ok().build();
+    }
 
 }

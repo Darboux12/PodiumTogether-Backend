@@ -1,156 +1,118 @@
 package com.podium.service;
 
+import com.podium.dal.entity.*;
+import com.podium.dal.repository.EventRepository;
+import com.podium.service.dto.converter.ServiceConverter;
+import com.podium.service.dto.request.EventAddServiceRequest;
+import com.podium.service.dto.response.EventServiceResponse;
+import com.podium.service.dto.response.PlaceServiceResponse;
+import com.podium.service.exception.PodiumAuthorityException;
+import com.podium.service.exception.PodiumEntityAlreadyExistException;
+import com.podium.service.exception.PodiumEntityNotFoundException;
+import com.podium.service.exception.PodiumEntityTimeConsistencyError;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class EventService {
 
-    /*
-
     private EventRepository eventRepository;
-    private CityRepository cityRepository;
-    private StreetRepository streetRepository;
-    private LocalizationRepository localizationRepository;
-    private DisciplineRepository disciplineRepository;
-    private GenderRepository genderRepository;
-    private UserRepository userRepository;
 
-    @Autowired
-    public EventService(
-            EventRepository eventRepository,
-            CityRepository cityRepository,
-            StreetRepository streetRepository,
-            LocalizationRepository localizationRepository,
-            DisciplineRepository disciplineRepository,
-            GenderRepository genderRepository,
-            UserRepository userRepository) {
+    private UserService userService;
+    private SecurityService securityService;
+    private PlaceService placeService;
+    private ResourceService resourceService;
+    private GenderService genderService;
 
+    public EventService(EventRepository eventRepository, UserService userService, SecurityService securityService, PlaceService placeService, ResourceService resourceService, GenderService genderService) {
         this.eventRepository = eventRepository;
-        this.cityRepository = cityRepository;
-        this.streetRepository = streetRepository;
-        this.localizationRepository = localizationRepository;
-        this.disciplineRepository = disciplineRepository;
-        this.genderRepository = genderRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
+        this.securityService = securityService;
+        this.placeService = placeService;
+        this.resourceService = resourceService;
+        this.genderService = genderService;
     }
 
+    @Transactional
+    public void addEvent(EventAddServiceRequest addServiceDto, String username) throws PodiumEntityAlreadyExistException, PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError, PodiumAuthorityException {
 
-    public void addEvent(EventAddRequestDto requestDto){
-        this.eventRepository.save(this.convertRequestDtoToEntity(requestDto));
-    }
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
-    public boolean existEventByTitle(String eventTitle){
-        return this.eventRepository.existsByTitle(eventTitle);
-    }
+        if(this.eventRepository.existsByTitle(addServiceDto.getTitle()))
+            throw new PodiumEntityAlreadyExistException("Event with given title");
 
-    public void deleteEventByTitle(String eventTitle){
-        this.eventRepository.deleteByTitle(eventTitle);
-
-    }
-
-    private Event convertRequestDtoToEntity(EventAddRequestDto requestDto){
-
-        Event event = new Event();
-        event.setTitle(requestDto.getTitle());
-        event.setDateFrom(requestDto.getDateFrom());
-        event.setDateTo(requestDto.getDateTo());
-
-        City city;
-        Street street;
-        Localization localization;
-
-        if(this.cityRepository.existsByCity(requestDto.getCity()))
-            city = this.cityRepository.findByCity(requestDto.getCity());
-        else{
-            city = new City(requestDto.getCity());
-
-        }
-
-
-
-        if(this.streetRepository.existsByStreet(requestDto.getStreet()))
-            street = this.streetRepository.findByStreet(requestDto.getStreet());
-        else{
-            street = new Street();
-            street.setStreet(requestDto.getStreet());
-        }
-
-
-
-        if(this.localizationRepository
-                .existsByCityAndStreetAndBuildingNumberAndPostalCode(
-                        city,street,requestDto.getNumber(),requestDto.getPostal()
-                ))
-        localization =
-                this.localizationRepository
-                        .findByCityAndStreetAndBuildingNumberAndPostalCode(
-                                city,street,requestDto.getNumber(),requestDto.getPostal());
-        else{
-            localization = new Localization();
-            localization.setCity(city);
-            localization.setStreet(street);
-            localization.setBuildingNumber(requestDto.getNumber());
-            localization.setPostalCode(requestDto.getPostal());
-        }
-
-        this.localizationRepository.save(localization);
-
-        event.setLocalization(localization);
-
-        Discipline discipline = this.disciplineRepository
-                .findByDiscipline(requestDto.getDiscipline());
-
-        event.setDiscipline(discipline);
-
-        event.setPeopleNumber(requestDto.getPeople());
-
-        for(String genderName : requestDto.getGenders()){
-            Gender gender = this.genderRepository.findByGender(genderName);
-
-            if(gender != null)
-                event.getGenders().add(gender);
-            else{
-                Gender gender1 = new Gender();
-                gender1.setGender("Chuj");
-                event.getGenders().add(gender1);
-            }
-        }
-
-        event.setMinAge(requestDto.getMinAge());
-        event.setMaxAge(requestDto.getMaxAge());
-        event.setCost(requestDto.getCost());
-        event.setDescription(requestDto.getDescription());
-
-        User user = this.userRepository.findByUsername(requestDto.getAuthor()).orElse(null);
-
-        if (user != null) {
-            System.out.println(user.getEmail());
-        }
-
-        event.setAuthor(user);
-
-        event.setViews(0);
-
-        event.setCreationDate(new Date());
-
-        return event;
+        this.eventRepository.save(this.convertServiceAddDtoToEntity(addServiceDto));
 
     }
 
-    private CountryResponseDto convertEntityToResponseDto(Country country){
+    public EventServiceResponse findEventByTitle(String eventTitle, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-        CountryResponseDto responseDto = new CountryResponseDto();
-        responseDto.setCountryId(country.getCountryId());
-        responseDto.setIso3(country.getIso3());
-        responseDto.setName(country.getName());
-        responseDto.setPrintable_name(country.getPrintableName());
-        responseDto.setNumCode(country.getNumCode());
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
 
-        return responseDto;
+        return ServiceConverter
+                .getInstance()
+                .convertEventToResponseDto( this.eventRepository
+                        .findByTitle(eventTitle)
+                        .orElseThrow(() -> new PodiumEntityNotFoundException("Event with given name")));
 
-    } */
+    }
 
+    @Transactional
+    public void deleteEventById(int id, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
+        User user = userService.getEntity(username);
+        this.securityService.validateUserAdminAuthority(user);
 
+        Event event = this.eventRepository.findById(id)
+                .orElseThrow(() -> new PodiumEntityNotFoundException("Event with given id"));
+
+        this.eventRepository.deleteById(id);
+
+        this.resourceService.deleteResources(event.getEventResources());
+    }
+
+    private Event convertServiceAddDtoToEntity(EventAddServiceRequest requestDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
+
+        User author = this.userService.getEntity(requestDto.getAuthor());
+
+        Place place = this.placeService.getEntity(requestDto.getPlaceName());
+
+        Set<PodiumResource> imageResources = this.resourceService
+                .createPodiumImageResources(requestDto.getImages());
+
+        Set<PodiumResource> documentResources = this.resourceService
+                .createPodiumDocumentResources(requestDto.getDocuments());
+
+        Set<PodiumResource> resources = new HashSet<>();
+
+        resources.addAll(imageResources);
+        resources.addAll(documentResources);
+
+        Set<Gender> genders = new HashSet<>();
+
+        for(String gender : requestDto.getGenders())
+            genders.add(this.genderService.findByGenderName(gender));
+
+        return new Event(
+                requestDto.getTitle(),
+                requestDto.getDateFrom(),
+                requestDto.getDateTo(),
+                requestDto.getPeople(),
+                requestDto.getMinAge(),
+                requestDto.getMaxAge(),
+                requestDto.getDescription(),
+                author,
+                place.getDiscipline(),
+                0,
+                resources,
+                genders,
+                place
+        );
+    }
 
 }

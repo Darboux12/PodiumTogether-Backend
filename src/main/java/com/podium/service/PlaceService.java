@@ -133,6 +133,8 @@ public class PlaceService {
 
     private Place convertServiceAddDtoToEntity(PlaceAddServiceRequest requestDto) throws PodiumEntityNotFoundException, PodiumEntityTimeConsistencyError {
 
+        User author = this.getPlaceAuthor(requestDto.getAuthor());
+
         Discipline discipline = this.getPlaceDiscipline(requestDto.getDiscipline());
 
         Localization localization = this.getPlaceLocalization(requestDto.getLocalizationDto());
@@ -159,6 +161,7 @@ public class PlaceService {
                 requestDto.getUsageTime(),
                 requestDto.getMinAge(),
                 requestDto.getMaxAge(),
+                author,
                 resources
         );
     }
@@ -169,6 +172,10 @@ public class PlaceService {
 
     private Discipline getPlaceDiscipline(String disciplineName) throws PodiumEntityNotFoundException {
         return this.disciplineService.getEntity(disciplineName);
+    }
+
+    private User getPlaceAuthor(String username) throws PodiumEntityNotFoundException {
+        return this.userService.getEntity(username);
     }
 
     private Set<BusinessDay> getBusinessDays(Set<BusinessDayServiceDto> businessDayServiceDtos) throws PodiumEntityTimeConsistencyError, PodiumEntityNotFoundException {

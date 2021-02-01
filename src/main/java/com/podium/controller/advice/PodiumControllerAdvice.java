@@ -307,6 +307,16 @@ public class PodiumControllerAdvice {
 
     }
 
+    @ExceptionHandler(PodiumUserBannedException.class)
+    public ResponseEntity<PodiumResponse> handlePodiumUserBannedException(PodiumUserBannedException e, WebRequest request) {
+
+        return new ResponseEntity<>(
+                this.createResponseMessage("Podium User Banned Error", HttpStatus.FORBIDDEN,
+                        e.getMessage(),request.getDescription(false)), HttpStatus.FORBIDDEN
+        );
+
+    }
+
     private PodiumResponse createResponseMessage(String title, HttpStatus status,String message, String description) {
 
         return new PodiumResponse(

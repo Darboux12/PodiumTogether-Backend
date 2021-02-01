@@ -133,6 +133,8 @@ public class PodiumEndpoint {
 
     public static final String degradeUserRole = "/user/degrade/role";
 
+    public static final String banUser = "/user/ban";
+
     public static final String synchronizeResources = "/resources/synchronize";
 
 
@@ -204,11 +206,13 @@ public class PodiumEndpoint {
 
     public static final String findAllPlaces = "/place/find/all";
 
+    public static final String findEventByTitle = "/place/find/title/{title}";
+
     public static final String findPlaceById = "/place/find/id/{id}";
 
     public static final String deletePlaceById = "/place/delete/id/{id}";
 
-    public static final String deleteEvent = "/event/delete/{title}";
+    public static final String deleteEventById = "/event/delete/id/{id}";
 
     public static final String addReview = "/place/review/add";
 

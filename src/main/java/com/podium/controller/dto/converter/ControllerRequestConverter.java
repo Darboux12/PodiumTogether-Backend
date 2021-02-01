@@ -31,6 +31,17 @@ public class ControllerRequestConverter {
         );
     }
 
+    public BanUserServiceRequest convertBanUserRequestToServiceRequest(BanUserControllerRequest request, String adminUsername){
+        return new BanUserServiceRequest(
+                request.getDateFrom(),
+                request.getDateTo(),
+                request.getReason(),
+                request.getUsernameToBan(),
+                adminUsername
+        );
+    }
+
+
     public CityAddServiceRequest convertCityAddRequestToServiceDto(CityAddControllerRequest request){
         return new CityAddServiceRequest(request.getCity());
     }
@@ -76,7 +87,7 @@ public class ControllerRequestConverter {
         );
     }
 
-    public PlaceAddServiceRequest convertPlaceAddRequestToServiceDto(PlaceAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
+    public PlaceAddServiceRequest convertPlaceAddRequestToServiceDto(PlaceAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents, String author){
 
         LocalizationServiceDto localizationServiceDto =
 
@@ -108,6 +119,26 @@ public class ControllerRequestConverter {
                 addRequest.getUsageTime(),
                 addRequest.getMinAge(),
                 addRequest.getMaxAge(),
+                author,
+                new HashSet<>(images),
+                new HashSet<>(documents)
+        );
+
+    }
+
+    public EventAddServiceRequest convertEventAddRequestToServiceDto(EventAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
+
+        return new EventAddServiceRequest(
+                addRequest.getTitle(),
+                addRequest.getDateFrom(),
+                addRequest.getDateTo(),
+                addRequest.getPeople(),
+                addRequest.getGenders(),
+                addRequest.getMinAge(),
+                addRequest.getMaxAge(),
+                addRequest.getDescription(),
+                addRequest.getAuthor(),
+                addRequest.getPlaceName(),
                 new HashSet<>(images),
                 new HashSet<>(documents)
         );

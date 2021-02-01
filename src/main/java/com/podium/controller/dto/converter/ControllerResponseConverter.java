@@ -4,6 +4,7 @@ import com.podium.controller.dto.other.*;
 import com.podium.controller.dto.response.*;
 import com.podium.dal.entity.*;
 import com.podium.service.dto.other.*;
+import com.podium.service.dto.response.EventServiceResponse;
 import com.podium.service.dto.response.PlaceServiceResponse;
 import org.springframework.util.FileCopyUtils;
 
@@ -27,8 +28,30 @@ public class ControllerResponseConverter {
         return instance;
     }
 
-    public PlaceControllerResponse convertPlaceServiceDtoToControllerResponseDto(PlaceServiceResponse place){
+    public EventControllerResponse convertEventServiceDtoToControllerResponseDto(EventServiceResponse eventServiceResponse){
 
+
+        return new EventControllerResponse(
+                eventServiceResponse.getId(),
+                eventServiceResponse.getTitle(),
+                eventServiceResponse.getDateFrom(),
+                eventServiceResponse.getDateTo(),
+                eventServiceResponse.getPeopleNumber(),
+                eventServiceResponse.getMinAge(),
+                eventServiceResponse.getMaxAge(),
+                eventServiceResponse.getDescription(),
+                eventServiceResponse.getUsersJoined(),
+                eventServiceResponse.getAuthor(),
+                eventServiceResponse.getDiscipline(),
+                eventServiceResponse.getViews(),
+                this.convertImageFilesServiceToControllerFiles(eventServiceResponse.getImages()),
+                this.convertDocumentFilesServiceToControllerFiles(eventServiceResponse.getDocuments()),
+                eventServiceResponse.getCreationDate(),
+                eventServiceResponse.getPlace()
+        );
+    }
+
+    public PlaceControllerResponse convertPlaceServiceDtoToControllerResponseDto(PlaceServiceResponse place){
 
         return new PlaceControllerResponse(
                 place.getId(),
@@ -40,6 +63,7 @@ public class ControllerResponseConverter {
                 place.getUsageTime(),
                 place.getMinAge(),
                 place.getMaxAge(),
+                place.getAuthor(),
                 this.convertImageFilesServiceToControllerFiles(place.getImages()),
                 this.convertDocumentFilesServiceToControllerFiles(place.getDocuments()),
                 this.convertReviewServiceIterableToControllerResponse(place.getReviews())
@@ -80,7 +104,8 @@ public class ControllerResponseConverter {
                 review.getPlace(),
                 this.convertImageFilesServiceToControllerFiles(review.getImages()),
                 review.getLikes(),
-                review.getDislikes()
+                review.getDislikes(),
+                review.getDate()
 
         );
     }
@@ -279,7 +304,8 @@ public class ControllerResponseConverter {
                     review.getPlace(),
                     this.convertImageFilesServiceToControllerFiles(review.getImages()),
                     review.getLikes(),
-                    review.getDislikes()
+                    review.getDislikes(),
+                    review.getDate()
             ));
 
         });

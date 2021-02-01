@@ -21,6 +21,7 @@ public class PlaceAddServiceRequest {
     private double usageTime;
     private int minAge;
     private int maxAge;
+    private String author;
     private Set<MultipartFile> images;
     private Set<MultipartFile> documents;
 }

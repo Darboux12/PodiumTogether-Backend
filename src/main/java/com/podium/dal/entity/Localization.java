@@ -49,9 +49,6 @@ public class Localization {
     @Column(name = "remarks")
     private String remarks;
 
-    @OneToMany(mappedBy="eventLocalization")
-    private Set<Event> events = new HashSet<>();
-
     @OneToMany(mappedBy="placeLocalization")
     private Set<Place> places = new HashSet<>();
 

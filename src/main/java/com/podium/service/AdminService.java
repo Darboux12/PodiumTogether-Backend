@@ -3,6 +3,7 @@ package com.podium.service;
 import com.podium.dal.entity.Role;
 import com.podium.dal.entity.User;
 import com.podium.dal.repository.UserRepository;
+import com.podium.service.dto.request.BanUserServiceRequest;
 import com.podium.service.dto.request.UserRoleUpdateServiceRequest;
 import com.podium.service.exception.*;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,15 @@ public class AdminService {
     private RoleService roleService;
     private ResourceService resourceService;
     private SecurityService securityService;
+    private BanService banService;
 
-    public AdminService(UserRepository userRepository, UserService userService, RoleService roleService, ResourceService resourceService, SecurityService securityService) {
+    public AdminService(UserRepository userRepository, UserService userService, RoleService roleService, ResourceService resourceService, SecurityService securityService, BanService banService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.roleService = roleService;
         this.resourceService = resourceService;
         this.securityService = securityService;
+        this.banService = banService;
     }
 
     public void grantUserRole(UserRoleUpdateServiceRequest request) throws PodiumEntityNotFoundException, PodiumAuthorityException, PodiumUserRoleAlreadyGivenException, PodiumSelfPromotionError {
@@ -77,4 +80,13 @@ public class AdminService {
     private boolean isRoleAlreadyGiven(User user,Role role){
         return user.getRoles().contains(role);
     }
+
+    public void banUser(BanUserServiceRequest request) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User admin = userService.getEntity(request.getAdminUsername());
+        this.securityService.validateUserAdminAuthority(admin);
+
+        this.banService.addBan(request);
+    }
+
 }

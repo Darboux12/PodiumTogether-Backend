@@ -26,6 +26,7 @@ public class PlaceServiceResponse {
     private double usageTime;
     private int minAge;
     private int maxAge;
+    private String author;
     private Set<FileServiceDto> images;
     private Set<FileServiceDto> documents;
     private Set<ReviewServiceDto> reviews;

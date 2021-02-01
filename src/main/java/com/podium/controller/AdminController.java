@@ -3,6 +3,7 @@ package com.podium.controller;
 import com.podium.configuration.JwtTokenUtil;
 import com.podium.constant.PodiumEndpoint;
 import com.podium.controller.dto.converter.ControllerRequestConverter;
+import com.podium.controller.dto.request.BanUserControllerRequest;
 import com.podium.controller.dto.request.UserRoleUpdateControllerRequest;
 import com.podium.controller.validation.validator.annotation.PodiumValidateController;
 import com.podium.service.AdminService;
@@ -46,5 +47,14 @@ public class AdminController {
         this.adminService.degradeUserRole(ControllerRequestConverter.getInstance().convertGrantRoleRequestToServiceRequest(request,authentication.getName()));
         return ResponseEntity.ok().body("User role was successfully taken away!");
     }
+
+    //ADMIN
+    @PatchMapping(PodiumEndpoint.banUser)
+    public ResponseEntity banUser(@RequestBody BanUserControllerRequest request, Authentication authentication) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+        this.adminService.banUser(ControllerRequestConverter.getInstance().convertBanUserRequestToServiceRequest(request,authentication.getName()));
+        return ResponseEntity.ok().body("User role was successfully taken away!");
+    }
+
+
 
 }

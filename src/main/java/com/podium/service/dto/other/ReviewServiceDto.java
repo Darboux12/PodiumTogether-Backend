@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -20,4 +21,5 @@ public class ReviewServiceDto {
     private Set<FileServiceDto> images;
     private int likes;
     private int dislikes;
+    private Date date;
 }

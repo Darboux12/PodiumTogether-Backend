@@ -1,664 +1,164 @@
 package com.podium.api;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.podium.constant.PodiumLimits;
+import com.podium.controller.dto.other.BusinessDayControllerDto;
+import com.podium.controller.dto.other.LocalizationControllerDto;
+import com.podium.controller.dto.request.EventAddControllerRequest;
+import com.podium.controller.dto.request.JwtControllerRequest;
+import com.podium.controller.dto.request.PlaceAddControllerRequest;
+import com.podium.logger.TestLogger;
+import com.podium.validator.EventValidator;
+import com.podium.validator.PlaceValidator;
+import com.podium.validator.UserValidator;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpStatus;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
  class EventTest {
 
-   /*
+ private static EventAddControllerRequest requestDto;
+ private static String textValueHolder;
+ private static int intValueHolder;
+ private static double doubleValueHolder;
 
-    private static EventAddRequestDto requestDto;
-    private static String valueHolder;
+ private static String adminToken = "";
+ private static String subscriberToken = "";
 
-    @BeforeAll
-     static void beforeClass() throws ParseException {
-        TestLogger.setUp();
-        requestDto = Constant.getValidEventRequestDto();
-    }
+ @BeforeAll
+ static void beforeClass() throws ParseException {
 
-    @Test
-     void T01_Add_Event_With_Empty__Title_Should_Return_Status_CONFLICT(){
+  TestLogger.setUp();
 
-        valueHolder = requestDto.getTitle();
-        requestDto.setTitle("");
+  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+  Date timeFrom = format.parse("2050-02-01 12:00:00");
+  Date timeTo = format.parse("2050-02-04 13:00:00");
 
-        requestDto.setTitle(valueHolder);
+  requestDto = new EventAddControllerRequest(
+          "TEST_EVENT_NAME",
+          timeFrom,
+          timeTo,
+          10,
+          Set.of("Male"),
+          10,
+          30,
+          "THIS IS EVENT TEST DESCRIPTION",
+          "TEST USERNAME_ONE",
+          "Test Place Name"
+  );
 
-    }
+ }
 
-    @Test
-     void T02_Add_Event_To_Short_Title_Should_Return_Status_CONFLICT(){
+   private static Stream<String> provideEmptyValuesForTests(){
+  return Stream.of("", " ", "  ","                    ");
+ }
 
-        String toShort = StringUtils
-                .repeat("*", PodiumLimits.minEventTitleLength - 1);
+   @Test
+   void T01_Sign_In_As_Admin_User_Get_Token(){
 
-        valueHolder = requestDto.getTitle();
-        requestDto.setTitle(toShort);
+    adminToken =
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+            UserValidator
+                    .getInstance()
+                    .signIn(new JwtControllerRequest("admin","adminadmin"), HttpStatus.OK)
+                    .getToken();
 
-        requestDto.setTitle(valueHolder);
+   }
 
-    }
+   @Test
+   void T02_Sign_In_As_Subscriber_User_Get_Token(){
 
-    @Test
-     void T03_Add_To_Long_Title_Should_Return_Status_CONFLICT(){
+    subscriberToken =
 
-        String To_Long_ = StringUtils.repeat("*", PodiumLimits.maxEventTitleLength + 1);
+            UserValidator
+                    .getInstance()
+                    .signIn(new JwtControllerRequest("TEST USERNAME_ONE","TEST PASSWORD ONE"),HttpStatus.OK)
+                    .getToken();
 
-        valueHolder = requestDto.getTitle();
-        requestDto.setTitle(To_Long_);
+   }
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+   @ParameterizedTest
+   @MethodSource("provideEmptyValuesForTests")
+   void T03_Add_Event_Empty_Title_Return_Status_CONFLICT(String emptyName){
 
-        requestDto.setTitle(valueHolder);
+    textValueHolder = requestDto.getTitle();
+    requestDto.setTitle(emptyName);
 
-    }
+    EventValidator
+            .getInstance()
+            .addEvent(requestDto,subscriberToken, HttpStatus.CONFLICT);
 
-    @Test
-     void T04_Add_Date_From_In_Past_Should_Return_Status_CONFLICT() throws ParseException {
+    requestDto.setTitle(textValueHolder);
+   }
 
-        Date tmpDate = requestDto.getDateFrom();
-        requestDto.setDateFrom(new SimpleDateFormat("dd/MM/yyyy")
-                .parse("31/12/1700"));
+   @Test
+   void T04_Add_Event_Too_Title_Return_Status_CONFLICT(){
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+    String toShort =
+            StringUtils.repeat("*", PodiumLimits.minEventTitleLength - 1);
+    textValueHolder = requestDto.getTitle();
+    requestDto.setTitle(toShort);
 
-        requestDto.setDateFrom(tmpDate);
+    EventValidator
+            .getInstance()
+            .addEvent(requestDto, adminToken,HttpStatus.CONFLICT);
 
-    }
-    
-    @Test
-     void T05_Add_DateToInPast_Should_Return_Status_CONFLICT() throws ParseException {
+    requestDto.setTitle(textValueHolder);
 
-        Date tmpDate = requestDto.getDateTo();
-        requestDto.setDateTo(new SimpleDateFormat("dd/MM/yyyy")
-                .parse("31/12/1700"));
+   }
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+   @Test
+   void T05_Add_Place_Too_Long_Name_Return_Status_CONFLICT(){
 
-        requestDto.setDateTo(tmpDate);
+    String toLong =
+            StringUtils.repeat("*", PodiumLimits.maxEventTitleLength + 1);
+    textValueHolder = requestDto.getTitle();
+    requestDto.setTitle(toLong);
 
-    }
+    EventValidator
+            .getInstance()
+            .addEvent(requestDto, adminToken,HttpStatus.CONFLICT);
 
-    @Test
-     void T06_Add_Empty_City_Should_Return_Status_CONFLICT(){
+    requestDto.setTitle(textValueHolder);
 
-        valueHolder = requestDto.getCity();
-        requestDto.setCity("");
+   }
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+   @Test
+   void T36_Add_Valid_Place_Should_Return_Status_OK(){
 
-        requestDto.setCity(valueHolder);
+    EventValidator
+            .getInstance()
+            .addEvent(requestDto, adminToken,HttpStatus.OK);
 
-    }
-    
-    @Test
-     void T07_Add_ToShortCity_Should_Return_Status_CONFLICT(){
+   }
 
-        String toShort = StringUtils.repeat("*", PodiumLimits.minCityLength - 1);
+   @Test
+   void T43_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
 
-        valueHolder = requestDto.getCity();
-        requestDto.setCity(toShort);
+    int id = EventValidator
 
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
+            .getInstance()
+            .findEventByTitle(requestDto.getTitle(),subscriberToken,HttpStatus.OK)
+            .getId();
 
-        requestDto.setCity(valueHolder);
+    EventValidator.getInstance().deleteEventById(id,adminToken,HttpStatus.OK);
 
-    }
+   }
 
-    @Test
-     void T08_Add_To_Long_City_Should_Return_Status_CONFLICT(){
-
-        String To_Long_ = StringUtils.repeat("*", PodiumLimits.maxCityLength + 1);
-
-        valueHolder = requestDto.getCity();
-        requestDto.setCity(To_Long_);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setCity(valueHolder);
-
-    }
-
-    @Test
-     void T09_Add_Empty_Street_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getStreet();
-        requestDto.setStreet("");
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setStreet(valueHolder);
-
-    }
-
-    @Test
-     void T10_Add_To_Short_Street_Should_Return_Status_CONFLICT(){
-
-        String toShort = StringUtils.repeat("*", PodiumLimits.minStreetLength - 1);
-
-        valueHolder = requestDto.getStreet();
-        requestDto.setStreet(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setStreet(valueHolder);
-
-    }
-
-    @Test
-     void T11_Add_To_Long_Street_Should_Return_Status_CONFLICT(){
-
-        String toLong = StringUtils.repeat("*", PodiumLimits.maxStreetLength + 1);
-
-        valueHolder = requestDto.getStreet();
-        requestDto.setStreet(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setStreet(valueHolder);
-
-    }
-
-    @Test
-     void T12_Add_To_ShortNumber_Should_Return_Status_CONFLICT(){
-        
-        int valueHolderInt;
-
-        int toShort = PodiumLimits.minBuildingNumberLength - 1;
-
-        valueHolderInt = requestDto.getNumber();
-        requestDto.setNumber(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setNumber(valueHolderInt);
-
-    }
-
-    @Test
-     void T13_Add_To_Long_Number_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toLong =  PodiumLimits.maxBuildingNumberLength + 1;
-
-        valueHolderInt = requestDto.getNumber();
-        requestDto.setNumber(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);;
-
-        requestDto.setNumber(valueHolderInt);
-
-    }
-
-    @Test
-     void T14_Add_Empty_Postal_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getPostal();
-        requestDto.setPostal("");
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPostal(valueHolder);
-
-    }
-
-    @Test
-     void T15_Add_To_ShortPostal_Should_Return_Status_CONFLICT(){
-
-        String toShort = StringUtils.repeat("*", PodiumLimits.minPostalLength - 1);
-
-        valueHolder = requestDto.getPostal();
-        requestDto.setPostal(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPostal(valueHolder);
-
-    }
-
-    @Test
-     void T16_Add_To_Long_Postal_Should_Return_Status_CONFLICT(){
-
-        String toLong= StringUtils.repeat("*", PodiumLimits.maxPostalLength + 1);
-
-        valueHolder = requestDto.getPostal();
-        requestDto.setPostal(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPostal(valueHolder);
-
-    }
-
-    @Test
-     void T17_Add_Empty_Discipline_Should_Return_Status_CONFLICT(){
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline("");
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
-
-    }
-
-    @Test
-     void T18_Add_To_Short_Discipline_Should_Return_Status_CONFLICT(){
-
-        String toShort = StringUtils.repeat("*", PodiumLimits.minDisciplineLength - 1);
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
-
-    }
-
-    @Test
-     void T19_Add_To_Long_Discipline_Should_Return_Status_CONFLICT(){
-
-        String toLong = StringUtils.repeat("*", PodiumLimits.maxDisciplineLength + 1);
-
-        valueHolder = requestDto.getDiscipline();
-        requestDto.setDiscipline(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setDiscipline(valueHolder);
-
-    }
-
-    @Test
-     void T20_Add_Empty_People_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        valueHolderInt= requestDto.getPeople();
-        requestDto.setPeople(0);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPeople(valueHolderInt);
-
-    }
-
-    @Test
-     void T21_Add_To_Short_People_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toShort = PodiumLimits.minEventPeopleLength - 1;
-
-        valueHolderInt = requestDto.getPeople();
-        requestDto.setPeople(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPeople(valueHolderInt);
-
-    }
-
-    @Test
-     void T22_Add_To_Long_People_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toLong =  PodiumLimits.maxEventPeopleLength + 1;
-
-        valueHolderInt = requestDto.getPeople();
-        requestDto.setPeople(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setPeople(valueHolderInt);
-
-    }
-
-    @Test
-     void T23_Add_Empty_Min_Age_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        valueHolderInt= requestDto.getMinAge();
-        requestDto.setMinAge(0);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMinAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T24_Add_To_ShortMin_Age_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toShort = PodiumLimits.minEventMinAge - 1;
-
-        valueHolderInt = requestDto.getMinAge();
-        requestDto.setMinAge(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMinAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T25_Add_To_Long_Min_Age_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toLong =  PodiumLimits.maxEventMinAge + 1;
-
-        valueHolderInt = requestDto.getMaxAge();
-        requestDto.setMaxAge(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMaxAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T26_Add_Empty_Max_Age_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        valueHolderInt= requestDto.getMaxAge();
-        requestDto.setMaxAge(0);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMaxAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T27_Add_To_Short_MaxAge_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toShort = PodiumLimits.minEventMaxAge - 1;
-
-        valueHolderInt = requestDto.getMaxAge();
-        requestDto.setMaxAge(toShort);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMaxAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T28_Add_To_Long_MaxAge_Should_Return_Status_CONFLICT(){
-
-        int valueHolderInt;
-
-        int toLong =  PodiumLimits.maxEventMaxAge + 1;
-
-        valueHolderInt = requestDto.getMaxAge();
-        requestDto.setMaxAge(toLong);
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setMaxAge(valueHolderInt);
-
-    }
-
-    @Test
-     void T29_Add_Valid_Event_Should_Return_Status_OK(){
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.OK);
-
-    }
-
-    @Test
-     void T30_Add_Same_Event_Should_Return_Status_CONFLICT(){
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-    }
-
-    @Test
-     void T31_Add_Event_Nonexistent_Discipline_Should_Return_Status_CONFLICT(){
-
-        String valueHolder = requestDto.getTitle();
-
-        requestDto.setTitle("AnotherEventTitle");
-
-        requestDto.setDiscipline("NonExistentDiscipline");
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setTitle(valueHolder);
-
-    }
-
-    @Test
-     void T32_Add_Event_Nonexistent_User_Should_Return_Status_CONFLICT(){
-
-        String author = requestDto.getAuthor();
-        String title = requestDto.getTitle();
-
-        requestDto.setTitle("AnotherEventTitle");
-        requestDto.setAuthor("NonExistentUsername");
-
-        EventValidator
-                .getInstance()
-                .add(requestDto,HttpStatus.CONFLICT);
-
-        requestDto.setTitle(title);
-        requestDto.setAuthor(author);
-
-    }
-
-    @Test
-     void T33_Delete_Created_Event_Should_Return_Status_OK(){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("title",requestDto.getTitle())
-                .when().delete(Path.server + PodiumEndpoint.deleteEvent)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    /*
-
-    @Test
-     void T01_Add_ValidEvent_Should_Return_Status_OK(){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(PodiumPath.server + PodiumEndpoint.AddEvent)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    @Test
-     void T02_Add_SameEventAgain_Should_Return_Status_CONFLICT(){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post(PodiumPath.server + PodiumEndpoint.AddEvent)
-                .then().assertThat()
-                .statusCode(HttpStatus.CONFLICT.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    @Test
-     void T03_getAllEvent_Should_Return_Status_OK(){
-
-        given()
-                .spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when().get(PodiumPath.server + PodiumEndpoint.findAllEvent)
-                .then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    @Test
-     void T04_getAllEvent_ShouldReturnIterable_EventResponse(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.findAllEvent)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(EventResponseDto[].class);
-
-    }
-
-    @Test
-     void T05_findCreatedEvent_Should_Return_Status_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getEvent())
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.findEventByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-
-    }
-
-    @Test
-     void T06_findCreatedEvent_ShouldReturn_EventResponse(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getEvent())
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.findEventByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec())
-                .extract().as(EventResponseDto.class);
-    }
-
-    @Test
-     void T07_existCreatedEvent_Should_Return_Status_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .contentType(ContentType.JSON)
-                .pathParam("name",requestDto.getEvent())
-                .when()
-                .get(PodiumPath.server + PodiumEndpoint.existEventByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    @Test
-     void T08_deleteCreatedEvent_Should_Return_Status_OK(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getEvent())
-                .delete(PodiumPath.server + PodiumEndpoint.deleteEventByName)
-                .then().assertThat().statusCode(HttpStatus.OK.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-    @Test
-     void T09_deleteCreatedEventAgain_Should_Return_Status_NOTFOUND(){
-
-        given().spec(TestSpecification.buildRequestSpec())
-                .when()
-                .pathParam("name",requestDto.getEvent())
-                .delete(PodiumPath.server + PodiumEndpoint.deleteEventByName)
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value())
-                .spec(TestSpecification.buildResponseSpec());
-
-    }
-
-
-     */
 }

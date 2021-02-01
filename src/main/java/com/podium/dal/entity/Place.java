@@ -67,6 +67,14 @@ public class Place {
     @Column(name = "max_age")
     private int maxAge;
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinColumn(name="user_id", nullable=false)
+    private User author;
+
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -80,7 +88,10 @@ public class Place {
     @OneToMany(mappedBy="place")
     private Set<Review> reviews = new HashSet<>();
 
-    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge, Set<PodiumResource> placeResources) {
+    @OneToMany(mappedBy="place")
+    private Set<Event> events = new HashSet<>();
+
+    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge,User author, Set<PodiumResource> placeResources) {
         this.name = name;
         this.discipline = discipline;
         this.placeLocalization = placeLocalization;
@@ -90,9 +101,10 @@ public class Place {
         this.minAge = minAge;
         this.maxAge = maxAge;
         this.placeResources = placeResources;
+        this.author = author;
     }
 
-    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge) {
+    public Place(String name, Discipline discipline, Localization placeLocalization, Set<BusinessDay> businessDays, double cost, double usageTime, int minAge, int maxAge, User author) {
         this.name = name;
         this.discipline = discipline;
         this.placeLocalization = placeLocalization;
@@ -101,5 +113,6 @@ public class Place {
         this.usageTime = usageTime;
         this.minAge = minAge;
         this.maxAge = maxAge;
+        this.author = author;
     }
 }
