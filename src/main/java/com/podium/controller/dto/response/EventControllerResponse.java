@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -16,8 +17,8 @@ import java.util.Set;
 public class EventControllerResponse {
     private int id;
     private String title;
-    private Date dateFrom;
-    private Date dateTo;
+    private LocalDateTime dateFrom;
+    private LocalDateTime dateTo;
     private int peopleNumber;
     private int minAge;
     private int maxAge;
@@ -28,6 +29,6 @@ public class EventControllerResponse {
     private int views;
     private Set<FileControllerDto> images;
     private Set<FileControllerDto> documents;
-    private Date creationDate;
-    private String place;
+    private LocalDateTime creationDate;
+    private PlaceControllerResponse place;
 }

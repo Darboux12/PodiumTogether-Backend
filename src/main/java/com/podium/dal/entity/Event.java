@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,11 +32,11 @@ public class Event {
 
     @NotNull
     @Column(name = "date_from", table = "EVENT_DETAILS")
-    private Date dateFrom;
+    private LocalDateTime dateFrom;
 
     @NotNull
     @Column(name = "date_to", table = "EVENT_DETAILS")
-    private Date dateTo;
+    private LocalDateTime dateTo;
 
     @NotNull
     @Column(name = "people_number", table = "EVENT_DETAILS")
@@ -98,7 +99,7 @@ public class Event {
     private Set<Gender> genders = new HashSet<>();
 
     @Column(name = "creation_date")
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = {
@@ -109,7 +110,7 @@ public class Event {
     private Place place;
 
 
-    public Event(String title, Date dateFrom, Date dateTo, int peopleNumber, int minAge, int maxAge, String description, User author, Discipline discipline, int views, Set<PodiumResource> eventResources, Set<Gender> genders, Place place) {
+    public Event(String title, LocalDateTime dateFrom, LocalDateTime dateTo, int peopleNumber, int minAge, int maxAge, String description, User author, Discipline discipline, int views, Set<PodiumResource> eventResources, Set<Gender> genders, Place place) {
         this.title = title;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
@@ -123,6 +124,6 @@ public class Event {
         this.eventResources = eventResources;
         this.genders = genders;
         this.place = place;
-        this.creationDate = new Date();
+        this.creationDate = LocalDateTime.now();
     }
 }

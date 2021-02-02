@@ -5,6 +5,8 @@ import com.podium.controller.validation.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,9 +20,9 @@ public class EventAddControllerRequest {
     @PodiumLength(min = PodiumLimits.minEventTitleLength, max = PodiumLimits.maxEventTitleLength)
     private String title;
     @PodiumDateFuture
-    private Date dateFrom;
+    private LocalDateTime dateFrom;
     @PodiumDateFuture
-    private Date dateTo;
+    private LocalDateTime dateTo;
     @PodiumNotNull
     @PodiumNumberInt(min = PodiumLimits.minEventPeopleLength, max = PodiumLimits.maxEventPeopleLength)
     private int people;
@@ -35,9 +37,6 @@ public class EventAddControllerRequest {
     @PodiumTextNotEmpty
     @PodiumLength(min = PodiumLimits.minEventDescriptionLength, max = PodiumLimits.maxEventDescriptionLength)
     private String description;
-    @PodiumTextNotEmpty
-    @PodiumLength(min = PodiumLimits.minUsernameLength, max = PodiumLimits.maxUsernameLength)
-    private String author;
     @PodiumTextNotEmpty
     private String placeName;
 }

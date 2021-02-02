@@ -206,7 +206,9 @@ public class PodiumEndpoint {
 
     public static final String findAllPlaces = "/place/find/all";
 
-    public static final String findEventByTitle = "/place/find/title/{title}";
+    public static final String findEventByName = "/event/find/name/{name}";
+
+    public static final String findAllEvents = "/event/find/all";
 
     public static final String findPlaceById = "/place/find/id/{id}";
 

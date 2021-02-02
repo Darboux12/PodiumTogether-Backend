@@ -10,10 +10,7 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ControllerResponseConverter {
 
@@ -47,8 +44,19 @@ public class ControllerResponseConverter {
                 this.convertImageFilesServiceToControllerFiles(eventServiceResponse.getImages()),
                 this.convertDocumentFilesServiceToControllerFiles(eventServiceResponse.getDocuments()),
                 eventServiceResponse.getCreationDate(),
-                eventServiceResponse.getPlace()
+                this.convertPlaceServiceDtoToControllerResponseDto(eventServiceResponse.getPlace())
         );
+    }
+
+    public Iterable<EventControllerResponse> convertEventServiceDtoToControllerResponseDtoIterable(Iterable<EventServiceResponse> eventServiceResponses){
+
+        var responses = new HashSet<EventControllerResponse>();
+
+        eventServiceResponses.forEach(eventServiceResponse ->
+                responses.add(this.convertEventServiceDtoToControllerResponseDto(eventServiceResponse)));
+
+        return responses;
+
     }
 
     public PlaceControllerResponse convertPlaceServiceDtoToControllerResponseDto(PlaceServiceResponse place){

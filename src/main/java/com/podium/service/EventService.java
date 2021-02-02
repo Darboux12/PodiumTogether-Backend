@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Service
@@ -61,6 +62,18 @@ public class EventService {
                         .orElseThrow(() -> new PodiumEntityNotFoundException("Event with given name")));
 
     }
+
+    public Iterable<EventServiceResponse> findAllEvents(String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {
+
+        User user = userService.getEntity(username);
+        this.securityService.validateUserSubscriberAuthority(user);
+
+        return ServiceConverter
+                .getInstance()
+                .convertEventIterableToResponseDto(this.eventRepository.findAll());
+
+    }
+
 
     @Transactional
     public void deleteEventById(int id, String username) throws PodiumEntityNotFoundException, PodiumAuthorityException {

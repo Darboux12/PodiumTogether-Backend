@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ import java.util.Set;
 public class EventServiceResponse {
     private int id;
     private String title;
-    private Date dateFrom;
-    private Date dateTo;
+    private LocalDateTime dateFrom;
+    private LocalDateTime dateTo;
     private int peopleNumber;
     private int minAge;
     private int maxAge;
@@ -29,6 +30,6 @@ public class EventServiceResponse {
     private int views;
     private Set<FileServiceDto> images;
     private Set<FileServiceDto> documents;
-    private Date creationDate;
-    private String place;
+    private LocalDateTime creationDate;
+    private PlaceServiceResponse place;
 }

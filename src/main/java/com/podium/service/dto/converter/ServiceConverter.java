@@ -9,6 +9,7 @@ import org.springframework.util.FileCopyUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -67,8 +68,26 @@ public class ServiceConverter {
                 this.convertImagesResourcesToFiles(event.getEventResources()),
                 this.convertDocumentsResourcesToFiles(event.getEventResources()),
                 event.getCreationDate(),
-                event.getPlace().getName()
+                this.convertPlaceToResponseDto(event.getPlace())
         );
+
+    }
+
+    public Iterable<EventServiceResponse> convertEventIterableToResponseDto(Iterable<Event> events){
+
+        var responses = new HashSet<EventServiceResponse>();
+
+        events.forEach(event -> {
+
+            Set<String> users = new HashSet<>();
+
+            event.getUsersJoined().forEach(x -> users.add(x.getUsername()));
+
+            responses.add(this.convertEventToResponseDto(event));
+
+        });
+
+        return responses;
 
     }
 

@@ -126,7 +126,7 @@ public class ControllerRequestConverter {
 
     }
 
-    public EventAddServiceRequest convertEventAddRequestToServiceDto(EventAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents){
+    public EventAddServiceRequest convertEventAddRequestToServiceDto(EventAddControllerRequest addRequest, List<MultipartFile> images, List<MultipartFile> documents, String author){
 
         return new EventAddServiceRequest(
                 addRequest.getTitle(),
@@ -137,7 +137,7 @@ public class ControllerRequestConverter {
                 addRequest.getMinAge(),
                 addRequest.getMaxAge(),
                 addRequest.getDescription(),
-                addRequest.getAuthor(),
+                author,
                 addRequest.getPlaceName(),
                 new HashSet<>(images),
                 new HashSet<>(documents)

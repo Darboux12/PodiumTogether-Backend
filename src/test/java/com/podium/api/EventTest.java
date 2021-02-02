@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.LinkedList;
@@ -47,8 +48,8 @@ import static io.restassured.RestAssured.given;
 
   SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-  Date timeFrom = format.parse("2050-02-01 12:00:00");
-  Date timeTo = format.parse("2050-02-04 13:00:00");
+  LocalDateTime timeFrom = LocalDateTime.parse("2050-02-01 12:00:00");
+  LocalDateTime timeTo = LocalDateTime.parse("2050-02-04 13:00:00");
 
   requestDto = new EventAddControllerRequest(
           "TEST_EVENT_NAME",
@@ -59,7 +60,6 @@ import static io.restassured.RestAssured.given;
           10,
           30,
           "THIS IS EVENT TEST DESCRIPTION",
-          "TEST USERNAME_ONE",
           "Test Place Name"
   );
 
@@ -140,7 +140,7 @@ import static io.restassured.RestAssured.given;
    }
 
    @Test
-   void T36_Add_Valid_Place_Should_Return_Status_OK(){
+   void T36_Add_Valid_Event_Should_Return_Status_OK(){
 
     EventValidator
             .getInstance()
@@ -149,7 +149,7 @@ import static io.restassured.RestAssured.given;
    }
 
    @Test
-   void T43_Delete_Created_Place_Should_Return_Status_OK_Delete_Entity(){
+   void T43_Delete_Created_Event_Should_Return_Status_OK_Delete_Entity(){
 
     int id = EventValidator
 

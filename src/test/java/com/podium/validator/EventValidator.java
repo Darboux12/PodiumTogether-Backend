@@ -87,7 +87,7 @@ public class EventValidator {
                             .header("Authorization", "Bearer " + token)
                             .pathParam("title",title)
                             .when()
-                            .get(PodiumPath.server + PodiumEndpoint.findEventByTitle)
+                            .get(PodiumPath.server + PodiumEndpoint.findEventByName)
                             .then().assertThat().statusCode(status.value())
                             .spec(TestSpecification.buildResponseSpec())
                             .extract().as((Type) EventControllerResponse.class);
@@ -99,7 +99,7 @@ public class EventValidator {
                     .header("Authorization", "Bearer " + token)
                     .pathParam("title",title)
                     .when()
-                    .get(PodiumPath.server + PodiumEndpoint.findEventByTitle)
+                    .get(PodiumPath.server + PodiumEndpoint.findEventByName)
                     .then().assertThat().statusCode(status.value())
                     .spec(TestSpecification.buildResponseSpec());
 

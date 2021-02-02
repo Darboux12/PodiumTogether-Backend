@@ -35,13 +35,18 @@ public class EventController {
             @RequestPart("images") List<MultipartFile> images,
             @RequestPart("documents") List<MultipartFile> documents,
             Authentication authentication) throws PodiumEntityTimeConsistencyError, PodiumAuthorityException, PodiumEntityNotFoundException, PodiumEntityAlreadyExistException {
-        this.eventService.addEvent(ControllerRequestConverter.getInstance().convertEventAddRequestToServiceDto(requestDto,images,documents),authentication.getName());
+        this.eventService.addEvent(ControllerRequestConverter.getInstance().convertEventAddRequestToServiceDto(requestDto,images,documents,authentication.getName()),authentication.getName());
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(PodiumEndpoint.findEventByTitle)
-    public ResponseEntity findEventByTitle(@PathVariable String title,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
-        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertEventServiceDtoToControllerResponseDto(this.eventService.findEventByTitle(title,authentication.getName())));
+    @GetMapping(PodiumEndpoint.findEventByName)
+    public ResponseEntity findEventByTitle(@PathVariable String name,Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertEventServiceDtoToControllerResponseDto(this.eventService.findEventByTitle(name,authentication.getName())));
+    }
+
+    @GetMapping(PodiumEndpoint.findAllEvents)
+    public ResponseEntity findAllEvents(Authentication authentication) throws PodiumAuthorityException, PodiumEntityNotFoundException {
+        return ResponseEntity.ok().body(ControllerResponseConverter.getInstance().convertEventServiceDtoToControllerResponseDtoIterable(this.eventService.findAllEvents(authentication.getName())));
     }
 
 
