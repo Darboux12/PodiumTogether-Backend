@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: podium-together-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      springboot-mysql-net:
+    environment:
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+      - spring.datasource.url=jdbc:mysql://database:3306/podium-together-db
+      - spring.datasource.username=root
+      - spring.datasource.password=podium123
+      - spring.jpa.show-sql=true
+      - spring.jpa.hibernate.ddl-auto=validate
+      - spring.jpa.database=mysql
+      - server.error.include-message=always
+
+  database:
+    image: mysql:latest
+    container_name: podium-together-database
+    environment:
+      MYSQL_ROOT_PASSWORD: podium123
+      MYSQL_DATABASE: podium-together-db
+    ports:
+      - "3306:3306"
+    networks:
+      springboot-mysql-net:
+
+networks:
+  springboot-mysql-net:
