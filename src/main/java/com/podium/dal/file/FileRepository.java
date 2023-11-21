@@ -200,11 +200,11 @@ public class FileRepository {
     }
 
     private String getImagesDirectoryPath(){
-        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/images";
+        return "C:\\Users\\Dariusz\\Desktop\\PodiumTogether-Backend\\src\\main\\resources\\images";
     }
 
     private String getDocumentsDirectoryPath(){
-        return "C:/Users/Dariusz/Desktop/gdziejestgrane-react-spring/podium-together-backend/src/main/resources/files";
+        return "C:\\Users\\Dariusz\\Desktop\\PodiumTogether-Backend\\src\\main\\resources\\files";
     }
 
 

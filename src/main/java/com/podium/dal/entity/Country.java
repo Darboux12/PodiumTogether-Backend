@@ -1,11 +1,14 @@
 package com.podium.dal.entity;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,15 +22,18 @@ public class Country {
 
     @Id
     @Column(name = "country_id", columnDefinition = "char")
-    private String countryId;
+    private int countryId;
+
+    @Column(name = "iso", columnDefinition = "char")
+    private String iso;
 
     @NotEmpty
     @Column(name = "name")
     private String name;
 
-    @NotNull
-    @Column(name = "printable_name")
-    private String printableName;
+    @NotEmpty
+    @Column(name = "nicename")
+    private String niceName;
 
     @Column(name = "iso3", columnDefinition = "char")
     private String iso3;
@@ -35,13 +41,15 @@ public class Country {
     @Column(name = "numcode",columnDefinition = "smallint")
     private Integer numCode;
 
+    @Column(name = "phonecode",columnDefinition = "smallint")
+    private Integer phoneCode;
+
     @OneToMany(mappedBy="country")
     private Set<User> users = new HashSet<>();
 
-    public Country(String countryId, String name, String printableName, String iso3, Integer numCode) {
+    public Country(int countryId, String name, String iso3, Integer numCode) {
         this.countryId = countryId;
         this.name = name;
-        this.printableName = printableName;
         this.iso3 = iso3;
         this.numCode = numCode;
     }

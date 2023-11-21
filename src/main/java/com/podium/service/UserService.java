@@ -81,8 +81,6 @@ public class UserService {
 
     public User findUserByUsername(String usernameToFind, String authorUsername) throws PodiumEntityNotFoundException, PodiumAuthorityException {
 
-        System.out.println(usernameToFind);
-
         User user = this.userRepository.findByUsername(usernameToFind).orElseThrow(() ->
                 new PodiumEntityNotFoundException("User with given username"));
 

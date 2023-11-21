@@ -10,9 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CountryControllerResponse {
-    private String countryId;
+    private Integer countryId;
     private String name;
-    private String printable_name;
     private String iso3;
     private Integer numCode;
 }

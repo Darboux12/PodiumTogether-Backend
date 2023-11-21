@@ -55,7 +55,6 @@ public class ResourceService {
 
         images.stream().filter(image -> this.fileRepository.isAcceptedImagesType(image.getContentType())).forEach(image -> {
 
-
                 PodiumResource resource = new PodiumResource();
                 resource.setName(image.getOriginalFilename());
                 resource.setType(image.getContentType());

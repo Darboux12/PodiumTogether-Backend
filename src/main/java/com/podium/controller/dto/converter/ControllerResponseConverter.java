@@ -156,7 +156,6 @@ public class ControllerResponseConverter {
         return new CountryControllerResponse(
                 country.getCountryId(),
                 country.getName(),
-                country.getPrintableName(),
                 country.getIso3(),
                 country.getNumCode()
         );
